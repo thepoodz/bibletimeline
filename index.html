@@ -34,6 +34,7 @@
       background-color: var(--bg-color);
       color: var(--text-main);
       overflow-x: hidden;
+      touch-action: pan-y;
     }
 
     /* --- Top Controls Toolbar (Sticky) --- */
@@ -86,16 +87,16 @@
     /* --- Timeline Container --- */
     .timeline-container {
       display: grid;
-      /* Fixed Year column + 2 equal selectable columns */
       grid-template-columns: var(--col-year-width) repeat(2, 1fr);
       min-width: 100%;
       position: relative;
+      padding-right: 28px; /* Room for touch scrubber rail */
     }
 
-    /* --- Column Selector Headers (Sticky below Toolbar) --- */
+    /* --- Column Selector Headers (Sticky) --- */
     .col-header {
       position: sticky;
-      top: 49px; /* Below toolbar */
+      top: 49px;
       z-index: 90;
       background-color: var(--card-bg);
       border-bottom: 2px solid var(--border-color);
@@ -116,7 +117,6 @@
       text-transform: uppercase;
     }
 
-    /* Column Selector Dropdown */
     .column-select {
       background: var(--bg-color);
       color: var(--text-main);
@@ -131,7 +131,7 @@
       text-overflow: ellipsis;
     }
 
-    /* --- Timeline Data Rows & Cells --- */
+    /* --- Timeline Rows --- */
     .timeline-row {
       display: contents;
     }
@@ -139,105 +139,125 @@
     .timeline-cell {
       border-bottom: 1px solid var(--border-color);
       border-right: 1px solid var(--border-color);
-      padding: 16px 10px;
-      min-height: 90px;
+      padding: 8px 10px;
+      min-height: 48px;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
 
-    /* Sticky Year Axis Column */
     .year-cell {
       position: sticky;
       left: 0;
       background-color: #111827;
       z-index: 80;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: var(--accent-gold);
       text-align: center;
       justify-content: flex-start;
-      padding-top: 18px;
+      padding-top: 12px;
       border-right: 2px solid var(--border-color);
       scroll-margin-top: 100px;
     }
 
-    /* Event Cards Inside Cells */
+    /* Subtle dot indicator for quiet 10-year rows */
+    .timeline-cell:empty::after {
+      content: "";
+      width: 3px;
+      height: 3px;
+      background-color: rgba(148, 163, 184, 0.2);
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+
+    /* Event Cards */
     .event-card {
       background: var(--card-bg);
       border-left: 3px solid var(--accent-gold);
       border-radius: 4px;
-      padding: 8px 10px;
-      margin-bottom: 6px;
-      font-size: 0.8rem;
+      padding: 6px 8px;
+      margin-bottom: 4px;
+      font-size: 0.75rem;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
-    .event-card .title {
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
+    .event-card .title { font-weight: 600; margin-bottom: 2px; }
+    .event-card .subtitle { font-size: 0.65rem; color: var(--text-muted); }
 
-    .event-card .subtitle {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-
-    /* Category Borders */
     .event-card.prophet { border-left-color: #a855f7; }
     .event-card.king-judah { border-left-color: #3b82f6; }
     .event-card.king-israel { border-left-color: #ef4444; }
     .event-card.patriarch { border-left-color: #10b981; }
     .event-card.empire { border-left-color: #f97316; }
 
-    /* --- Scrubber Bar (Right Rail) --- */
-    .scrubber-bar {
+    /* --- Dynamic Full-Height Scrubber Rail --- */
+    .scrubber-rail {
       position: fixed;
-      right: 4px;
-      top: 50%;
-      transform: translateY(-50%);
+      right: 0;
+      top: 98px; /* Below sticky headers */
+      bottom: 0;
+      width: 28px;
       z-index: 200;
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.9);
       backdrop-filter: blur(8px);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 6px 4px;
+      border-left: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      padding: 12px 0;
+      user-select: none;
+      touch-action: none; /* Allows continuous touch-drag scrubbing */
     }
 
-    .scrub-item {
-      color: var(--accent-gold);
-      font-size: 0.65rem;
+    .scrub-tick {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .scrub-tick::before {
+      content: "";
+      width: 6px;
+      height: 1px;
+      background-color: var(--border-color);
+    }
+
+    .scrub-tick.major::before {
+      width: 12px;
+      height: 2px;
+      background-color: var(--accent-gold);
+    }
+
+    .scrub-label {
+      position: absolute;
+      right: 14px;
+      font-size: 0.6rem;
       font-weight: 700;
-      text-decoration: none;
-      padding: 4px 2px;
+      color: var(--accent-gold);
+      pointer-events: none;
+    }
+
+    .scrub-indicator {
+      position: absolute;
+      right: 2px;
+      width: 24px;
+      height: 16px;
+      background: rgba(245, 158, 11, 0.3);
+      border: 1px solid var(--accent-gold);
       border-radius: 4px;
-      transition: background 0.2s, color 0.2s;
+      pointer-events: none;
+      transition: top 0.05s linear;
     }
-
-    .scrub-item:active,
-    .scrub-item:hover {
-      background: var(--accent-gold);
-      color: var(--bg-color);
-    }
-
-    /* Gives quiet decades consistent spacing */
-.timeline-cell:empty::after {
-  content: "•";
-  color: var(--border-color);
-  text-align: center;
-  font-size: 0.75rem;
-}
-    
   </style>
 </head>
 <body>
 
-  <!-- Top Toolbar with Quick Presets -->
+  <!-- Top Toolbar -->
   <header class="toolbar">
     <span class="toolbar-title">Chronos</span>
     <div class="preset-pills">
@@ -247,14 +267,10 @@
     </div>
   </header>
 
-  <!-- Quick Jump Scrubber Bar (Pinned Right) -->
-  <nav class="scrubber-bar" aria-label="Timeline Jump Index">
-    <a href="#year-4000bc" class="scrub-item">4k</a>
-    <a href="#year-2000bc" class="scrub-item">2k</a>
-    <a href="#year-1000bc" class="scrub-item">1k</a>
-    <a href="#year-1ad" class="scrub-item">1</a>
-    <a href="#year-100ad" class="scrub-item">100</a>
-  </nav>
+  <!-- Touch Scrubber Rail -->
+  <div class="scrubber-rail" id="scrubber-rail">
+    <div class="scrub-indicator" id="scrub-indicator"></div>
+  </div>
 
   <!-- Main Timeline Grid -->
   <main class="timeline-container">
@@ -278,44 +294,89 @@
       </select>
     </div>
 
-    <!-- Rows injected dynamically by JS -->
     <div id="timeline-rows-container" style="display: contents;"></div>
   </main>
 
   <script>
-    let timelineData = [];
+    let rawTimelineData = [];
+    let generated10YrData = [];
 
     const col1Select = document.getElementById('select-col-1');
     const col2Select = document.getElementById('select-col-2');
     const rowsContainer = document.getElementById('timeline-rows-container');
+    const scrubberRail = document.getElementById('scrubber-rail');
+    const scrubIndicator = document.getElementById('scrub-indicator');
 
+    // Load JSON and build 10-year decade grid
     async function loadTimeline() {
       try {
         const response = await fetch('timeline.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        timelineData = await response.json();
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        rawTimelineData = await response.json();
+
+        generate10YearGrid();
         renderTimeline();
+        buildScrubberRail();
+        setupTouchScrubber();
       } catch (error) {
         console.error('Error loading timeline data:', error);
       }
     }
 
+    // Generates a continuous row for every 10-year step from -4000 to +100
+    function generate10YearGrid() {
+      const dataMap = new Map();
+      rawTimelineData.forEach(item => dataMap.set(item.yearNum, item));
+
+      generated10YrData = [];
+
+      for (let y = -4000; y <= 100; y += 10) {
+        if (y === 0) continue; // No year 0 in historical calendar
+
+        const existing = dataMap.get(y);
+        const yearLabel = y < 0 ? `${Math.abs(y)} B.C.` : `${y} A.D.`;
+        const elemId = `year-${y < 0 ? Math.abs(y) + 'bc' : y + 'ad'}`;
+
+        if (existing) {
+          generated10YrData.push({
+            ...existing,
+            year: yearLabel,
+            id: existing.id || elemId,
+            yearNum: y
+          });
+        } else {
+          generated10YrData.push({
+            yearNum: y,
+            year: yearLabel,
+            id: elemId,
+            columns: { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] }
+          });
+        }
+      }
+    }
+
+    // Render timeline grid
     function renderTimeline() {
       const key1 = col1Select.value;
       const key2 = col2Select.value;
 
       rowsContainer.innerHTML = '';
 
-      timelineData.forEach(row => {
+      generated10YrData.forEach(row => {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'timeline-row';
 
         const yearCell = document.createElement('div');
         yearCell.className = 'timeline-cell year-cell';
         if (row.id) yearCell.id = row.id;
-        yearCell.textContent = row.year;
+        
+        // Show year label on 50-year intervals or populated rows
+        const hasContent = (row.columns[key1] && row.columns[key1].length > 0) || 
+                           (row.columns[key2] && row.columns[key2].length > 0);
+        if (row.yearNum % 50 === 0 || hasContent) {
+          yearCell.textContent = row.year;
+        }
+
         rowDiv.appendChild(yearCell);
 
         const cell1 = document.createElement('div');
@@ -350,6 +411,87 @@
         card.appendChild(title);
         card.appendChild(subtitle);
         containerCell.appendChild(card);
+      });
+    }
+
+    // Build vertical ticks along right rail
+    function buildScrubberRail() {
+      // Clear ticks except indicator
+      scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
+
+      const majorMilestones = new Map([
+        [-4000, "4k"],
+        [-3000, "3k"],
+        [-2000, "2k"],
+        [-1000, "1k"],
+        [1, "1"],
+        [100, "100"]
+      ]);
+
+      // Ticks for every 100 years
+      for (let y = -4000; y <= 100; y += 100) {
+        const tick = document.createElement('div');
+        tick.className = 'scrub-tick';
+
+        if (majorMilestones.has(y)) {
+          tick.classList.add('major');
+          const label = document.createElement('span');
+          label.className = 'scrub-label';
+          label.textContent = majorMilestones.get(y);
+          tick.appendChild(label);
+        }
+
+        scrubberRail.appendChild(tick);
+      }
+    }
+
+    // Drag-to-scrub controller
+    function setupTouchScrubber() {
+      function scrubToY(clientY) {
+        const rect = scrubberRail.getBoundingClientRect();
+        const percentage = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const targetScroll = percentage * maxScroll;
+
+        window.scrollTo({ top: targetScroll, behavior: 'instant' });
+        scrubIndicator.style.top = `${percentage * (rect.height - 16)}px`;
+      }
+
+      let isScrubbing = false;
+
+      // Mouse drag
+      scrubberRail.addEventListener('mousedown', (e) => {
+        isScrubbing = true;
+        scrubToY(e.clientY);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (isScrubbing) scrubToY(e.clientY);
+      });
+
+      window.addEventListener('mouseup', () => isScrubbing = false);
+
+      // Touch drag on mobile
+      scrubberRail.addEventListener('touchstart', (e) => {
+        isScrubbing = true;
+        scrubToY(e.touches[0].clientY);
+      }, { passive: true });
+
+      scrubberRail.addEventListener('touchmove', (e) => {
+        if (isScrubbing) scrubToY(e.touches[0].clientY);
+      }, { passive: true });
+
+      scrubberRail.addEventListener('touchend', () => isScrubbing = false);
+
+      // Keep indicator synced during normal scrolling
+      window.addEventListener('scroll', () => {
+        if (isScrubbing) return;
+        const rect = scrubberRail.getBoundingClientRect();
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        if (maxScroll <= 0) return;
+        const percentage = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+        scrubIndicator.style.top = `${percentage * (rect.height - 16)}px`;
       });
     }
 
