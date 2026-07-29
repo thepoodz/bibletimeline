@@ -1,20 +1,506 @@
 [
-  { "title": "Genesis 1–3", "subtitle": "Creation, Eden & The Fall", "startYear": -4000, "endYear": -3900, "type": "book" },
-  { "title": "Genesis 6–9", "subtitle": "Noah & The Great Flood", "startYear": -2350, "endYear": -2300, "type": "book" },
-  { "title": "Genesis 12–25", "subtitle": "Covenant with Abraham", "startYear": -2095, "endYear": -1920, "type": "book" },
-  { "title": "Job", "subtitle": "Traditional Era setting", "startYear": -2000, "endYear": -1900, "type": "book" },
-  { "title": "Genesis 37–50", "subtitle": "Joseph & Descent into Egypt", "startYear": -1915, "endYear": -1805, "type": "book" },
-  { "title": "Exodus & Leviticus", "subtitle": "Exodus & Law at Sinai", "startYear": -1446, "endYear": -1445, "type": "book" },
-  { "title": "Numbers & Deuteronomy", "subtitle": "Wilderness Wanderings", "startYear": -1445, "endYear": -1406, "type": "book" },
-  { "title": "Joshua", "subtitle": "Conquest of Canaan", "startYear": -1406, "endYear": -1375, "type": "book" },
-  { "title": "Judges & Ruth", "subtitle": "Period of the Judges", "startYear": -1375, "endYear": -1050, "type": "book" },
-  { "title": "1 & 2 Samuel", "subtitle": "Reigns of Saul & David", "startYear": -1050, "endYear": -970, "type": "book" },
-  { "title": "1 Kings 1–11", "subtitle": "Reign of Solomon & Wisdom Books", "startYear": -970, "endYear": -931, "type": "book" },
-  { "title": "1 Kings 12–22", "subtitle": "Kingdom Splits (Israel / Judah)", "startYear": -931, "endYear": -850, "type": "book" },
-  { "title": "2 Kings 1–17", "subtitle": "Elijah/Elisha to Fall of Israel", "startYear": -850, "endYear": -722, "type": "book" },
-  { "title": "2 Kings 18–25", "subtitle": "Judah Alone to Babylonian Exile", "startYear": -722, "endYear": -586, "type": "book" },
-  { "title": "Matthew, Mark, Luke, John", "subtitle": "Life & Ministry of Jesus", "startYear": -4, "endYear": 30, "type": "book" },
-  { "title": "Acts 1–12", "subtitle": "Early Church in Jerusalem", "startYear": 30, "endYear": 45, "type": "book" },
-  { "title": "Acts 13–28 & Epistles", "subtitle": "Paul's Journeys & Letters", "startYear": 45, "endYear": 68, "type": "book" },
-  { "title": "General Epistles & Revelation", "subtitle": "Apostolic Era Closes", "startYear": 68, "endYear": 95, "type": "book" }
+  {
+    "id": "gen-1-4",
+    "title": "Genesis 1–4",
+    "subtitle": "Creation, Fall, Cain & Abel",
+    "startYear": -4000,
+    "endYear": -3800,
+    "type": "book"
+  },
+  {
+    "id": "gen-5",
+    "title": "Genesis 5",
+    "subtitle": "Genealogy: Adam to Noah",
+    "startYear": -3800,
+    "endYear": -2950,
+    "type": "book"
+  },
+  {
+    "id": "gen-6-11",
+    "title": "Genesis 6–11",
+    "subtitle": "Noah, Flood & Babel",
+    "startYear": -2950,
+    "endYear": -2100,
+    "type": "book"
+  },
+  {
+    "id": "gen-12-50",
+    "title": "Genesis 12–50",
+    "subtitle": "Patriarchs: Abraham to Joseph",
+    "startYear": -2100,
+    "endYear": -1805,
+    "type": "book"
+  },
+  {
+    "id": "job",
+    "title": "Book of Job",
+    "subtitle": "Patriarchal Era Wisdom",
+    "startYear": -2000,
+    "endYear": -1800,
+    "type": "book"
+  },
+  {
+    "id": "exodus",
+    "title": "Book of Exodus",
+    "subtitle": "Bondage, Wilderness & Tabernacle",
+    "startYear": -1525,
+    "endYear": -1445,
+    "type": "book"
+  },
+  {
+    "id": "leviticus",
+    "title": "Book of Leviticus",
+    "subtitle": "Priesthood & Law at Sinai",
+    "startYear": -1445,
+    "endYear": -1444,
+    "type": "book"
+  },
+  {
+    "id": "numbers",
+    "title": "Book of Numbers",
+    "subtitle": "Wilderness Wanderings",
+    "startYear": -1444,
+    "endYear": -1406,
+    "type": "book"
+  },
+  {
+    "id": "deuteronomy",
+    "title": "Book of Deuteronomy",
+    "subtitle": "Moab Covenant & Death of Moses",
+    "startYear": -1406,
+    "endYear": -1405,
+    "type": "book"
+  },
+  {
+    "id": "joshua",
+    "title": "Book of Joshua",
+    "subtitle": "Conquest & Division of Canaan",
+    "startYear": -1405,
+    "endYear": -1385,
+    "type": "book"
+  },
+  {
+    "id": "judges-1-3",
+    "title": "Judges 1–3",
+    "subtitle": "Othniel, Ehud & Shamgar",
+    "startYear": -1380,
+    "endYear": -1220,
+    "type": "book"
+  },
+  {
+    "id": "judges-4-8",
+    "title": "Judges 4–8",
+    "subtitle": "Deborah, Barak & Gideon",
+    "startYear": -1220,
+    "endYear": -1170,
+    "type": "book"
+  },
+  {
+    "id": "judges-9-12",
+    "title": "Judges 9–12",
+    "subtitle": "Abimelech, Jephthah & Minor Judges",
+    "startYear": -1170,
+    "endYear": -1100,
+    "type": "book"
+  },
+  {
+    "id": "judges-13-16",
+    "title": "Judges 13–16",
+    "subtitle": "Samson vs. Philistines",
+    "startYear": -1100,
+    "endYear": -1060,
+    "type": "book"
+  },
+  {
+    "id": "judges-17-21",
+    "title": "Judges 17–21",
+    "subtitle": "Tribal Anarchy Epilogues",
+    "startYear": -1060,
+    "endYear": -1050,
+    "type": "book"
+  },
+  {
+    "id": "ruth",
+    "title": "Book of Ruth",
+    "subtitle": "Story of Boaz & Ruth",
+    "startYear": -1150,
+    "endYear": -1100,
+    "type": "book"
+  },
+  {
+    "id": "1-samuel",
+    "title": "1 Samuel",
+    "subtitle": "Samuel, Saul & David's Rise",
+    "startYear": -1100,
+    "endYear": -1010,
+    "type": "book"
+  },
+  {
+    "id": "2-samuel",
+    "title": "2 Samuel",
+    "subtitle": "Reign of King David",
+    "startYear": -1010,
+    "endYear": -970,
+    "type": "book"
+  },
+  {
+    "id": "psalms",
+    "title": "Book of Psalms",
+    "subtitle": "Davidic & Temple Hymnal",
+    "startYear": -1020,
+    "endYear": -450,
+    "type": "book"
+  },
+  {
+    "id": "proverbs",
+    "title": "Book of Proverbs",
+    "subtitle": "Wisdom of Solomon & Scribes",
+    "startYear": -970,
+    "endYear": -700,
+    "type": "book"
+  },
+  {
+    "id": "song-of-solomon",
+    "title": "Song of Solomon",
+    "subtitle": "Love Poetry of Solomon",
+    "startYear": -965,
+    "endYear": -950,
+    "type": "book"
+  },
+  {
+    "id": "ecclesiastes",
+    "title": "Ecclesiastes",
+    "subtitle": "Reflections of Qoheleth",
+    "startYear": -940,
+    "endYear": -931,
+    "type": "book"
+  },
+  {
+    "id": "1-kings",
+    "title": "1 Kings",
+    "subtitle": "Solomon to Divided Kingdom",
+    "startYear": -970,
+    "endYear": -850,
+    "type": "book"
+  },
+  {
+    "id": "2-kings",
+    "title": "2 Kings",
+    "subtitle": "Elisha to Babylonian Exile",
+    "startYear": -850,
+    "endYear": -561,
+    "type": "book"
+  },
+  {
+    "id": "jonah",
+    "title": "Book of Jonah",
+    "subtitle": "Mission to Nineveh",
+    "startYear": -780,
+    "endYear": -760,
+    "type": "book"
+  },
+  {
+    "id": "amos",
+    "title": "Book of Amos",
+    "subtitle": "Prophecy to Northern Israel",
+    "startYear": -760,
+    "endYear": -750,
+    "type": "book"
+  },
+  {
+    "id": "hosea",
+    "title": "Book of Hosea",
+    "subtitle": "Unfaithfulness of Israel",
+    "startYear": -755,
+    "endYear": -725,
+    "type": "book"
+  },
+  {
+    "id": "micah",
+    "title": "Book of Micah",
+    "subtitle": "Judgment & Messianic Hope",
+    "startYear": -735,
+    "endYear": -700,
+    "type": "book"
+  },
+  {
+    "id": "isaiah",
+    "title": "Book of Isaiah",
+    "subtitle": "Assyrian Crisis & Consolation",
+    "startYear": -740,
+    "endYear": -680,
+    "type": "book"
+  },
+  {
+    "id": "nahum",
+    "title": "Book of Nahum",
+    "subtitle": "Fall of Nineveh Predicted",
+    "startYear": -660,
+    "endYear": -630,
+    "type": "book"
+  },
+  {
+    "id": "zephaniah",
+    "title": "Book of Zephaniah",
+    "subtitle": "Day of the Lord Warning",
+    "startYear": -640,
+    "endYear": -620,
+    "type": "book"
+  },
+  {
+    "id": "habakkuk",
+    "title": "Book of Habakkuk",
+    "subtitle": "Dialogue on Babylonian Threat",
+    "startYear": -608,
+    "endYear": -598,
+    "type": "book"
+  },
+  {
+    "id": "jeremiah",
+    "title": "Book of Jeremiah",
+    "subtitle": "Warnings & Fall of Jerusalem",
+    "startYear": -627,
+    "endYear": -580,
+    "type": "book"
+  },
+  {
+    "id": "lamentations",
+    "title": "Lamentations",
+    "subtitle": "Mourning Destruction of Jerusalem",
+    "startYear": -586,
+    "endYear": -585,
+    "type": "book"
+  },
+  {
+    "id": "obadiah",
+    "title": "Book of Obadiah",
+    "subtitle": "Judgment on Edom",
+    "startYear": -585,
+    "endYear": -575,
+    "type": "book"
+  },
+  {
+    "id": "ezekiel",
+    "title": "Book of Ezekiel",
+    "subtitle": "Exilic Visions in Babylon",
+    "startYear": -593,
+    "endYear": -570,
+    "type": "book"
+  },
+  {
+    "id": "daniel",
+    "title": "Book of Daniel",
+    "subtitle": "Court Tales & Apocalyptic Visions",
+    "startYear": -605,
+    "endYear": -535,
+    "type": "book"
+  },
+  {
+    "id": "1-chronicles",
+    "title": "1 Chronicles",
+    "subtitle": "Genealogies & David's Temple Prep",
+    "startYear": -450,
+    "endYear": -430,
+    "type": "book"
+  },
+  {
+    "id": "2-chronicles",
+    "title": "2 Chronicles",
+    "subtitle": "Solomon to Cyrus Decree",
+    "startYear": -450,
+    "endYear": -430,
+    "type": "book"
+  },
+  {
+    "id": "zerubbabel-returns",
+    "title": "Ezra 1–6",
+    "subtitle": "First Return & Temple Rebuilt",
+    "startYear": -538,
+    "endYear": -516,
+    "type": "book"
+  },
+  {
+    "id": "haggai",
+    "title": "Book of Haggai",
+    "subtitle": "Call to Rebuild Second Temple",
+    "startYear": -520,
+    "endYear": -519,
+    "type": "book"
+  },
+  {
+    "id": "zechariah",
+    "title": "Book of Zechariah",
+    "subtitle": "Post-Exilic Messianic Visions",
+    "startYear": -520,
+    "endYear": -480,
+    "type": "book"
+  },
+  {
+    "id": "esther",
+    "title": "Book of Esther",
+    "subtitle": "Jewish Deliverance in Persia",
+    "startYear": -483,
+    "endYear": -473,
+    "type": "book"
+  },
+  {
+    "id": "ezra-7-10",
+    "title": "Ezra 7–10",
+    "subtitle": "Ezra's Return & Spiritual Reform",
+    "startYear": -458,
+    "endYear": -457,
+    "type": "book"
+  },
+  {
+    "id": "nehemiah",
+    "title": "Book of Nehemiah",
+    "subtitle": "Rebuilding Walls of Jerusalem",
+    "startYear": -445,
+    "endYear": -420,
+    "type": "book"
+  },
+  {
+    "id": "malachi",
+    "title": "Book of Malachi",
+    "subtitle": "Final Old Testament Prophecy",
+    "startYear": -433,
+    "endYear": -420,
+    "type": "book"
+  },
+  {
+    "id": "joel",
+    "title": "Book of Joel",
+    "subtitle": "Locust Plague & Outpouring of Spirit",
+    "startYear": -400,
+    "endYear": -350,
+    "type": "book"
+  },
+  {
+    "id": "matthew",
+    "title": "Gospel of Matthew",
+    "subtitle": "Life & Ministry of Jesus Christ",
+    "startYear": 26,
+    "endYear": 30,
+    "type": "book"
+  },
+  {
+    "id": "mark",
+    "title": "Gospel of Mark",
+    "subtitle": "Servant Ministry of Jesus",
+    "startYear": 27,
+    "endYear": 30,
+    "type": "book"
+  },
+  {
+    "id": "luke",
+    "title": "Gospel of Luke",
+    "subtitle": "Son of Man Narrative",
+    "startYear": 26,
+    "endYear": 30,
+    "type": "book"
+  },
+  {
+    "id": "john",
+    "title": "Gospel of John",
+    "subtitle": "Sign Miracles & Divine Sonship",
+    "startYear": 27,
+    "endYear": 30,
+    "type": "book"
+  },
+  {
+    "id": "acts",
+    "title": "Book of Acts",
+    "subtitle": "Early Church & Apostolic Expansion",
+    "startYear": 30,
+    "endYear": 62,
+    "type": "book"
+  },
+  {
+    "id": "james",
+    "title": "Epistle of James",
+    "subtitle": "Letter to Diaspora Believers",
+    "startYear": 45,
+    "endYear": 48,
+    "type": "book"
+  },
+  {
+    "id": "galatians",
+    "title": "Galatians",
+    "subtitle": "Paul's Defense of Grace",
+    "startYear": 48,
+    "endYear": 49,
+    "type": "book"
+  },
+  {
+    "id": "1-2-thessalonians",
+    "title": "1 & 2 Thessalonians",
+    "subtitle": "Pauline Letters on Christ's Return",
+    "startYear": 50,
+    "endYear": 52,
+    "type": "book"
+  },
+  {
+    "id": "1-2-corinthians",
+    "title": "1 & 2 Corinthians",
+    "subtitle": "Church Order & Reconciliation",
+    "startYear": 53,
+    "endYear": 56,
+    "type": "book"
+  },
+  {
+    "id": "romans",
+    "title": "Epistle to Romans",
+    "subtitle": "Paul's Systematic Theology",
+    "startYear": 57,
+    "endYear": 58,
+    "type": "book"
+  },
+  {
+    "id": "prison-epistles",
+    "title": "Ephesians, Phil, Col, Phlm",
+    "subtitle": "Pauline Prison Epistles",
+    "startYear": 60,
+    "endYear": 62,
+    "type": "book"
+  },
+  {
+    "id": "pastoral-epistles",
+    "title": "1 & 2 Timothy, Titus",
+    "subtitle": "Pastoral Care & Leadership",
+    "startYear": 63,
+    "endYear": 67,
+    "type": "book"
+  },
+  {
+    "id": "1-2-peter-jude",
+    "title": "1 & 2 Peter, Jude",
+    "subtitle": "Exhortation in Suffering & False Teaching",
+    "startYear": 63,
+    "endYear": 68,
+    "type": "book"
+  },
+  {
+    "id": "hebrews",
+    "title": "Epistle to Hebrews",
+    "subtitle": "Supremacy of Christ Covenant",
+    "startYear": 65,
+    "endYear": 69,
+    "type": "book"
+  },
+  {
+    "id": "1-2-3-john",
+    "title": "1, 2, 3 John",
+    "subtitle": "Johannine Epistles on Love & Truth",
+    "startYear": 85,
+    "endYear": 92,
+    "type": "book"
+  },
+  {
+    "id": "revelation",
+    "title": "Book of Revelation",
+    "subtitle": "Apocalypse of John at Patmos",
+    "startYear": 95,
+    "endYear": 96,
+    "type": "book"
+  }
 ]
