@@ -15,9 +15,10 @@
       --border-color: #334155;
       --accent-gold: #f59e0b;
       --text-main: #f8fafc;
-      --text-muted: #64748b; /* Subtle gray for decade ticks */
+      --text-muted: #64748b;
       --col-year-width: 68px;
       --scrubber-width: 28px;
+      --pixels-per-year: 2.5; /* Scale factor: 10 years = 25px height */
     }
 
     * {
@@ -59,35 +60,28 @@
       color: var(--accent-gold);
     }
 
-    /* --- Responsive Timeline Container --- */
+    /* --- Responsive Timeline Canvas Grid --- */
     .timeline-container {
       display: grid;
-      /* Fixed Year column + 2 equal selectable columns on mobile */
       grid-template-columns: var(--col-year-width) repeat(2, 1fr);
       min-width: 100%;
       position: relative;
       padding-right: var(--scrubber-width);
     }
 
-    /* Tablet (3 Data Columns) */
     @media (min-width: 768px) {
-      .timeline-container {
-        grid-template-columns: var(--col-year-width) repeat(3, 1fr);
-      }
+      .timeline-container { grid-template-columns: var(--col-year-width) repeat(3, 1fr); }
     }
 
-    /* Desktop (All 5 Data Columns Visible) */
     @media (min-width: 1100px) {
-      .timeline-container {
-        grid-template-columns: var(--col-year-width) repeat(5, 1fr);
-      }
+      .timeline-container { grid-template-columns: var(--col-year-width) repeat(5, 1fr); }
     }
 
     /* --- Column Selector Headers --- */
     .col-header {
       position: sticky;
       top: 45px;
-      z-index: 90;
+      z-index: 95;
       background-color: var(--card-bg);
       border-bottom: 2px solid var(--border-color);
       border-right: 1px solid var(--border-color);
@@ -99,7 +93,7 @@
 
     .col-header.year-header {
       background-color: #161e2e;
-      z-index: 95;
+      z-index: 98;
       left: 0;
       font-weight: 700;
       font-size: 0.75rem;
@@ -107,7 +101,6 @@
       text-transform: uppercase;
     }
 
-    /* Responsive Slot Hiding for Headers */
     .col-header.col-slot-3 { display: none; }
     @media (min-width: 768px) { .col-header.col-slot-3 { display: flex; } }
 
@@ -132,90 +125,110 @@
       text-overflow: ellipsis;
     }
 
-    /* --- Timeline Rows & Cells --- */
-    .timeline-row {
-      display: contents;
+    /* --- Continuous Map Canvas --- */
+    .timeline-canvas {
+      position: relative;
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: inherit;
+      width: 100%;
     }
 
-    .timeline-cell {
-      border-bottom: 1px solid var(--border-color);
-      border-right: 1px solid var(--border-color);
-      padding: 8px 8px;
-      min-height: 48px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    /* Left Year Axis Cell */
-    .year-cell {
-      position: sticky;
-      left: 0;
+    /* --- Left Sticky Year Track --- */
+    .year-track {
+      position: relative;
       background-color: #111827;
-      z-index: 80;
-      text-align: center;
-      justify-content: flex-start;
-      padding-top: 12px;
       border-right: 2px solid var(--border-color);
-      scroll-margin-top: 100px;
-      font-variant-numeric: tabular-nums;
+      z-index: 80;
     }
 
-    /* 10-Year Decades: Small & Grey */
-    .year-cell.decade {
+    .year-marker {
+      position: absolute;
+      left: 0;
+      right: 0;
+      text-align: center;
+      transform: translateY(-50%);
+      font-variant-numeric: tabular-nums;
+      pointer-events: none;
+    }
+
+    .year-marker.decade {
       font-size: 0.65rem;
       font-weight: 500;
       color: var(--text-muted);
     }
 
-    /* Major Milestones (100s / 0): Larger & White */
-    .year-cell.major {
+    .year-marker.major {
       font-size: 0.82rem;
       font-weight: 700;
       color: #ffffff;
     }
 
-    /* Responsive Cell Hiding */
-    .timeline-cell.col-slot-3 { display: none; }
-    @media (min-width: 768px) { .timeline-cell.col-slot-3 { display: flex; } }
+    /* Track Columns for Data Blocks */
+    .data-track {
+      position: relative;
+      border-right: 1px solid var(--border-color);
+    }
 
-    .timeline-cell.col-slot-4,
-    .timeline-cell.col-slot-5 { display: none; }
+    .data-track.col-slot-3 { display: none; }
+    @media (min-width: 768px) { .data-track.col-slot-3 { display: block; } }
+
+    .data-track.col-slot-4,
+    .data-track.col-slot-5 { display: none; }
     @media (min-width: 1100px) { 
-      .timeline-cell.col-slot-4,
-      .timeline-cell.col-slot-5 { display: flex; } 
+      .data-track.col-slot-4,
+      .data-track.col-slot-5 { display: block; } 
     }
 
-    .timeline-cell:empty::after {
-      content: "";
-      width: 3px;
-      height: 3px;
-      background-color: rgba(148, 163, 184, 0.2);
-      border-radius: 50%;
-      margin: 0 auto;
-    }
-
-    /* Event Cards */
-    .event-card {
+    /* --- Variable Height Event Blocks --- */
+    .event-block {
+      position: absolute;
+      left: 4px;
+      right: 4px;
       background: var(--card-bg);
-      border-left: 3px solid var(--accent-gold);
+      border-left: 4px solid var(--accent-gold);
       border-radius: 4px;
-      padding: 6px 8px;
-      margin-bottom: 4px;
-      font-size: 0.75rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      padding: 4px 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: transform 0.1s ease;
     }
 
-    .event-card .title { font-weight: 600; margin-bottom: 2px; }
-    .event-card .subtitle { font-size: 0.65rem; color: var(--text-muted); }
+    .event-block:hover {
+      z-index: 10;
+      transform: scale(1.02);
+    }
 
-    .event-card.prophet { border-left-color: #a855f7; }
-    .event-card.king-judah { border-left-color: #3b82f6; }
-    .event-card.king-israel { border-left-color: #ef4444; }
-    .event-card.patriarch { border-left-color: #10b981; }
-    .event-card.empire { border-left-color: #f97316; }
+    .event-block .title {
+      font-weight: 700;
+      font-size: 0.72rem;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-    /* --- Slim Touch Scrubber Rail (Right Side) --- */
+    .event-block .subtitle {
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    /* Classification Colors matching user's chart */
+    .event-block.good { border-left-color: #22c55e; background: #142e22; }      /* Good King - Green */
+    .event-block.bad { border-left-color: #eab308; background: #2e2814; }       /* Bad King - Yellow */
+    .event-block.evil { border-left-color: #ef4444; background: #33171a; }      /* Evil King - Red */
+    .event-block.prophet { border-left-color: #a855f7; background: #261738; }   /* Prophet - Purple */
+    .event-block.empire { border-left-color: #f97316; background: #2e1e14; }    /* Empire - Orange */
+    .event-block.book { border-left-color: #3b82f6; background: #172438; }      /* Book - Blue */
+
+    /* --- Slim Touch Scrubber Rail --- */
     .scrubber-rail {
       position: fixed;
       right: 0;
@@ -279,18 +292,18 @@
     <span class="toolbar-title">Bible Timeline</span>
   </header>
 
-  <!-- Slim Touch Scrubber Rail -->
+  <!-- Touch Scrubber Rail -->
   <div class="scrubber-rail" id="scrubber-rail">
     <div class="scrub-indicator" id="scrub-indicator"></div>
   </div>
 
-  <!-- Main Timeline Grid -->
+  <!-- Main Timeline Container -->
   <main class="timeline-container">
 
     <!-- Header: Year Column -->
     <div class="col-header year-header">Year</div>
 
-    <!-- Slot 1 -->
+    <!-- Dropdown Slot 1 -->
     <div class="col-header col-slot-1">
       <select class="column-select" id="select-col-1">
         <option value="books" selected>Books of the Bible</option>
@@ -301,7 +314,7 @@
       </select>
     </div>
 
-    <!-- Slot 2 -->
+    <!-- Dropdown Slot 2 -->
     <div class="col-header col-slot-2">
       <select class="column-select" id="select-col-2">
         <option value="books">Books of the Bible</option>
@@ -312,7 +325,7 @@
       </select>
     </div>
 
-    <!-- Slot 3 (Visible on Tablet / Desktop) -->
+    <!-- Dropdown Slot 3 -->
     <div class="col-header col-slot-3">
       <select class="column-select" id="select-col-3">
         <option value="books">Books of the Bible</option>
@@ -323,7 +336,7 @@
       </select>
     </div>
 
-    <!-- Slot 4 (Visible on Desktop) -->
+    <!-- Dropdown Slot 4 -->
     <div class="col-header col-slot-4">
       <select class="column-select" id="select-col-4">
         <option value="books">Books of the Bible</option>
@@ -334,7 +347,7 @@
       </select>
     </div>
 
-    <!-- Slot 5 (Visible on Desktop) -->
+    <!-- Dropdown Slot 5 -->
     <div class="col-header col-slot-5">
       <select class="column-select" id="select-col-5">
         <option value="books">Books of the Bible</option>
@@ -345,13 +358,22 @@
       </select>
     </div>
 
-    <!-- Rows injected dynamically by JS -->
-    <div id="timeline-rows-container" style="display: contents;"></div>
+    <!-- Canvas area where continuous timeline is drawn -->
+    <div class="timeline-canvas" id="timeline-canvas">
+      <div class="year-track" id="year-track"></div>
+      <div class="data-track col-slot-1" id="track-1"></div>
+      <div class="data-track col-slot-2" id="track-2"></div>
+      <div class="data-track col-slot-3" id="track-3"></div>
+      <div class="data-track col-slot-4" id="track-4"></div>
+      <div class="data-track col-slot-5" id="track-5"></div>
+    </div>
   </main>
 
   <script>
-    let rawTimelineData = [];
-    let generated10YrData = [];
+    let erasData = [];
+    const START_YEAR = -4000;
+    const END_YEAR = 100;
+    const PIXELS_PER_YEAR = 2.5;
 
     const selects = [
       document.getElementById('select-col-1'),
@@ -361,7 +383,16 @@
       document.getElementById('select-col-5')
     ];
 
-    const rowsContainer = document.getElementById('timeline-rows-container');
+    const tracks = [
+      document.getElementById('track-1'),
+      document.getElementById('track-2'),
+      document.getElementById('track-3'),
+      document.getElementById('track-4'),
+      document.getElementById('track-5')
+    ];
+
+    const yearTrack = document.getElementById('year-track');
+    const canvas = document.getElementById('timeline-canvas');
     const scrubberRail = document.getElementById('scrubber-rail');
     const scrubIndicator = document.getElementById('scrub-indicator');
 
@@ -369,9 +400,10 @@
       try {
         const response = await fetch('timeline.json');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        rawTimelineData = await response.json();
+        erasData = await response.json();
 
-        generate10YearGrid();
+        setupCanvasHeight();
+        renderYearAxis();
         renderTimeline();
         buildScrubberRail();
         setupTouchScrubber();
@@ -380,99 +412,95 @@
       }
     }
 
-    function generate10YearGrid() {
-      const dataMap = new Map();
-      rawTimelineData.forEach(item => dataMap.set(item.yearNum, item));
+    function getYearOffset(year) {
+      // Calculates pixel position from -4000 start point
+      return (year - START_YEAR) * PIXELS_PER_YEAR;
+    }
 
-      generated10YrData = [];
+    function setupCanvasHeight() {
+      const totalYears = END_YEAR - START_YEAR;
+      const totalHeight = totalYears * PIXELS_PER_YEAR;
+      canvas.style.height = `${totalHeight}px`;
+    }
 
-      for (let y = -4000; y <= 100; y += 10) {
+    function renderYearAxis() {
+      yearTrack.innerHTML = '';
+      for (let y = START_YEAR; y <= END_YEAR; y += 10) {
         if (y === 0) continue;
 
-        const existing = dataMap.get(y);
-        const elemId = `year-${y < 0 ? Math.abs(y) + 'bc' : y + 'ad'}`;
+        const marker = document.createElement('div');
+        marker.className = 'year-marker';
+        marker.style.top = `${getYearOffset(y)}px`;
 
-        if (existing) {
-          generated10YrData.push({
-            ...existing,
-            id: existing.id || elemId,
-            yearNum: y
-          });
+        const absYear = Math.abs(y);
+        marker.textContent = absYear;
+
+        if (absYear % 100 === 0) {
+          marker.classList.add('major');
         } else {
-          generated10YrData.push({
-            yearNum: y,
-            id: elemId,
-            columns: { "books": [], "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] }
-          });
+          marker.classList.add('decade');
         }
 
-        // Force a row for '0' right after -10
-        if (y === -10) {
-          const year1Data = dataMap.get(1);
-          generated10YrData.push({
-            yearNum: 0,
-            id: "year-0",
-            columns: year1Data ? year1Data.columns : { "books": [], "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] }
-          });
-        }
+        yearTrack.appendChild(marker);
       }
     }
 
     function renderTimeline() {
-      const keys = selects.map(s => s.value);
-      rowsContainer.innerHTML = '';
+      // Clear current data tracks
+      tracks.forEach(track => track.innerHTML = '');
 
-      generated10YrData.forEach(row => {
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'timeline-row';
+      // Flatten items from JSON eras
+      const allEvents = {
+        'books': [],
+        'kings-judah': [],
+        'kings-israel': [],
+        'prophets': [],
+        'empires': []
+      };
 
-        // 1. Render Left Sticky Year Cell
-        const yearCell = document.createElement('div');
-        yearCell.className = 'timeline-cell year-cell';
-        if (row.id) yearCell.id = row.id;
-
-        const displayNum = Math.abs(row.yearNum);
-        yearCell.textContent = displayNum;
-
-        // Major vs Decade styling logic
-        if (displayNum % 100 === 0) {
-          yearCell.classList.add('major');
-        } else {
-          yearCell.classList.add('decade');
-        }
-
-        rowDiv.appendChild(yearCell);
-
-        // 2. Render Data Cells for active category slots
-        keys.forEach((key, index) => {
-          const cell = document.createElement('div');
-          cell.className = `timeline-cell col-slot-${index + 1}`;
-          renderCards(cell, row.columns[key] || []);
-          rowDiv.appendChild(cell);
+      erasData.forEach(era => {
+        Object.keys(allEvents).forEach(cat => {
+          if (era.columns && era.columns[cat]) {
+            allEvents[cat].push(...era.columns[cat]);
+          }
         });
-
-        rowsContainer.appendChild(rowDiv);
       });
-    }
 
-    function renderCards(containerCell, events) {
-      if (!events || events.length === 0) return;
+      // Render cards to active tracks
+      selects.forEach((select, slotIndex) => {
+        const catKey = select.value;
+        const targetTrack = tracks[slotIndex];
+        const events = allEvents[catKey] || [];
 
-      events.forEach(event => {
-        const card = document.createElement('div');
-        card.className = `event-card ${event.type || ''}`;
+        events.forEach(event => {
+          const block = document.createElement('div');
+          
+          // Determine color classification class
+          let styleClass = event.type || 'book';
+          if (event.classification) {
+            styleClass = event.classification; // 'good', 'bad', 'evil'
+          }
+          block.className = `event-block ${styleClass}`;
 
-        const title = document.createElement('div');
-        title.className = 'title';
-        title.textContent = event.title;
+          const topPos = getYearOffset(event.startYear);
+          const duration = Math.max(1, event.endYear - event.startYear);
+          const blockHeight = Math.max(24, duration * PIXELS_PER_YEAR); // Minimum height for readability
 
-        const subtitle = document.createElement('div');
-        subtitle.className = 'subtitle';
-        subtitle.textContent = event.subtitle;
+          block.style.top = `${topPos}px`;
+          block.style.height = `${blockHeight}px`;
 
-        card.appendChild(title);
-        card.appendChild(subtitle);
-        containerCell.appendChild(card);
+          const title = document.createElement('div');
+          title.className = 'title';
+          title.textContent = event.title;
+
+          const subtitle = document.createElement('div');
+          subtitle.className = 'subtitle';
+          subtitle.textContent = event.subtitle;
+
+          block.appendChild(title);
+          block.appendChild(subtitle);
+          targetTrack.appendChild(block);
+        });
       });
     }
 
@@ -487,7 +515,7 @@
         [0, "0"]
       ]);
 
-      for (let y = -4000; y <= 100; y += 100) {
+      for (let y = START_YEAR; y <= END_YEAR; y += 100) {
         const tickKey = (y === 0) ? 0 : y;
         const tick = document.createElement('div');
         tick.className = 'scrub-tick';
