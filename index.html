@@ -37,7 +37,7 @@
       touch-action: pan-y;
     }
 
-    /* --- Top Controls Toolbar (Sticky) --- */
+    /* --- Top Controls Toolbar --- */
     .toolbar {
       position: sticky;
       top: 0;
@@ -64,13 +64,13 @@
       grid-template-columns: var(--col-year-width) repeat(2, 1fr);
       min-width: 100%;
       position: relative;
-      padding-right: 28px; /* Room for touch scrubber rail */
+      padding-right: 28px;
     }
 
-    /* --- Column Selector Headers (Sticky) --- */
+    /* --- Column Selector Headers --- */
     .col-header {
       position: sticky;
-      top: 45px; /* Directly below simplified toolbar */
+      top: 45px;
       z-index: 90;
       background-color: var(--card-bg);
       border-bottom: 2px solid var(--border-color);
@@ -135,7 +135,6 @@
       scroll-margin-top: 100px;
     }
 
-    /* Subtle dot indicator for quiet 10-year rows */
     .timeline-cell:empty::after {
       content: "";
       width: 3px;
@@ -165,11 +164,11 @@
     .event-card.patriarch { border-left-color: #10b981; }
     .event-card.empire { border-left-color: #f97316; }
 
-    /* --- Dynamic Full-Height Scrubber Rail --- */
+    /* --- Clean Scrubber Rail --- */
     .scrubber-rail {
       position: fixed;
       right: 0;
-      top: 94px; /* Below sticky header stack */
+      top: 94px;
       bottom: 0;
       width: 28px;
       z-index: 200;
@@ -194,26 +193,21 @@
       cursor: pointer;
     }
 
-    .scrub-tick::before {
+    /* Small tick line for intermediate 100-year steps */
+    .scrub-tick.intermediate::before {
       content: "";
       width: 6px;
       height: 1px;
       background-color: var(--border-color);
     }
 
-    .scrub-tick.major::before {
-      width: 12px;
-      height: 2px;
-      background-color: var(--accent-gold);
-    }
-
+    /* Clean text display for major milestones (no background tick line) */
     .scrub-label {
-      position: absolute;
-      right: 14px;
-      font-size: 0.6rem;
+      font-size: 0.65rem;
       font-weight: 700;
       color: var(--accent-gold);
       pointer-events: none;
+      line-height: 1;
     }
 
     .scrub-indicator {
@@ -231,7 +225,7 @@
 </head>
 <body>
 
-  <!-- Simplified Top Toolbar -->
+  <!-- Top Toolbar -->
   <header class="toolbar">
     <span class="toolbar-title">Bible Timeline</span>
   </header>
@@ -301,7 +295,17 @@
         if (y === 0) continue;
 
         const existing = dataMap.get(y);
-        const yearLabel = y < 0 ? `${Math.abs(y)} B.C.` : `${y} A.D.`;
+        
+        // Displays "0" explicitly at 1 A.D. for the timeline axis
+        let yearLabel = "";
+        if (y === 1) {
+          yearLabel = "0";
+        } else if (y < 0) {
+          yearLabel = `${Math.abs(y)} B.C.`;
+        } else {
+          yearLabel = `${y} A.D.`;
+        }
+
         const elemId = `year-${y < 0 ? Math.abs(y) + 'bc' : y + 'ad'}`;
 
         if (existing) {
@@ -338,7 +342,9 @@
         
         const hasContent = (row.columns[key1] && row.columns[key1].length > 0) || 
                            (row.columns[key2] && row.columns[key2].length > 0);
-        if (row.yearNum % 50 === 0 || hasContent) {
+        
+        // Always force rendering "0" at 1 A.D.
+        if (row.yearNum === 1 || row.yearNum % 50 === 0 || hasContent) {
           yearCell.textContent = row.year;
         }
 
@@ -382,13 +388,13 @@
     function buildScrubberRail() {
       scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
 
+      // Major milestones map: 4k, 3k, 2k, 1k, 0
       const majorMilestones = new Map([
         [-4000, "4k"],
         [-3000, "3k"],
         [-2000, "2k"],
         [-1000, "1k"],
-        [1, "1"],
-        [100, "100"]
+        [1, "0"]
       ]);
 
       for (let y = -4000; y <= 100; y += 100) {
@@ -396,11 +402,14 @@
         tick.className = 'scrub-tick';
 
         if (majorMilestones.has(y)) {
-          tick.classList.add('major');
+          // Clean text-only label (no dash)
           const label = document.createElement('span');
           label.className = 'scrub-label';
           label.textContent = majorMilestones.get(y);
           tick.appendChild(label);
+        } else {
+          // Intermediate tick line for 100-year steps (including the tick after 0 at 100 A.D.)
+          tick.classList.add('intermediate');
         }
 
         scrubberRail.appendChild(tick);
