@@ -1,4 +1,185 @@
 [
+  {
+    "id": "rehoboam",
+    "title": "Rehoboam",
+    "subtitle": "1 Kings 12–14 | 17 yrs",
+    "startYear": -931,
+    "endYear": -913,
+    "classification": "bad",
+    "description": "Son of Solomon; rejected elders' advice causing the 10 northern tribes to rebel under Jeroboam."
+  },
+  {
+    "id": "abijam",
+    "title": "Abijah (Abijam)",
+    "subtitle": "1 Kings 15 | 3 yrs",
+    "startYear": -913,
+    "endYear": -911,
+    "classification": "bad",
+    "description": "Fought against Jeroboam of Israel; won a major battle through divine intervention despite personal shortcomings."
+  },
+  {
+    "id": "asa",
+    "title": "Asa",
+    "subtitle": "1 Kings 15 | 41 yrs",
+    "startYear": -911,
+    "endYear": -870,
+    "classification": "good",
+    "description": "A godly reformer who removed idols and defeated the Ethiopian army; relied on Syria later in life."
+  },
+  {
+    "id": "jehoshaphat",
+    "title": "Jehoshaphat",
+    "subtitle": "1 Kings 22 | 25 yrs",
+    "startYear": -873,
+    "endYear": -848,
+    "classification": "good",
+    "description": "Sent teachers with God's Law throughout Judah; made an unwise military alliance with Ahab."
+  },
+  {
+    "id": "jehoram-judah",
+    "title": "Jehoram",
+    "subtitle": "2 Kings 8 | 8 yrs",
+    "startYear": -853,
+    "endYear": -841,
+    "classification": "evil",
+    "description": "Married Athaliah, Ahab's daughter; introduced Baal worship to Judah and murdered his brothers."
+  },
+  {
+    "id": "ahaziah-judah",
+    "title": "Ahaziah",
+    "subtitle": "2 Kings 8 | 1 yr",
+    "startYear": -841,
+    "endYear": -841,
+    "classification": "evil",
+    "description": "Followed the house of Ahab; killed by Jehu while visiting King Joram of Israel."
+  },
+  {
+    "id": "athaliah",
+    "title": "Athaliah (Queen)",
+    "subtitle": "2 Kings 11 | 6 yrs",
+    "startYear": -841,
+    "endYear": -835,
+    "classification": "evil",
+    "description": "Usurped the throne after her son's death and attempted to exterminate the royal line of David."
+  },
+  {
+    "id": "joash-judah",
+    "title": "Joash (Jehoash)",
+    "subtitle": "2 Kings 12 | 40 yrs",
+    "startYear": -835,
+    "endYear": -796,
+    "classification": "good",
+    "description": "Hidden as a child by Jehoiada the priest; repaired the Temple, but lapsed after Jehoiada died."
+  },
+  {
+    "id": "amaziah",
+    "title": "Amaziah",
+    "subtitle": "2 Kings 14 | 29 yrs",
+    "startYear": -796,
+    "endYear": -767,
+    "classification": "good",
+    "description": "Defeated Edom; grew proud and challenged Northern Israel to war, resulting in Jerusalem's wall being breached."
+  },
+  {
+    "id": "uzziah",
+    "title": "Uzziah (Azariah)",
+    "subtitle": "2 Chronicles 26 | 52 yrs",
+    "startYear": -790,
+    "endYear": -739,
+    "classification": "good",
+    "description": "Strengthened Judah militarily and economically; struck with leprosy for arrogantly burning incense in the Temple."
+  },
+  {
+    "id": "jotham",
+    "title": "Jotham",
+    "subtitle": "2 Kings 15 | 16 yrs",
+    "startYear": -750,
+    "endYear": -731,
+    "classification": "good",
+    "description": "Rebuilt the Upper Gate of the Temple and fortified Judah; served as co-regent during Uzziah's leprosy."
+  },
+  {
+    "id": "ahaz",
+    "title": "Ahaz",
+    "subtitle": "2 Kings 16 | 16 yrs",
+    "startYear": -735,
+    "endYear": -715,
+    "classification": "evil",
+    "description": "Practiced child sacrifice, closed the Temple doors, and paid Assyria for protection against Israel and Syria."
+  },
+  {
+    "id": "hezekiah",
+    "title": "Hezekiah",
+    "subtitle": "2 Kings 18–20 | 29 yrs",
+    "startYear": -729,
+    "endYear": -695,
+    "classification": "good",
+    "description": "Judah's greatest reformer; destroyed the high places, built Hezekiah's Tunnel, and prayed as God destroyed Assyria's siege."
+  },
+  {
+    "id": "manasseh",
+    "title": "Manasseh",
+    "subtitle": "2 Kings 21 | 55 yrs",
+    "startYear": -695,
+    "endYear": -642,
+    "classification": "evil",
+    "description": "Judah's longest-reigning and most wicked king; shed innocent blood, but repented late in life while captive in Babylon."
+  },
+  {
+    "id": "amon",
+    "title": "Amon",
+    "subtitle": "2 Kings 21 | 2 yrs",
+    "startYear": -642,
+    "endYear": -640,
+    "classification": "evil",
+    "description": "Continued Manasseh's idolatrous practices without repenting; assassinated by his own servants."
+  },
+  {
+    "id": "josiah",
+    "title": "Josiah",
+    "subtitle": "2 Kings 22–23 | 31 yrs",
+    "startYear": -640,
+    "endYear": -609,
+    "classification": "good",
+    "description": "Boy king who discovered the Book of the Law, purged idol worship, and celebrated Passover; killed fighting Egypt at Megiddo."
+  },
+  {
+    "id": "jehoahaz-judah",
+    "title": "Jehoahaz",
+    "subtitle": "2 Kings 23 | 3 months",
+    "startYear": -609,
+    "endYear": -609,
+    "classification": "evil",
+    "description": "Ruled 3 months before Pharaoh Necho deposed him and took him in chains to Egypt where he died."
+  },
+  {
+    "id": "jehoiakim",
+    "title": "Jehoiakim",
+    "subtitle": "2 Kings 23–24 | 11 yrs",
+    "startYear": -609,
+    "endYear": -597,
+    "classification": "evil",
+    "description": "Placed on throne by Egypt; burned Jeremiah's prophetic scroll; experienced Nebuchadnezzar's first siege (605 BC)."
+  },
+  {
+    "id": "jehoiachin",
+    "title": "Jehoiachin",
+    "subtitle": "2 Kings 24 | 3 months",
+    "startYear": -597,
+    "endYear": -597,
+    "classification": "evil",
+    "description": "Surrendered to Nebuchadnezzar and was carried captive to Babylon along with Ezekiel and Judah's nobility."
+  },
+  {
+    "id": "zedekiah",
+    "title": "Zedekiah",
+    "subtitle": "2 Kings 24–25 | 11 yrs",
+    "startYear": -597,
+    "endYear": -586,
+    "classification": "evil",
+    "description": "Judah's final king; rebelled against Babylon resulting in the destruction of Jerusalem and Solomonic Temple in 586 BC."
+  }
+][
   { "title": "Saul", "subtitle": "1 Sa 9–31 • United Kingdom", "startYear": -1051, "endYear": -1011, "type": "king-judah", "classification": "bad" },
   { "title": "David", "subtitle": "1 Sa 16–1 Ki 2 • United Kingdom", "startYear": -1011, "endYear": -971, "type": "king-judah", "classification": "good" },
   { "title": "Solomon", "subtitle": "1 Ki 1–11 • United Kingdom", "startYear": -971, "endYear": -931, "type": "king-judah", "classification": "good" },
