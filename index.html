@@ -198,6 +198,7 @@
     .year-marker.century { font-size: 0.78rem; font-weight: 700; color: #ffffff; }
     .year-marker.millennium { font-size: 0.92rem; font-weight: 900; color: var(--accent-gold); }
 
+    /* --- Horizontal Grid Lines --- */
     .grid-line {
       position: absolute;
       left: 0;
@@ -206,6 +207,7 @@
       z-index: 5;
     }
 
+    .grid-line.annual { border-top: 1px dotted rgba(100, 116, 139, 0.15); z-index: 4; }
     .grid-line.decade { border-top: 1px dashed rgba(100, 116, 139, 0.2); }
     .grid-line.century { border-top: 1px solid rgba(255, 255, 255, 0.35); }
     .grid-line.millennium { border-top: 2px solid var(--accent-gold); z-index: 6; }
@@ -383,7 +385,6 @@
   <header class="toolbar">
     <span class="toolbar-title">Bible Timeline</span>
 
-    <!-- Desktop & Mobile Zoom Control Pill -->
     <div class="zoom-controls">
       <button class="zoom-btn" id="btn-zoom-out" title="Zoom Out (−)">−</button>
       <span class="zoom-level-text" id="zoom-level-text">1.0×</span>
@@ -469,11 +470,10 @@
     const START_YEAR = -4000;
     const END_YEAR = 100;
     
-    // Dynamic Zoom Bounds
-    const BASE_PIXELS_PER_YEAR = 2.5; // Default 1.0x Scale
+    const BASE_PIXELS_PER_YEAR = 2.5; 
     let pixelsPerYear = BASE_PIXELS_PER_YEAR;
-    const MIN_PIXELS_PER_YEAR = 0.5;  // Zoomed Out Max (0.2x)
-    const MAX_PIXELS_PER_YEAR = 15.0; // Zoomed In Max (6.0x)
+    const MIN_PIXELS_PER_YEAR = 0.5;  
+    const MAX_PIXELS_PER_YEAR = 15.0; 
 
     const CANVAS_PADDING_TOP = 30;
 
@@ -528,22 +528,17 @@
     }
 
     function setZoom(newScaleFactor) {
-      // 1. Calculate historical year at center of current viewport before scale shift
       const currentScrollY = window.scrollY;
       const centerViewportY = currentScrollY + (window.innerHeight / 2);
       const yearAtCenter = START_YEAR + ((centerViewportY - CANVAS_PADDING_TOP) / pixelsPerYear);
 
-      // 2. Clamp scale within boundaries
       pixelsPerYear = Math.max(MIN_PIXELS_PER_YEAR, Math.min(MAX_PIXELS_PER_YEAR, newScaleFactor));
 
-      // 3. Update Zoom UI Pill
       const multiplier = (pixelsPerYear / BASE_PIXELS_PER_YEAR).toFixed(1);
       zoomLevelText.textContent = `${multiplier}×`;
 
-      // 4. Re-render timeline canvas
       rebuildCanvasLayout();
 
-      // 5. Restore scroll position so user remains anchored to the same year!
       const newCenterViewportY = CANVAS_PADDING_TOP + ((yearAtCenter - START_YEAR) * pixelsPerYear);
       const newScrollY = newCenterViewportY - (window.innerHeight / 2);
       window.scrollTo({ top: newScrollY, behavior: 'instant' });
@@ -553,10 +548,8 @@
       btnZoomIn.addEventListener('click', () => setZoom(pixelsPerYear * 1.3));
       btnZoomOut.addEventListener('click', () => setZoom(pixelsPerYear / 1.3));
 
-      // Reset Zoom on double click text
       zoomLevelText.addEventListener('dblclick', () => setZoom(BASE_PIXELS_PER_YEAR));
 
-      // Desktop Ctrl + Wheel or Trackpad Pinch
       window.addEventListener('wheel', (e) => {
         if (e.ctrlKey || e.metaKey) {
           e.preventDefault();
@@ -565,7 +558,6 @@
         }
       }, { passive: false });
 
-      // Mobile Touchscreen Pinch-to-Zoom
       let initialTouchDistance = null;
       let initialZoom = pixelsPerYear;
 
@@ -622,35 +614,45 @@
       yearTrack.innerHTML = '';
       canvas.querySelectorAll('.grid-line').forEach(l => l.remove());
 
-      for (let y = START_YEAR; y <= END_YEAR; y += 10) {
+      const showDecades = pixelsPerYear >= 1.5; // Hide 10-yr decades when zoomed out
+      const showAnnuals = pixelsPerYear > 6.0;  // Show 1-yr lines when zoomed in
+
+      for (let y = START_YEAR; y <= END_YEAR; y++) {
         if (y === 0) continue;
 
         const absYear = Math.abs(y);
         const topPos = getYearOffset(y);
 
-        const marker = document.createElement('div');
-        marker.className = 'year-marker';
-        marker.style.top = `${topPos}px`;
-        marker.textContent = absYear;
-
-        const gridLine = document.createElement('div');
-        gridLine.className = 'grid-line';
-        gridLine.style.top = `${topPos}px`;
-
         if (absYear % 1000 === 0) {
-          marker.classList.add('millennium');
-          gridLine.classList.add('millennium');
+          addMarkerAndLine(topPos, absYear, 'millennium');
         } else if (absYear % 100 === 0) {
-          marker.classList.add('century');
-          gridLine.classList.add('century');
-        } else {
-          marker.classList.add('decade');
-          gridLine.classList.add('decade');
+          addMarkerAndLine(topPos, absYear, 'century');
+        } else if (absYear % 10 === 0) {
+          if (showDecades) {
+            addMarkerAndLine(topPos, absYear, 'decade');
+          }
+        } else if (showAnnuals) {
+          // 1-Year Micro Grid Line (No Text Label)
+          const gridLine = document.createElement('div');
+          gridLine.className = 'grid-line annual';
+          gridLine.style.top = `${topPos}px`;
+          canvas.appendChild(gridLine);
         }
-
-        yearTrack.appendChild(marker);
-        canvas.appendChild(gridLine);
       }
+    }
+
+    function addMarkerAndLine(topPos, labelText, typeClass) {
+      const marker = document.createElement('div');
+      marker.className = `year-marker ${typeClass}`;
+      marker.style.top = `${topPos}px`;
+      marker.textContent = labelText;
+
+      const gridLine = document.createElement('div');
+      gridLine.className = `grid-line ${typeClass}`;
+      gridLine.style.top = `${topPos}px`;
+
+      yearTrack.appendChild(marker);
+      canvas.appendChild(gridLine);
     }
 
     function updateDropdownOptionsUI() {
