@@ -1,26 +1,173 @@
 [
-  { "title": "Saul", "subtitle": "1 Sa 9–31 • United Kingdom", "startYear": -1051, "endYear": -1011, "type": "king-israel", "classification": "bad" },
-  { "title": "David", "subtitle": "1 Sa 16–1 Ki 2 • United Kingdom", "startYear": -1011, "endYear": -971, "type": "king-israel", "classification": "good" },
-  { "title": "Ish-bosheth", "subtitle": "2 Sa 2–4 • Contested Reign", "startYear": -1006, "endYear": -1004, "type": "king-israel", "classification": "bad" },
-  { "title": "Solomon", "subtitle": "1 Ki 1–11 • United Kingdom", "startYear": -971, "endYear": -931, "type": "king-israel", "classification": "good" },
-  { "title": "Jeroboam I", "subtitle": "1 Ki 11:26–14:20 • Evil King", "startYear": -930, "endYear": -910, "type": "king-israel", "classification": "evil" },
-  { "title": "Nadab", "subtitle": "1 Ki 15:25-32 • Evil King", "startYear": -910, "endYear": -909, "type": "king-israel", "classification": "evil" },
-  { "title": "Baasha", "subtitle": "1 Ki 15:27-34 • Evil King", "startYear": -909, "endYear": -886, "type": "king-israel", "classification": "evil" },
-  { "title": "Elah", "subtitle": "1 Ki 16:8-14 • Evil King", "startYear": -886, "endYear": -885, "type": "king-israel", "classification": "evil" },
-  { "title": "Zimri", "subtitle": "1 Ki 16:15-20 • Evil King (7 Days)", "startYear": -885, "endYear": -885, "type": "king-israel", "classification": "evil" },
-  { "title": "Tibni", "subtitle": "1 Ki 16:21-22 • Throne Contested", "startYear": -885, "endYear": -880, "type": "king-israel", "classification": "bad" },
-  { "title": "Omri", "subtitle": "1 Ki 16:15-28 • Evil King", "startYear": -885, "endYear": -874, "type": "king-israel", "classification": "evil" },
-  { "title": "Ahab", "subtitle": "1 Ki 16:20–22:40 • Evil King", "startYear": -874, "endYear": -853, "type": "king-israel", "classification": "evil" },
-  { "title": "Ahaziah", "subtitle": "1 Ki 22:51–2 Ki 1 • Evil King", "startYear": -853, "endYear": -852, "type": "king-israel", "classification": "evil" },
-  { "title": "Joram", "subtitle": "2 Ki 3:1-3 • Bad King", "startYear": -852, "endYear": -841, "type": "king-israel", "classification": "bad" },
-  { "title": "Jehu", "subtitle": "2 Ki 9–10 • Bad King", "startYear": -841, "endYear": -814, "type": "king-israel", "classification": "bad" },
-  { "title": "Jehoahaz", "subtitle": "2 Ki 13:1-9 • Evil King", "startYear": -814, "endYear": -798, "type": "king-israel", "classification": "evil" },
-  { "title": "Jehoash", "subtitle": "2 Ki 13:10-13 • Evil King", "startYear": -798, "endYear": -782, "type": "king-israel", "classification": "evil" },
-  { "title": "Jeroboam II", "subtitle": "2 Ki 14:23-29 • Evil King", "startYear": -793, "endYear": -753, "type": "king-israel", "classification": "evil" },
-  { "title": "Zechariah", "subtitle": "2 Ki 15:8-12 • Evil King", "startYear": -753, "endYear": -752, "type": "king-israel", "classification": "evil" },
-  { "title": "Shallum", "subtitle": "2 Ki 15:13-16 • Evil King", "startYear": -752, "endYear": -752, "type": "king-israel", "classification": "evil" },
-  { "title": "Menahem", "subtitle": "2 Ki 15:17-22 • Evil King", "startYear": -752, "endYear": -742, "type": "king-israel", "classification": "evil" },
-  { "title": "Pekahiah", "subtitle": "2 Ki 15:23-26 • Evil King", "startYear": -742, "endYear": -740, "type": "king-israel", "classification": "evil" },
-  { "title": "Pekah", "subtitle": "2 Ki 15:27-31 • Evil King", "startYear": -752, "endYear": -732, "type": "king-israel", "classification": "evil" },
-  { "title": "Hoshea", "subtitle": "2 Ki 17:1-6 • Evil King", "startYear": -732, "endYear": -722, "type": "king-israel", "classification": "evil" }
+  {
+    "id": "jeroboam-1",
+    "title": "Jeroboam I",
+    "subtitle": "1 Kings 12–14 | 22 yrs",
+    "startYear": -931,
+    "endYear": -910,
+    "classification": "evil",
+    "description": "First king of Northern Israel; set up golden calves at Dan and Bethel to prevent worship in Jerusalem."
+  },
+  {
+    "id": "nadab",
+    "title": "Nadab",
+    "subtitle": "1 Kings 15 | 2 yrs",
+    "startYear": -910,
+    "endYear": -909,
+    "classification": "evil",
+    "description": "Son of Jeroboam I; assassinated by Baasha while besieging the Philistine town of Gibbethon."
+  },
+  {
+    "id": "baasha",
+    "title": "Baasha",
+    "subtitle": "1 Kings 15–16 | 24 yrs",
+    "startYear": -909,
+    "endYear": -886,
+    "classification": "evil",
+    "description": "Wiped out Jeroboam's family; built Ramah to blockade Judah until King Asa bought Syrian aid."
+  },
+  {
+    "id": "elah",
+    "title": "Elah",
+    "subtitle": "1 Kings 16 | 2 yrs",
+    "startYear": -886,
+    "endYear": -885,
+    "classification": "evil",
+    "description": "Son of Baasha; assassinated while drunk by Zimri, commander of half his chariot force."
+  },
+  {
+    "id": "zimri",
+    "title": "Zimri",
+    "subtitle": "1 Kings 16 | 7 days",
+    "startYear": -885,
+    "endYear": -885,
+    "classification": "evil",
+    "description": "Shortest reign in Israel; burned the royal palace down around himself when Omri besieged Tirzah."
+  },
+  {
+    "id": "omri",
+    "title": "Omri",
+    "subtitle": "1 Kings 16 | 12 yrs",
+    "startYear": -885,
+    "endYear": -874,
+    "classification": "evil",
+    "description": "Powerful military commander; established Samaria as capital of Northern Israel."
+  },
+  {
+    "id": "ahab",
+    "title": "Ahab",
+    "subtitle": "1 Kings 16–22 | 22 yrs",
+    "startYear": -874,
+    "endYear": -853,
+    "classification": "evil",
+    "description": "Married Jezebel; made Baal state religion; opposed Elijah at Mt. Carmel; killed by random arrow at Ramoth-gilead."
+  },
+  {
+    "id": "ahaziah-israel",
+    "title": "Ahaziah",
+    "subtitle": "1 Kings 22 / 2 Kings 1 | 2 yrs",
+    "startYear": -853,
+    "endYear": -852,
+    "classification": "evil",
+    "description": "Fell through lattice in Samaria; consulted Baal-zebub; rebuked by Elijah."
+  },
+  {
+    "id": "jehoram-israel",
+    "title": "Joram (Jehoram)",
+    "subtitle": "2 Kings 3–9 | 12 yrs",
+    "startYear": -852,
+    "endYear": -841,
+    "classification": "evil",
+    "description": "Fought Moab with Jehoshaphat; witnessed Elisha's ministry; assassinated by Jehu."
+  },
+  {
+    "id": "jehu",
+    "title": "Jehu",
+    "subtitle": "2 Kings 9–10 | 28 yrs",
+    "startYear": -841,
+    "endYear": -814,
+    "classification": "bad",
+    "description": "Anointed by Elisha's messenger; executed Ahab's family and destroyed Baal worship, but kept Jeroboam's calf shrines."
+  },
+  {
+    "id": "jehoahaz-israel",
+    "title": "Jehoahaz",
+    "subtitle": "2 Kings 13 | 17 yrs",
+    "startYear": -814,
+    "endYear": -798,
+    "classification": "evil",
+    "description": "Suffered severe military defeat under Hazael of Syria; prayed to God who provided temporary relief."
+  },
+  {
+    "id": "jehoash-israel",
+    "title": "Jehoash (Joash)",
+    "subtitle": "2 Kings 13–14 | 16 yrs",
+    "startYear": -798,
+    "endYear": -782,
+    "classification": "evil",
+    "description": "Visited Elisha on his deathbed; defeated Amaziah of Judah and breached Jerusalem's wall."
+  },
+  {
+    "id": "jeroboam-2",
+    "title": "Jeroboam II",
+    "subtitle": "2 Kings 14 | 41 yrs",
+    "startYear": -793,
+    "endYear": -753,
+    "classification": "bad",
+    "description": "Longest-reigning northern king; expanded Israel's borders to peak prosperity, but condemned by Amos for social injustice."
+  },
+  {
+    "id": "zechariah-israel",
+    "title": "Zechariah",
+    "subtitle": "2 Kings 15 | 6 months",
+    "startYear": -753,
+    "endYear": -753,
+    "classification": "evil",
+    "description": "Last of Jehu's dynasty; publicly assassinated by Shallum."
+  },
+  {
+    "id": "shallum",
+    "title": "Shallum",
+    "subtitle": "2 Kings 15 | 1 month",
+    "startYear": -753,
+    "endYear": -753,
+    "classification": "evil",
+    "description": "Reigned one month in Samaria before being overthrown and killed by Menahem."
+  },
+  {
+    "id": "menahem",
+    "title": "Menahem",
+    "subtitle": "2 Kings 15 | 10 yrs",
+    "startYear": -752,
+    "endYear": -742,
+    "classification": "evil",
+    "description": "Brutal usurper who paid heavy tribute to Pul (Tiglath-Pileser III) of Assyria by taxing wealthy Israelites."
+  },
+  {
+    "id": "pekahiah",
+    "title": "Pekahiah",
+    "subtitle": "2 Kings 15 | 2 yrs",
+    "startYear": -742,
+    "endYear": -740,
+    "classification": "evil",
+    "description": "Son of Menahem; assassinated in Samaria citadel by his army officer Pekah."
+  },
+  {
+    "id": "pekah",
+    "title": "Pekah",
+    "subtitle": "2 Kings 15–16 | 20 yrs",
+    "startYear": -740,
+    "endYear": -732,
+    "classification": "evil",
+    "description": "Allied with Syria against Judah (Syro-Ephraimite War); lost Galilee and Gilead to Assyria; assassinated by Hoshea."
+  },
+  {
+    "id": "hoshea",
+    "title": "Hoshea",
+    "subtitle": "2 Kings 17 | 9 yrs",
+    "startYear": -732,
+    "endYear": -722,
+    "classification": "evil",
+    "description": "Last king of Israel; stopped paying tribute to Assyria and sought Egyptian aid, leading to Samaria's fall and Northern Exile in 722 BC."
+  }
 ]
