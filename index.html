@@ -19,6 +19,7 @@
       --col-year-width: 68px;
       --scrubber-width: 28px;
       --canvas-top-padding: 30px;
+      --active-cols: 1;
     }
 
     * {
@@ -116,21 +117,13 @@
       user-select: none;
     }
 
-    /* --- Responsive Timeline Canvas Grid --- */
+    /* --- Dynamic Grid Layout --- */
     .timeline-container {
       display: grid;
-      grid-template-columns: var(--col-year-width) repeat(2, 1fr);
+      grid-template-columns: var(--col-year-width) repeat(var(--active-cols), 1fr);
       min-width: 100%;
       position: relative;
-      padding-right: var(--scrubber-width);
-    }
-
-    @media (min-width: 768px) {
-      .timeline-container { grid-template-columns: var(--col-year-width) repeat(3, 1fr); }
-    }
-
-    @media (min-width: 1100px) {
-      .timeline-container { grid-template-columns: var(--col-year-width) repeat(5, 1fr); }
+      padding-right: calc(var(--scrubber-width) + 12px);
     }
 
     /* --- Column Selector Headers --- */
@@ -141,10 +134,10 @@
       background-color: var(--card-bg);
       border-bottom: 2px solid var(--border-color);
       border-right: 1px solid var(--border-color);
-      padding: 10px 6px;
+      padding: 8px 6px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 4px;
     }
 
     .col-header.year-header {
@@ -155,16 +148,7 @@
       font-size: 0.75rem;
       color: var(--text-muted);
       text-transform: uppercase;
-    }
-
-    .col-header.col-slot-3 { display: none; }
-    @media (min-width: 768px) { .col-header.col-slot-3 { display: flex; } }
-
-    .col-header.col-slot-4,
-    .col-header.col-slot-5 { display: none; }
-    @media (min-width: 1100px) { 
-      .col-header.col-slot-4,
-      .col-header.col-slot-5 { display: flex; } 
+      justify-content: center;
     }
 
     .column-select {
@@ -179,6 +163,56 @@
       outline: none;
       cursor: pointer;
       text-overflow: ellipsis;
+    }
+
+    .remove-col-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+      border-radius: 4px;
+    }
+
+    .remove-col-btn:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* Add Column Button Floating Area */
+    .add-col-wrapper {
+      position: sticky;
+      top: 50px;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+    }
+
+    .add-col-btn {
+      background: var(--card-bg);
+      border: 1px dashed var(--accent-gold);
+      color: var(--accent-gold);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      height: 32px;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .add-col-btn:hover {
+      background: var(--accent-gold);
+      color: #000;
+      border-style: solid;
     }
 
     /* --- Continuous Map Canvas --- */
@@ -231,16 +265,6 @@
       position: relative;
       border-right: 1px solid var(--border-color);
       z-index: 10;
-    }
-
-    .data-track.col-slot-3 { display: none; }
-    @media (min-width: 768px) { .data-track.col-slot-3 { display: block; } }
-
-    .data-track.col-slot-4,
-    .data-track.col-slot-5 { display: none; }
-    @media (min-width: 1100px) { 
-      .data-track.col-slot-4,
-      .data-track.col-slot-5 { display: block; } 
     }
 
     /* --- Continuous Span Event Blocks --- */
@@ -302,7 +326,7 @@
 
     .event-block:hover { 
       z-index: 40 !important; 
-      transform: scale(1.03); 
+      transform: scale(1.02); 
       border-color: rgba(255, 255, 255, 0.4);
       box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     }
@@ -340,7 +364,7 @@
 
     .event-point:hover {
       z-index: 40 !important;
-      transform: scale(1.03);
+      transform: scale(1.02);
       background: rgba(30, 41, 59, 0.95);
     }
 
@@ -551,23 +575,21 @@
     <div class="scrub-indicator" id="scrub-indicator"></div>
   </div>
 
-  <main class="timeline-container">
+  <main class="timeline-container" id="timeline-container">
     <div class="col-header year-header">Year</div>
 
-    <!-- Simplified Select Shells (Populated dynamically via JS) -->
-    <div class="col-header col-slot-1"><select class="column-select" id="select-col-1"></select></div>
-    <div class="col-header col-slot-2"><select class="column-select" id="select-col-2"></select></div>
-    <div class="col-header col-slot-3"><select class="column-select" id="select-col-3"></select></div>
-    <div class="col-header col-slot-4"><select class="column-select" id="select-col-4"></select></div>
-    <div class="col-header col-slot-5"><select class="column-select" id="select-col-5"></select></div>
+    <!-- Dynamic Headers Container -->
+    <div id="headers-container" style="display: contents;"></div>
 
+    <!-- Plus Button Area -->
+    <div class="add-col-wrapper" id="add-col-wrapper">
+      <button class="add-col-btn" id="btn-add-col" title="Add Column">+ Add Column</button>
+    </div>
+
+    <!-- Continuous Canvas Container -->
     <div class="timeline-canvas" id="timeline-canvas">
       <div class="year-track" id="year-track"></div>
-      <div class="data-track col-slot-1" id="track-1"></div>
-      <div class="data-track col-slot-2" id="track-2"></div>
-      <div class="data-track col-slot-3" id="track-3"></div>
-      <div class="data-track col-slot-4" id="track-4"></div>
-      <div class="data-track col-slot-5" id="track-5"></div>
+      <div id="tracks-container" style="display: contents;"></div>
     </div>
   </main>
 
@@ -594,11 +616,10 @@
     let pixelsPerYear = BASE_PIXELS_PER_YEAR;
 
     const ZOOM_STEPS = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 7.5, 10.0, 15.0];
-    let currentStepIndex = 3; // Step index 3 corresponds to 1.0x
+    let currentStepIndex = 3;
 
     const CANVAS_PADDING_TOP = 30;
 
-    // SINGLE SOURCE OF TRUTH: Add or edit categories here only!
     const CATEGORIES = {
       'books-narrative': 'Bible: Narrative Arc',
       'books-writings': 'Bible: Poetry, Wisdom & Epistles',
@@ -609,21 +630,14 @@
       'empires': 'Rulers & Empires'
     };
 
-    const selects = [
-      document.getElementById('select-col-1'),
-      document.getElementById('select-col-2'),
-      document.getElementById('select-col-3'),
-      document.getElementById('select-col-4'),
-      document.getElementById('select-col-5')
-    ];
+    // Active column state tracking
+    let activeColumns = ['books-narrative'];
 
-    const tracks = [
-      document.getElementById('track-1'),
-      document.getElementById('track-2'),
-      document.getElementById('track-3'),
-      document.getElementById('track-4'),
-      document.getElementById('track-5')
-    ];
+    const container = document.getElementById('timeline-container');
+    const headersContainer = document.getElementById('headers-container');
+    const tracksContainer = document.getElementById('tracks-container');
+    const btnAddCol = document.getElementById('btn-add-col');
+    const addColWrapper = document.getElementById('add-col-wrapper');
 
     const yearTrack = document.getElementById('year-track');
     const canvas = document.getElementById('timeline-canvas');
@@ -640,39 +654,110 @@
     const modalBody = document.getElementById('modal-body');
     const modalClose = document.getElementById('modal-close');
 
-    // Build options dynamically for all 5 column select dropdowns
-    function buildDropdowns() {
-      selects.forEach((select, index) => {
-        select.innerHTML = '';
+    function getMaxAllowedColumns() {
+      return window.innerWidth < 768 ? 3 : 5;
+    }
+
+    function renderColumnStructure() {
+      const maxCols = getMaxAllowedColumns();
+      
+      // Update CSS Grid Template variable
+      container.style.setProperty('--active-cols', activeColumns.length);
+
+      headersContainer.innerHTML = '';
+      tracksContainer.innerHTML = '';
+
+      activeColumns.forEach((catKey, index) => {
+        // Build Header
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'col-header';
+
+        const select = document.createElement('select');
+        select.className = 'column-select';
 
         const placeholder = document.createElement('option');
         placeholder.value = '';
         placeholder.textContent = 'Choose an option...';
-        if (index > 0) placeholder.selected = true;
+        if (!catKey) placeholder.selected = true;
         select.appendChild(placeholder);
 
         Object.entries(CATEGORIES).forEach(([key, title]) => {
           const opt = document.createElement('option');
           opt.value = key;
           opt.textContent = title;
-          
-          if (index === 0 && key === 'books-narrative') {
-            opt.selected = true;
-          }
+          if (catKey === key) opt.selected = true;
           select.appendChild(opt);
         });
+
+        select.addEventListener('change', async (e) => {
+          activeColumns[index] = e.target.value;
+          if (e.target.value) {
+            await fetchCategoryData(e.target.value);
+          }
+          updateDropdownOptionsUI();
+          renderTimeline();
+        });
+
+        headerDiv.appendChild(select);
+
+        // Remove Column Button (If more than 1 column exists)
+        if (activeColumns.length > 1) {
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'remove-col-btn';
+          removeBtn.innerHTML = '&times;';
+          removeBtn.title = 'Remove Column';
+          removeBtn.addEventListener('click', () => {
+            activeColumns.splice(index, 1);
+            renderColumnStructure();
+            renderTimeline();
+          });
+          headerDiv.appendChild(removeBtn);
+        }
+
+        headersContainer.appendChild(headerDiv);
+
+        // Build Track Canvas
+        const trackDiv = document.createElement('div');
+        trackDiv.className = 'data-track';
+        trackDiv.id = `track-${index}`;
+        tracksContainer.appendChild(trackDiv);
       });
+
+      // Show/Hide Add Button based on Max Limit
+      if (activeColumns.length >= maxCols) {
+        addColWrapper.style.display = 'none';
+      } else {
+        addColWrapper.style.display = 'flex';
+      }
+
+      updateDropdownOptionsUI();
     }
 
+    btnAddCol.addEventListener('click', () => {
+      const maxCols = getMaxAllowedColumns();
+      if (activeColumns.length < maxCols) {
+        activeColumns.push(''); // Add empty column
+        renderColumnStructure();
+      }
+    });
+
     async function loadTimeline() {
-      buildDropdowns();
+      renderColumnStructure();
       rebuildCanvasLayout();
       setupZoomListeners();
       setupModalListeners();
 
       await fetchCategoryData('books-narrative');
-      updateDropdownOptionsUI();
       renderTimeline();
+
+      window.addEventListener('resize', () => {
+        const maxCols = getMaxAllowedColumns();
+        if (activeColumns.length > maxCols) {
+          activeColumns = activeColumns.slice(0, maxCols);
+          renderColumnStructure();
+          renderTimeline();
+        }
+      });
 
       window.addEventListener('scroll', updateCardContinuationArrows, { passive: true });
     }
@@ -713,9 +798,7 @@
         setZoomStep(parseInt(e.target.value, 10));
       });
 
-      zoomLevelText.addEventListener('dblclick', () => {
-        setZoomStep(3);
-      });
+      zoomLevelText.addEventListener('dblclick', () => setZoomStep(3));
 
       window.addEventListener('wheel', (e) => {
         if (e.ctrlKey || e.metaKey) {
@@ -852,6 +935,8 @@
 
     function updateDropdownOptionsUI() {
       const activeSelections = {};
+      const selects = document.querySelectorAll('.column-select');
+
       selects.forEach((select, idx) => {
         if (select.value) {
           if (!activeSelections[select.value]) {
@@ -920,12 +1005,11 @@
     }
 
     function renderTimeline() {
-      tracks.forEach(track => track.innerHTML = '');
+      activeColumns.forEach((catKey, slotIndex) => {
+        const targetTrack = document.getElementById(`track-${slotIndex}`);
+        if (!targetTrack) return;
 
-      selects.forEach((select, slotIndex) => {
-        const catKey = select.value;
-        const targetTrack = tracks[slotIndex];
-
+        targetTrack.innerHTML = '';
         if (!catKey || !dataCache[catKey]) return;
 
         const eventsWithLanes = calculateSubLanes(dataCache[catKey]);
@@ -1107,15 +1191,6 @@
         scrubIndicator.style.top = `${percentage * (rect.height - 16)}px`;
       });
     }
-
-    selects.forEach(select => select.addEventListener('change', async () => {
-      const chosenCategory = select.value;
-      if (chosenCategory) {
-        await fetchCategoryData(chosenCategory);
-      }
-      updateDropdownOptionsUI();
-      renderTimeline();
-    }));
 
     loadTimeline();
   </script>
