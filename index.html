@@ -238,15 +238,34 @@
       border-right: 1px solid rgba(255, 255, 255, 0.15);
       border-bottom: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 4px;
-      padding: 4px 6px;
-      overflow: hidden;
       box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      z-index: 15;
+      transition: transform 0.15s ease, z-index 0.15s ease;
+    }
+
+    /* Sticky Inner Content Box */
+    .event-block .card-content {
+      position: sticky;
+      top: 105px; /* Stays visible right under the fixed column headers */
+      padding: 4px 6px;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      transition: transform 0.15s ease, z-index 0.15s ease, width 0.15s ease;
-      z-index: 15;
+      max-height: calc(100vh - 120px);
+      overflow: hidden;
     }
+
+    /* Continuation Arrows */
+    .card-arrow {
+      font-size: 0.55rem;
+      color: var(--accent-gold);
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+      display: none; /* Controlled by JS scroll calculations */
+    }
+
+    .card-arrow.top { margin-bottom: 2px; }
+    .card-arrow.bottom { margin-top: 2px; }
 
     .event-block:hover { 
       z-index: 40 !important; 
@@ -272,13 +291,13 @@
       margin-top: 2px;
     }
 
-    /* --- Single Point Event Markers (Elevated Z-Index & Protection Badge) --- */
+    /* --- Single Point Event Markers --- */
     .event-point {
       position: absolute;
       border-top: 2px solid var(--accent-gold);
       padding: 3px 6px 4px 8px;
-      z-index: 25; /* Always floats ABOVE neighboring blocks */
-      background: rgba(15, 23, 42, 0.85); /* Semi-transparent background badge prevents collision occlusion */
+      z-index: 25;
+      background: rgba(15, 23, 42, 0.85);
       border-radius: 0 0 4px 4px;
       backdrop-filter: blur(4px);
       box-shadow: 0 2px 6px rgba(0,0,0,0.4);
@@ -533,6 +552,9 @@
       await fetchCategoryData('books');
       updateDropdownOptionsUI();
       renderTimeline();
+
+      // Listen for scroll to dynamically toggle top/bottom continuation arrows
+      window.addEventListener('scroll', updateCardContinuationArrows, { passive: true });
     }
 
     function rebuildCanvasLayout() {
@@ -541,6 +563,7 @@
       renderTimeline();
       buildScrubberRail();
       setupTouchScrubber();
+      updateCardContinuationArrows();
     }
 
     function setZoom(newScaleFactor) {
@@ -694,7 +717,6 @@
       });
     }
 
-    /* --- Smart Collision & Sub-Lane Layout Engine --- */
     function calculateSubLanes(events) {
       if (!events || events.length === 0) return [];
 
@@ -705,11 +727,7 @@
         const rawDuration = event.endYear - event.startYear;
         const projectedHeight = rawDuration * pixelsPerYear;
         
-        // DYNAMIC POINT FALLBACK:
-        // Convert short reigns (< 2 yrs) to Point Events when zoomed out so they don't flatten into invisible hairlines
         const effectiveIsPoint = event.isPointEvent || rawDuration === 0 || (projectedHeight < 20 && rawDuration <= 2);
-
-        // Treat Point Events as occupying 3 virtual years for collision math so their labels stagger nicely
         const effectiveEndYear = effectiveIsPoint ? event.startYear + 3 : Math.max(event.startYear + 1, event.endYear);
 
         let assignedLane = 0;
@@ -773,6 +791,17 @@
             card.style.top = `${topPos}px`;
             card.style.left = `calc(${leftPosPct}% + 2px)`;
             card.style.width = `calc(${laneWidthPct}% - 4px)`;
+
+            const title = document.createElement('div');
+            title.className = 'title';
+            title.textContent = event.title;
+
+            const subtitle = document.createElement('div');
+            subtitle.className = 'subtitle';
+            subtitle.textContent = event.subtitle;
+
+            card.appendChild(title);
+            card.appendChild(subtitle);
           } else {
             card.className = `event-block ${styleClass}`;
             const blockHeight = Math.max(20, duration * pixelsPerYear);
@@ -780,20 +809,65 @@
             card.style.height = `${blockHeight}px`;
             card.style.left = `calc(${leftPosPct}% + 2px)`;
             card.style.width = `calc(${laneWidthPct}% - 4px)`;
+
+            // Store pixel boundaries as dataset attributes for scroll arrow checks
+            card.dataset.top = topPos;
+            card.dataset.bottom = topPos + blockHeight;
+
+            // Inner Sticky Content Container
+            const content = document.createElement('div');
+            content.className = 'card-content';
+
+            const arrowTop = document.createElement('div');
+            arrowTop.className = 'card-arrow top';
+            arrowTop.textContent = '▲';
+
+            const title = document.createElement('div');
+            title.className = 'title';
+            title.textContent = event.title;
+
+            const subtitle = document.createElement('div');
+            subtitle.className = 'subtitle';
+            subtitle.textContent = event.subtitle;
+
+            const arrowBottom = document.createElement('div');
+            arrowBottom.className = 'card-arrow bottom';
+            arrowBottom.textContent = '▼';
+
+            content.appendChild(arrowTop);
+            content.appendChild(title);
+            content.appendChild(subtitle);
+            content.appendChild(arrowBottom);
+            card.appendChild(content);
           }
 
-          const title = document.createElement('div');
-          title.className = 'title';
-          title.textContent = event.title;
-
-          const subtitle = document.createElement('div');
-          subtitle.className = 'subtitle';
-          subtitle.textContent = event.subtitle;
-
-          card.appendChild(title);
-          card.appendChild(subtitle);
           targetTrack.appendChild(card);
         });
+      });
+
+      updateCardContinuationArrows();
+    }
+
+    // Toggle continuation arrows based on current viewport scroll bounds
+    function updateCardContinuationArrows() {
+      const scrollY = window.scrollY;
+      const viewportTop = scrollY + 105; // Sticky header offset
+      const viewportBottom = scrollY + window.innerHeight;
+
+      document.querySelectorAll('.event-block').forEach(card => {
+        const top = parseFloat(card.dataset.top);
+        const bottom = parseFloat(card.dataset.bottom);
+
+        const arrowTop = card.querySelector('.card-arrow.top');
+        const arrowBottom = card.querySelector('.card-arrow.bottom');
+
+        if (arrowTop && arrowBottom) {
+          // Show top arrow if event started above visible area
+          arrowTop.style.display = (top < viewportTop && bottom > viewportTop + 30) ? 'block' : 'none';
+
+          // Show bottom arrow if event continues below visible viewport
+          arrowBottom.style.display = (bottom > viewportBottom && top < viewportBottom - 30) ? 'block' : 'none';
+        }
       });
     }
 
