@@ -20,6 +20,7 @@
       --scrubber-width: 28px;
       --canvas-top-padding: 30px;
       --active-cols: 1;
+      --has-add-btn: 1; /* 1 if add button visible, 0 if at max limit */
     }
 
     * {
@@ -120,10 +121,11 @@
     /* --- Dynamic Grid Layout --- */
     .timeline-container {
       display: grid;
-      grid-template-columns: var(--col-year-width) repeat(var(--active-cols), 1fr);
+      /* Grid = Year Track + Active Data Tracks + Optional Add Button Track */
+      grid-template-columns: var(--col-year-width) repeat(var(--active-cols), 1fr) calc(var(--has-add-btn) * 110px);
       min-width: 100%;
       position: relative;
-      padding-right: calc(var(--scrubber-width) + 12px);
+      padding-right: var(--scrubber-width);
     }
 
     /* --- Column Selector Headers --- */
@@ -181,18 +183,21 @@
       background: rgba(239, 68, 68, 0.1);
     }
 
-    /* Add Column Button Floating Area */
-    .add-col-wrapper {
+    /* Add Column Header Slot */
+    .add-col-header {
       position: sticky;
-      top: 50px;
-      z-index: 90;
+      top: 45px;
+      z-index: 95;
+      background-color: var(--card-bg);
+      border-bottom: 2px solid var(--border-color);
+      padding: 8px 6px;
       display: flex;
       align-items: center;
-      padding-left: 8px;
+      justify-content: center;
     }
 
     .add-col-btn {
-      background: var(--card-bg);
+      background: var(--bg-color);
       border: 1px dashed var(--accent-gold);
       color: var(--accent-gold);
       border-radius: 6px;
@@ -207,6 +212,8 @@
       height: 32px;
       white-space: nowrap;
       user-select: none;
+      width: 100%;
+      justify-content: center;
     }
 
     .add-col-btn:hover {
@@ -581,9 +588,9 @@
     <!-- Dynamic Headers Container -->
     <div id="headers-container" style="display: contents;"></div>
 
-    <!-- Plus Button Area -->
-    <div class="add-col-wrapper" id="add-col-wrapper">
-      <button class="add-col-btn" id="btn-add-col" title="Add Column">+ Add Column</button>
+    <!-- Sticky Header Slot for Add Button -->
+    <div class="add-col-header" id="add-col-header">
+      <button class="add-col-btn" id="btn-add-col" title="Add Column">+ Add</button>
     </div>
 
     <!-- Continuous Canvas Container -->
@@ -637,7 +644,7 @@
     const headersContainer = document.getElementById('headers-container');
     const tracksContainer = document.getElementById('tracks-container');
     const btnAddCol = document.getElementById('btn-add-col');
-    const addColWrapper = document.getElementById('add-col-wrapper');
+    const addColHeader = document.getElementById('add-col-header');
 
     const yearTrack = document.getElementById('year-track');
     const canvas = document.getElementById('timeline-canvas');
@@ -661,8 +668,16 @@
     function renderColumnStructure() {
       const maxCols = getMaxAllowedColumns();
       
-      // Update CSS Grid Template variable
+      // Update CSS Grid Template variables
       container.style.setProperty('--active-cols', activeColumns.length);
+      
+      if (activeColumns.length >= maxCols) {
+        container.style.setProperty('--has-add-btn', 0);
+        addColHeader.style.display = 'none';
+      } else {
+        container.style.setProperty('--has-add-btn', 1);
+        addColHeader.style.display = 'flex';
+      }
 
       headersContainer.innerHTML = '';
       tracksContainer.innerHTML = '';
@@ -723,20 +738,13 @@
         tracksContainer.appendChild(trackDiv);
       });
 
-      // Show/Hide Add Button based on Max Limit
-      if (activeColumns.length >= maxCols) {
-        addColWrapper.style.display = 'none';
-      } else {
-        addColWrapper.style.display = 'flex';
-      }
-
       updateDropdownOptionsUI();
     }
 
     btnAddCol.addEventListener('click', () => {
       const maxCols = getMaxAllowedColumns();
       if (activeColumns.length < maxCols) {
-        activeColumns.push(''); // Add empty column
+        activeColumns.push('');
         renderColumnStructure();
       }
     });
