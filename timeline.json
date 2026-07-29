@@ -1,337 +1,136 @@
 [
   {
-    "yearNum": -4000,
-    "year": "4000 B.C.",
-    "id": "year-4000bc",
-    "columns": {
-      "books": [{ "title": "Genesis 1–3", "subtitle": "Creation, Eden & The Fall", "type": "patriarch" }],
-      "kings-judah": [],
-      "kings-israel": [],
-      "prophets": [],
-      "empires": [{ "title": "Creation & Patriarchs", "subtitle": "Genesis 1–5", "type": "patriarch" }]
-    }
-  },
-  {
-    "yearNum": -2350,
-    "year": "2350 B.C.",
-    "columns": {
-      "books": [{ "title": "Genesis 6–9", "subtitle": "Noah & The Great Flood", "type": "patriarch" }],
-      "kings-judah": [],
-      "kings-israel": [],
-      "prophets": [],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -2000,
-    "year": "2000 B.C.",
-    "id": "year-2000bc",
+    "id": "creation-patriots",
     "columns": {
       "books": [
-        { "title": "Genesis 12–25", "subtitle": "Covenant with Abraham", "type": "patriarch" },
-        { "title": "Job", "subtitle": "Traditional Era setting", "type": "prophet" }
+        { "title": "Genesis 1–3", "subtitle": "Creation, Eden & The Fall", "startYear": -4000, "endYear": -3900, "type": "patriarch" },
+        { "title": "Genesis 6–9", "subtitle": "Noah & The Great Flood", "startYear": -2350, "endYear": -2300, "type": "patriarch" },
+        { "title": "Genesis 12–25", "subtitle": "Covenant with Abraham", "startYear": -2095, "endYear": -1920, "type": "patriarch" },
+        { "title": "Job", "subtitle": "Traditional Era setting", "startYear": -2000, "endYear": -1900, "type": "prophet" },
+        { "title": "Genesis 37–50", "subtitle": "Joseph & Descent into Egypt", "startYear": -1915, "endYear": -1805, "type": "patriarch" },
+        { "title": "Exodus & Leviticus", "subtitle": "Exodus & Law at Sinai", "startYear": -1446, "endYear": -1445, "type": "patriarch" },
+        { "title": "Numbers & Deuteronomy", "subtitle": "Wilderness Wanderings", "startYear": -1445, "endYear": -1406, "type": "patriarch" },
+        { "title": "Joshua", "subtitle": "Conquest of Canaan", "startYear": -1406, "endYear": -1375, "type": "patriarch" },
+        { "title": "Judges & Ruth", "subtitle": "Period of the Judges", "startYear": -1375, "endYear": -1050, "type": "patriarch" }
       ],
-      "kings-judah": [],
-      "kings-israel": [],
-      "prophets": [{ "title": "Job", "subtitle": "Traditional Era", "type": "prophet" }],
-      "empires": [{ "title": "Patriarchal Period", "subtitle": "Genesis 12–50", "type": "patriarch" }]
-    }
-  },
-  {
-    "yearNum": -1050,
-    "year": "1050 B.C.",
-    "columns": {
-      "books": [{ "title": "1 Samuel 9–31", "subtitle": "Reign of Saul", "type": "king-judah" }],
-      "kings-judah": [{ "title": "Saul (1051–1011)", "subtitle": "Good/Bad • 1 Sa 9–31", "type": "king-judah" }],
-      "kings-israel": [],
-      "prophets": [{ "title": "Samuel", "subtitle": "Prophet to United Israel", "type": "prophet" }],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -1010,
-    "year": "1010 B.C.",
-    "columns": {
-      "books": [{ "title": "1 Sa 16–1 Ki 2:10", "subtitle": "Reign of David", "type": "king-judah" }],
       "kings-judah": [
-        { "title": "David (1011–971)", "subtitle": "Good King • 1 Sa 16–1 Ki 2:10", "type": "king-judah" },
-        { "title": "Ish-Bosheth (1006–1004)", "subtitle": "Claimed reign over Israel • 2 Sa 2–4", "type": "king-israel" }
-      ],
-      "kings-israel": [],
-      "prophets": [{ "title": "Nathan", "subtitle": "Prophet to David", "type": "prophet" }],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -970,
-    "year": "970 B.C.",
-    "columns": {
-      "books": [{ "title": "1 Kings 1–11", "subtitle": "Reign of Solomon", "type": "king-judah" }],
-      "kings-judah": [{ "title": "Solomon (971–931)", "subtitle": "Good/Bad • 1 Ki 1–11:41", "type": "king-judah" }],
-      "kings-israel": [],
-      "prophets": [],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -930,
-    "year": "930 B.C.",
-    "id": "year-930bc",
-    "columns": {
-      "books": [{ "title": "1 Kings 12–14", "subtitle": "Kingdom Split", "type": "king-israel" }],
-      "kings-judah": [
-        { "title": "Rehoboam (931–913)", "subtitle": "Bad King • 1 Ki 14:21-31", "type": "king-judah" },
-        { "title": "Abijah (913–911)", "subtitle": "Bad King • 1 Ki 15:1-8", "type": "king-judah" }
+        { "title": "Saul", "subtitle": "1 Sa 9–31 • 1051–1011 B.C.", "startYear": -1051, "endYear": -1011, "type": "king-israel", "classification": "bad" },
+        { "title": "David", "subtitle": "1 Sa 16–1 Ki 2:10 • 1011–971 B.C.", "startYear": -1011, "endYear": -971, "type": "king-judah", "classification": "good" },
+        { "title": "Solomon", "subtitle": "1 Ki 1–11:41 • 971–931 B.C.", "startYear": -971, "endYear": -931, "type": "king-judah", "classification": "good" }
       ],
       "kings-israel": [
-        { "title": "Jeroboam (930–910)", "subtitle": "Evil King • 1 Ki 11:26–14:20", "type": "king-israel" },
-        { "title": "Nadab (910–909)", "subtitle": "Evil King • 1 Ki 15:25-32", "type": "king-israel" }
+        { "title": "Ish-bosheth", "subtitle": "2 Sa 2–4 • 1006–1004 B.C.", "startYear": -1006, "endYear": -1004, "type": "king-israel", "classification": "bad" }
       ],
       "prophets": [
-        { "title": "Shemaiah", "subtitle": "Prophet to Southern Kingdom (Judah)", "type": "prophet" },
-        { "title": "Ahijah", "subtitle": "Prophet to Northern Kingdom (Israel)", "type": "prophet" }
+        { "title": "Samuel", "subtitle": "Prophet to United Monarchy", "startYear": -1080, "endYear": -1012, "type": "prophet" },
+        { "title": "Nathan", "subtitle": "Prophet to David & Solomon", "startYear": -1010, "endYear": -960, "type": "prophet" }
       ],
-      "empires": []
+      "empires": [
+        { "title": "Patriarchal Era", "subtitle": "Genesis 1–50", "startYear": -4000, "endYear": -1800, "type": "patriarch" },
+        { "title": "Egyptian New Kingdom", "subtitle": "Pharaoh of Exodus", "startYear": -1550, "endYear": -1077, "type": "empire" }
+      ]
     }
   },
   {
-    "yearNum": -910,
-    "year": "910 B.C.",
-    "columns": {
-      "books": [{ "title": "1 Kings 15", "subtitle": "Reigns of Asa & Baasha", "type": "king-judah" }],
-      "kings-judah": [{ "title": "Asa (911–870)", "subtitle": "Good King • 1 Ki 15:9-24", "type": "king-judah" }],
-      "kings-israel": [{ "title": "Baasha (909–886)", "subtitle": "Evil King • 1 Ki 15:27-34", "type": "king-israel" }],
-      "prophets": [
-        { "title": "Hanani", "subtitle": "Prophet to Southern Kingdom", "type": "prophet" },
-        { "title": "Jehu", "subtitle": "Prophet to Northern Kingdom", "type": "prophet" }
-      ],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -880,
-    "year": "880 B.C.",
-    "columns": {
-      "books": [{ "title": "1 Kings 16", "subtitle": "Contested Throne in Israel", "type": "king-israel" }],
-      "kings-judah": [],
-      "kings-israel": [
-        { "title": "Elah (886–885)", "subtitle": "Evil King • 1 Ki 16:8-14", "type": "king-israel" },
-        { "title": "Zimri (885–885)", "subtitle": "Evil King • 1 Ki 16:15-20", "type": "king-israel" },
-        { "title": "Tibni (885–880)", "subtitle": "Evil King • 1 Ki 16:21-22 (Throne Contested)", "type": "king-israel" },
-        { "title": "Omri (885–874)", "subtitle": "Evil King • 1 Ki 16:15-28", "type": "king-israel" }
-      ],
-      "prophets": [],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -870,
-    "year": "870 B.C.",
-    "columns": {
-      "books": [{ "title": "1 Kings 17–22", "subtitle": "Ahab & Jehoshaphat / Elijah", "type": "prophet" }],
-      "kings-judah": [{ "title": "Jehoshaphat (872–848)", "subtitle": "Good King • Began while father king • 1 Ki 22:2-50", "type": "king-judah" }],
-      "kings-israel": [{ "title": "Ahab (874–853)", "subtitle": "Evil King • 1 Ki 16:20–22:40", "type": "king-israel" }],
-      "prophets": [
-        { "title": "Micaiah", "subtitle": "Prophet to Northern Kingdom", "type": "prophet" },
-        { "title": "Elijah", "subtitle": "Prophet to Northern Kingdom", "type": "prophet" }
-      ],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -850,
-    "year": "850 B.C.",
-    "columns": {
-      "books": [{ "title": "2 Kings 1–10", "subtitle": "Elisha's Ministry", "type": "prophet" }],
-      "kings-judah": [
-        { "title": "Jehoram (853–841)", "subtitle": "Evil King • 2 Ki 8:16-24", "type": "king-judah" },
-        { "title": "Ahaziah (841–841)", "subtitle": "Evil King • 2 Ki 8:25-29", "type": "king-judah" },
-        { "title": "Athaliah (841–835)", "subtitle": "Evil Queen • 2 Ki 11:1-21", "type": "king-judah" }
-      ],
-      "kings-israel": [
-        { "title": "Ahaziah (853–852)", "subtitle": "Evil King • 1 Ki 22:51-53, 2 Ki 1", "type": "king-israel" },
-        { "title": "Joram (852–841)", "subtitle": "Evil King • 2 Ki 3:1-3", "type": "king-israel" },
-        { "title": "Jehu (841–814)", "subtitle": "Bad King • 2 Ki 9-10", "type": "king-israel" }
-      ],
-      "prophets": [
-        { "title": "Elisha", "subtitle": "Prophet to Northern Kingdom", "type": "prophet" },
-        { "title": "Joel", "subtitle": "Prophet to Southern Kingdom", "type": "prophet" }
-      ],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -830,
-    "year": "830 B.C.",
-    "columns": {
-      "books": [{ "title": "2 Kings 12", "subtitle": "Reign of Joash", "type": "king-judah" }],
-      "kings-judah": [{ "title": "Joash (835–796)", "subtitle": "Good King • 2 Ki 12", "type": "king-judah" }],
-      "kings-israel": [{ "title": "Jehoahaz (814–798)", "subtitle": "Evil King • 2 Ki 13:1-9", "type": "king-israel" }],
-      "prophets": [],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -790,
-    "year": "790 B.C.",
-    "columns": {
-      "books": [{ "title": "2 Kings 13–14", "subtitle": "Amaziah & Jehoash", "type": "king-judah" }],
-      "kings-judah": [{ "title": "Amaziah (796–767)", "subtitle": "Good King • Held captive last years • 2 Ki 14:1-22", "type": "king-judah" }],
-      "kings-israel": [
-        { "title": "Jehoash (798–782)", "subtitle": "Evil King • Ruled with father • 2 Ki 13:10-13", "type": "king-israel" },
-        { "title": "Jeroboam II (793–753)", "subtitle": "Evil King • Ruled with father • 2 Ki 14:23-29", "type": "king-israel" }
-      ],
-      "prophets": [],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -750,
-    "year": "750 B.C.",
+    "id": "divided-kingdom",
     "columns": {
       "books": [
-        { "title": "2 Kings 15 / 2 Chronicles 26", "subtitle": "Uzziah & Rapid Succession in Israel", "type": "king-judah" },
-        { "title": "Amos, Hosea, Jonah", "subtitle": "Prophetic Warnings", "type": "prophet" }
+        { "title": "1 & 2 Samuel", "subtitle": "Reigns of Saul & David", "startYear": -1050, "endYear": -970, "type": "book" },
+        { "title": "1 Kings 1–11", "subtitle": "Reign of Solomon & Wisdom Books", "startYear": -970, "endYear": -931, "type": "book" },
+        { "title": "1 Kings 12–22", "subtitle": "Kingdom Splits (Israel / Judah)", "startYear": -931, "endYear": -850, "type": "book" },
+        { "title": "2 Kings 1–17", "subtitle": "Elijah/Elisha to Fall of Israel", "startYear": -850, "endYear": -722, "type": "book" },
+        { "title": "2 Kings 18–25", "subtitle": "Judah Alone to Babylonian Exile", "startYear": -722, "endYear": -586, "type": "book" }
       ],
       "kings-judah": [
-        { "title": "Uzziah (792–740)", "subtitle": "Good King • Leprosy last years • 2 Ki 15:1-7, 2 Ch 26", "type": "king-judah" },
-        { "title": "Jotham (750–732)", "subtitle": "Good King • 2 Ki 15:32-38", "type": "king-judah" }
+        { "title": "Rehoboam", "subtitle": "1 Ki 14:21-31 • Bad King", "startYear": -931, "endYear": -913, "type": "king-judah", "classification": "bad" },
+        { "title": "Abijah", "subtitle": "1 Ki 15:1-8 • Bad King", "startYear": -913, "endYear": -911, "type": "king-judah", "classification": "bad" },
+        { "title": "Asa", "subtitle": "1 Ki 15:9-24 • Good King", "startYear": -911, "endYear": -870, "type": "king-judah", "classification": "good" },
+        { "title": "Jehoshaphat", "subtitle": "1 Ki 22:2-50 • Good King", "startYear": -872, "endYear": -848, "type": "king-judah", "classification": "good" },
+        { "title": "Jehoram", "subtitle": "2 Ki 8:16-24 • Bad King", "startYear": -853, "endYear": -841, "type": "king-judah", "classification": "bad" },
+        { "title": "Ahaziah", "subtitle": "2 Ki 8:25-29 • Bad King", "startYear": -841, "endYear": -841, "type": "king-judah", "classification": "bad" },
+        { "title": "Athaliah", "subtitle": "2 Ki 11:1-21 • Bad Queen", "startYear": -841, "endYear": -835, "type": "king-judah", "classification": "bad" },
+        { "title": "Joash", "subtitle": "2 Ki 12 • Good King", "startYear": -835, "endYear": -796, "type": "king-judah", "classification": "good" },
+        { "title": "Amaziah", "subtitle": "2 Ki 14:1-22 • Good King", "startYear": -796, "endYear": -767, "type": "king-judah", "classification": "good" },
+        { "title": "Uzziah", "subtitle": "2 Ki 15:1-7 • Good King", "startYear": -792, "endYear": -740, "type": "king-judah", "classification": "good" },
+        { "title": "Jotham", "subtitle": "2 Ki 15:32-38 • Good King", "startYear": -750, "endYear": -732, "type": "king-judah", "classification": "good" },
+        { "title": "Ahaz", "subtitle": "2 Ki 16 • Evil King", "startYear": -735, "endYear": -716, "type": "king-judah", "classification": "evil" },
+        { "title": "Hezekiah", "subtitle": "2 Ki 18–20 • Good King", "startYear": -729, "endYear": -687, "type": "king-judah", "classification": "good" },
+        { "title": "Manasseh", "subtitle": "2 Ki 21:1-18 • Evil King", "startYear": -697, "endYear": -643, "type": "king-judah", "classification": "evil" },
+        { "title": "Amon", "subtitle": "2 Ki 21:19-26 • Evil King", "startYear": -643, "endYear": -641, "type": "king-judah", "classification": "evil" },
+        { "title": "Josiah", "subtitle": "2 Ki 22–23:30 • Good King", "startYear": -641, "endYear": -609, "type": "king-judah", "classification": "good" },
+        { "title": "Jehoahaz", "subtitle": "2 Ki 23:31-35 • Bad King", "startYear": -609, "endYear": -609, "type": "king-judah", "classification": "bad" },
+        { "title": "Jehoiakim", "subtitle": "2 Ki 23:36–24:6 • Evil King", "startYear": -609, "endYear": -598, "type": "king-judah", "classification": "evil" },
+        { "title": "Jehoiachin", "subtitle": "2 Ki 24:8-17 • Bad King", "startYear": -598, "endYear": -597, "type": "king-judah", "classification": "bad" },
+        { "title": "Zedekiah", "subtitle": "2 Ki 24:18–25:7 • Evil King", "startYear": -597, "endYear": -586, "type": "king-judah", "classification": "evil" }
       ],
       "kings-israel": [
-        { "title": "Zechariah (753–752)", "subtitle": "Evil King • 2 Ki 15:8-12", "type": "king-israel" },
-        { "title": "Shallum (752–752)", "subtitle": "Evil King • 2 Ki 15:13-16", "type": "king-israel" },
-        { "title": "Menahem (752–742)", "subtitle": "Evil King • 2 Ki 15:17-22", "type": "king-israel" },
-        { "title": "Pekahiah (742–740)", "subtitle": "Evil King • 2 Ki 15:23-26", "type": "king-israel" },
-        { "title": "Pekah (752–732)", "subtitle": "Evil King • Followed by some • 2 Ki 15:27-31", "type": "king-israel" }
+        { "title": "Jeroboam I", "subtitle": "1 Ki 11:26–14:20 • Evil King", "startYear": -930, "endYear": -910, "type": "king-israel", "classification": "evil" },
+        { "title": "Nadab", "subtitle": "1 Ki 15:25-32 • Evil King", "startYear": -910, "endYear": -909, "type": "king-israel", "classification": "evil" },
+        { "title": "Baasha", "subtitle": "1 Ki 15:27-34 • Evil King", "startYear": -909, "endYear": -886, "type": "king-israel", "classification": "evil" },
+        { "title": "Elah", "subtitle": "1 Ki 16:8-14 • Evil King", "startYear": -886, "endYear": -885, "type": "king-israel", "classification": "evil" },
+        { "title": "Zimri", "subtitle": "1 Ki 16:15-20 • Evil King (7 Days)", "startYear": -885, "endYear": -885, "type": "king-israel", "classification": "evil" },
+        { "title": "Tibni", "subtitle": "1 Ki 16:21-22 • Throne Contested", "startYear": -885, "endYear": -880, "type": "king-israel", "classification": "bad" },
+        { "title": "Omri", "subtitle": "1 Ki 16:15-28 • Evil King", "startYear": -885, "endYear": -874, "type": "king-israel", "classification": "evil" },
+        { "title": "Ahab", "subtitle": "1 Ki 16:20–22:40 • Evil King", "startYear": -874, "endYear": -853, "type": "king-israel", "classification": "evil" },
+        { "title": "Ahaziah", "subtitle": "1 Ki 22:51–2 Ki 1 • Evil King", "startYear": -853, "endYear": -852, "type": "king-israel", "classification": "evil" },
+        { "title": "Joram", "subtitle": "2 Ki 3:1-3 • Bad King", "startYear": -852, "endYear": -841, "type": "king-israel", "classification": "bad" },
+        { "title": "Jehu", "subtitle": "2 Ki 9–10 • Bad King", "startYear": -841, "endYear": -814, "type": "king-israel", "classification": "bad" },
+        { "title": "Jehoahaz", "subtitle": "2 Ki 13:1-9 • Evil King", "startYear": -814, "endYear": -798, "type": "king-israel", "classification": "evil" },
+        { "title": "Jehoash", "subtitle": "2 Ki 13:10-13 • Evil King", "startYear": -798, "endYear": -782, "type": "king-israel", "classification": "evil" },
+        { "title": "Jeroboam II", "subtitle": "2 Ki 14:23-29 • Evil King", "startYear": -793, "endYear": -753, "type": "king-israel", "classification": "evil" },
+        { "title": "Zechariah", "subtitle": "2 Ki 15:8-12 • Evil King", "startYear": -753, "endYear": -752, "type": "king-israel", "classification": "evil" },
+        { "title": "Shallum", "subtitle": "2 Ki 15:13-16 • Evil King", "startYear": -752, "endYear": -752, "type": "king-israel", "classification": "evil" },
+        { "title": "Menahem", "subtitle": "2 Ki 15:17-22 • Evil King", "startYear": -752, "endYear": -742, "type": "king-israel", "classification": "evil" },
+        { "title": "Pekahiah", "subtitle": "2 Ki 15:23-26 • Evil King", "startYear": -742, "endYear": -740, "type": "king-israel", "classification": "evil" },
+        { "title": "Pekah", "subtitle": "2 Ki 15:27-31 • Evil King", "startYear": -752, "endYear": -732, "type": "king-israel", "classification": "evil" },
+        { "title": "Hoshea", "subtitle": "2 Ki 17:1-6 • Evil King", "startYear": -732, "endYear": -722, "type": "king-israel", "classification": "evil" }
       ],
       "prophets": [
-        { "title": "Amos", "subtitle": "Prophet to Northern Kingdom", "type": "prophet" },
-        { "title": "Hosea", "subtitle": "Prophet to Northern Kingdom", "type": "prophet" },
-        { "title": "Jonah", "subtitle": "Prophet to Northern Kingdom", "type": "prophet" },
-        { "title": "Isaiah", "subtitle": "Prophet to Southern Kingdom", "type": "prophet" },
-        { "title": "Micah", "subtitle": "Prophet to Southern Kingdom", "type": "prophet" }
+        { "title": "Shemaiah", "subtitle": "Prophet to Southern Kingdom", "startYear": -931, "endYear": -910, "type": "prophet" },
+        { "title": "Ahijah", "subtitle": "Prophet to Northern Kingdom", "startYear": -931, "endYear": -909, "type": "prophet" },
+        { "title": "Hanani", "subtitle": "Prophet to Southern Kingdom", "startYear": -911, "endYear": -870, "type": "prophet" },
+        { "title": "Jehu", "subtitle": "Prophet to Northern Kingdom", "startYear": -909, "endYear": -853, "type": "prophet" },
+        { "title": "Micaiah", "subtitle": "Prophet to Northern Kingdom", "startYear": -875, "endYear": -850, "type": "prophet" },
+        { "title": "Elijah", "subtitle": "Prophet to Northern Kingdom", "startYear": -870, "endYear": -850, "type": "prophet" },
+        { "title": "Elisha", "subtitle": "Prophet to Northern Kingdom", "startYear": -850, "endYear": -798, "type": "prophet" },
+        { "title": "Joel", "subtitle": "Prophet to Southern Kingdom", "startYear": -835, "endYear": -796, "type": "prophet" },
+        { "title": "Amos", "subtitle": "Prophet to Northern Kingdom", "startYear": -760, "endYear": -750, "type": "prophet" },
+        { "title": "Hosea", "subtitle": "Prophet to Northern Kingdom", "startYear": -755, "endYear": -725, "type": "prophet" },
+        { "title": "Jonah", "subtitle": "Prophet to Northern Kingdom / Nineveh", "startYear": -780, "endYear": -750, "type": "prophet" },
+        { "title": "Isaiah", "subtitle": "Prophet to Southern Kingdom", "startYear": -740, "endYear": -680, "type": "prophet" },
+        { "title": "Micah", "subtitle": "Prophet to Southern Kingdom", "startYear": -737, "endYear": -696, "type": "prophet" },
+        { "title": "Nahum", "subtitle": "Prophet concerning Nineveh", "startYear": -663, "endYear": -612, "type": "prophet" },
+        { "title": "Zephaniah", "subtitle": "Prophet to Southern Kingdom", "startYear": -640, "endYear": -621, "type": "prophet" },
+        { "title": "Habakkuk", "subtitle": "Prophet to Southern Kingdom", "startYear": -612, "endYear": -589, "type": "prophet" },
+        { "title": "Jeremiah", "subtitle": "Prophet to Southern Kingdom", "startYear": -627, "endYear": -580, "type": "prophet" },
+        { "title": "Ezekiel", "subtitle": "Prophet in Babylonian Exile", "startYear": -593, "endYear": -571, "type": "prophet" },
+        { "title": "Daniel", "subtitle": "Prophet in Babylon/Persia", "startYear": -605, "endYear": -536, "type": "prophet" }
       ],
-      "empires": []
+      "empires": [
+        { "title": "Assyrian Empire", "subtitle": "722 B.C. Captivity of Israel", "startYear": -745, "endYear": -612, "type": "empire" },
+        { "title": "Babylonian Empire", "subtitle": "586 B.C. Destruction of Judah", "startYear": -612, "endYear": -539, "type": "empire" }
+      ]
     }
   },
   {
-    "yearNum": -730,
-    "year": "730 B.C.",
+    "id": "new-testament",
     "columns": {
-      "books": [{ "title": "2 Kings 16–17", "subtitle": "Ahaz & Hoshea / Fall of Israel", "type": "king-israel" }],
-      "kings-judah": [{ "title": "Ahaz (735–716)", "subtitle": "Evil King • 2 Ki 16", "type": "king-judah" }],
-      "kings-israel": [{ "title": "Hoshea (732–722)", "subtitle": "Evil King • Followed by some • 2 Ki 17:1-6", "type": "king-israel" }],
-      "prophets": [],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -720,
-    "year": "720 B.C.",
-    "columns": {
-      "books": [{ "title": "2 Kings 17–20", "subtitle": "722 Fall of Samaria & Hezekiah's Reign", "type": "king-judah" }],
-      "kings-judah": [{ "title": "Hezekiah (729–687)", "subtitle": "Good King • 2 Ki 18-20", "type": "king-judah" }],
-      "kings-israel": [{ "title": "722 Assyrian Captivity", "subtitle": "Northern Kingdom Taken Into Captivity", "type": "king-israel" }],
-      "prophets": [
-        { "title": "Nahum", "subtitle": "Prophet to Northern Kingdom", "type": "prophet" },
-        { "title": "Daniel", "subtitle": "Prophet to Northern Kingdom", "type": "prophet" },
-        { "title": "Obadiah", "subtitle": "Prophet to Northern Kingdom", "type": "prophet" }
+      "books": [
+        { "title": "Matthew, Mark, Luke, John", "subtitle": "Life & Ministry of Jesus", "startYear": -4, "endYear": 30, "type": "book" },
+        { "title": "Acts 1–12", "subtitle": "Early Church in Jerusalem", "startYear": 30, "endYear": 45, "type": "book" },
+        { "title": "Acts 13–28 & Epistles", "subtitle": "Paul's Journeys & Letters", "startYear": 45, "endYear": 68, "type": "book" },
+        { "title": "General Epistles & Revelation", "subtitle": "Apostolic Era Closes", "startYear": 68, "endYear": 95, "type": "book" }
       ],
-      "empires": [{ "title": "722 Assyrian Captivity", "subtitle": "Northern Kingdom Destroyed", "type": "empire" }]
-    }
-  },
-  {
-    "yearNum": -690,
-    "year": "690 B.C.",
-    "columns": {
-      "books": [{ "title": "2 Kings 21", "subtitle": "Reign of Manasseh", "type": "king-judah" }],
-      "kings-judah": [{ "title": "Manasseh (697–643)", "subtitle": "Evil King • 2 Ki 21:1-18", "type": "king-judah" }],
-      "kings-israel": [],
-      "prophets": [],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -640,
-    "year": "640 B.C.",
-    "columns": {
-      "books": [{ "title": "2 Kings 22–23", "subtitle": "Josiah's Reforms", "type": "king-judah" }],
-      "kings-judah": [
-        { "title": "Amon (643–641)", "subtitle": "Evil King • 2 Ki 21:19-26", "type": "king-judah" },
-        { "title": "Josiah (641–609)", "subtitle": "Good King • 2 Ki 22-23:30", "type": "king-judah" }
-      ],
+      "kings-judah": [],
       "kings-israel": [],
       "prophets": [
-        { "title": "Habakkuk", "subtitle": "Prophet to Southern Kingdom", "type": "prophet" },
-        { "title": "Zephaniah", "subtitle": "Prophet to Southern Kingdom", "type": "prophet" },
-        { "title": "Jeremiah", "subtitle": "Prophet to Southern Kingdom", "type": "prophet" },
-        { "title": "Ezekiel", "subtitle": "Prophet to Southern Kingdom", "type": "prophet" }
+        { "title": "Birth & Ministry of Jesus", "subtitle": "Gospels Era", "startYear": -4, "endYear": 30, "type": "prophet" },
+        { "title": "Apostolic Ministry", "subtitle": "Peter, Paul, John", "startYear": 30, "endYear": 100, "type": "prophet" }
       ],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -600,
-    "year": "600 B.C.",
-    "columns": {
-      "books": [{ "title": "2 Kings 23:31–24:17", "subtitle": "Final Kings of Judah", "type": "king-judah" }],
-      "kings-judah": [
-        { "title": "Jehoahaz (609–609)", "subtitle": "Evil King • 2 Ki 23:31-35", "type": "king-judah" },
-        { "title": "Jehoiakim (609–598)", "subtitle": "Evil King • 2 Ki 23:36–24:6", "type": "king-judah" },
-        { "title": "Jehoiachin (598–597)", "subtitle": "Evil King • 2 Ki 24:8-17", "type": "king-judah" }
-      ],
-      "kings-israel": [],
-      "prophets": [],
-      "empires": []
-    }
-  },
-  {
-    "yearNum": -580,
-    "year": "580 B.C.",
-    "columns": {
-      "books": [{ "title": "2 Kings 24:18–25:7", "subtitle": "586 Fall of Jerusalem", "type": "king-judah" }],
-      "kings-judah": [
-        { "title": "Zedekiah (597–586)", "subtitle": "Evil King • 2 Ki 24:18–25:7", "type": "king-judah" },
-        { "title": "586 Babylonian Captivity", "subtitle": "Jerusalem & Temple Destroyed", "type": "king-judah" }
-      ],
-      "kings-israel": [],
-      "prophets": [],
-      "empires": [{ "title": "586 Babylonian Captivity", "subtitle": "Southern Kingdom Taken Into Exile", "type": "empire" }]
-    }
-  },
-  {
-    "yearNum": -530,
-    "year": "530 B.C.",
-    "columns": {
-      "books": [{ "title": "Ezra 1–6", "subtitle": "Temple Rebuilt", "type": "prophet" }],
-      "kings-judah": [],
-      "kings-israel": [],
-      "prophets": [{ "title": "Zerubbabel", "subtitle": "Returnees Rebuild Temple", "type": "prophet" }],
-      "empires": [{ "title": "Persian Empire", "subtitle": "Cyrus Decree", "type": "empire" }]
-    }
-  },
-  {
-    "yearNum": 1,
-    "year": "1 A.D.",
-    "id": "year-1ad",
-    "columns": {
-      "books": [{ "title": "Gospels", "subtitle": "Life & Ministry of Jesus", "type": "prophet" }],
-      "kings-judah": [],
-      "kings-israel": [],
-      "prophets": [{ "title": "Birth of Jesus", "subtitle": "Gospels (Matthew / Luke)", "type": "prophet" }],
-      "empires": [{ "title": "Caesar Augustus", "subtitle": "Roman Emperor", "type": "empire" }]
-    }
-  },
-  {
-    "yearNum": 100,
-    "year": "100 A.D.",
-    "id": "year-100ad",
-    "columns": {
-      "books": [{ "title": "Revelation", "subtitle": "New Testament Closes", "type": "prophet" }],
-      "kings-judah": [],
-      "kings-israel": [],
-      "prophets": [{ "title": "Revelation / John's Writings", "subtitle": "Apostolic Era Closes", "type": "prophet" }],
-      "empires": [{ "title": "Trajan", "subtitle": "Roman Emperor", "type": "empire" }]
+      "empires": [
+        { "title": "Roman Empire", "subtitle": "Rule over Judea & Mediterranean", "startYear": -63, "endYear": 100, "type": "empire" },
+        { "title": "70 A.D. Fall of Jerusalem", "subtitle": "Titus Destroys 2nd Temple", "startYear": 70, "endYear": 70, "type": "empire" }
+      ]
     }
   }
 ]
