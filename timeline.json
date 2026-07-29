@@ -1,0 +1,91 @@
+[
+  {
+    "year": "4000 B.C.",
+    "id": "year-4000bc",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [
+        { "title": "Genesis", "subtitle": "Book of Beginnings", "type": "book" }
+      ],
+      "empires": [
+        { "title": "Creation & Patriarchs", "subtitle": "Genesis 1–5", "type": "patriarch" }
+      ]
+    }
+  },
+  {
+    "year": "2000 B.C.",
+    "id": "year-2000bc",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [
+        { "title": "Job", "subtitle": "Traditional Era", "type": "prophet" }
+      ],
+      "empires": [
+        { "title": "Covenant with Abraham", "subtitle": "Genesis 12–15", "type": "patriarch" }
+      ]
+    }
+  },
+  {
+    "year": "1000 B.C.",
+    "id": "year-1000bc",
+    "columns": {
+      "kings-judah": [
+        { "title": "King David", "subtitle": "United Monarchy", "type": "king-judah" }
+      ],
+      "kings-israel": [],
+      "prophets": [
+        { "title": "Psalms", "subtitle": "Davidic Psalms compiled", "type": "prophet" }
+      ],
+      "empires": []
+    }
+  },
+  {
+    "year": "740 B.C.",
+    "id": "year-740bc",
+    "columns": {
+      "kings-judah": [
+        { "title": "Uzziah (Reign Ends)", "subtitle": "2 Kings 15", "type": "king-judah" },
+        { "title": "Jotham (Begins)", "subtitle": "Co-regent with Uzziah", "type": "king-judah" }
+      ],
+      "kings-israel": [
+        { "title": "Pekahiah", "subtitle": "2 Kings 15:23", "type": "king-israel" }
+      ],
+      "prophets": [
+        { "title": "Isaiah (Called)", "subtitle": "\"In the year King Uzziah died...\"", "type": "prophet" }
+      ],
+      "empires": [
+        { "title": "Assyrian Expansion", "subtitle": "Tiglath-Pileser III", "type": "empire" }
+      ]
+    }
+  },
+  {
+    "year": "1 A.D.",
+    "id": "year-1ad",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [
+        { "title": "Birth of Jesus", "subtitle": "Gospels (Matthew / Luke)", "type": "prophet" }
+      ],
+      "empires": [
+        { "title": "Caesar Augustus", "subtitle": "Roman Emperor", "type": "empire" }
+      ]
+    }
+  },
+  {
+    "year": "100 A.D.",
+    "id": "year-100ad",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [
+        { "title": "Revelation / John's Epistles", "subtitle": "Apostolic Era Closes", "type": "prophet" }
+      ],
+      "empires": [
+        { "title": "Trajan", "subtitle": "Roman Empire Peak", "type": "empire" }
+      ]
+    }
+  }
+]
