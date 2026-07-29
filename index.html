@@ -247,14 +247,14 @@
     .event-block .card-content {
       position: sticky;
       top: 105px;
-      padding: 4px 18px 4px 6px; /* Right padding preserves room for top-right / bottom-right arrows */
+      padding: 4px 18px 4px 6px;
       display: flex;
       flex-direction: column;
       max-height: calc(100vh - 120px);
       overflow: hidden;
     }
 
-    /* Top-Right & Bottom-Right Corner Continuation Arrows */
+    /* Continuation Arrow Positions */
     .card-arrow {
       position: absolute;
       right: 4px;
@@ -264,11 +264,20 @@
       user-select: none;
       pointer-events: none;
       display: none;
-      z-index: 5;
+      z-index: 20;
     }
 
-    .card-arrow.top { top: 4px; }
-    .card-arrow.bottom { bottom: 4px; }
+    /* Top Arrow sits in the sticky card content header */
+    .card-arrow.top { 
+      top: 4px; 
+    }
+
+    /* Bottom Arrow sits anchored at the bottom-right corner of the whole card */
+    .card-arrow.bottom { 
+      position: absolute;
+      bottom: 4px; 
+      right: 4px;
+    }
 
     .event-block:hover { 
       z-index: 40 !important; 
@@ -815,10 +824,11 @@
             card.dataset.top = topPos;
             card.dataset.bottom = topPos + blockHeight;
 
+            // Inner Sticky Content Container
             const content = document.createElement('div');
             content.className = 'card-content';
 
-            // Corner Continuation Arrows
+            // Top Continuation Arrow (Sits inside the sticky header)
             const arrowTop = document.createElement('div');
             arrowTop.className = 'card-arrow top';
             arrowTop.textContent = '▲';
@@ -831,15 +841,16 @@
             subtitle.className = 'subtitle';
             subtitle.textContent = event.subtitle;
 
-            const arrowBottom = document.createElement('div');
-            arrowBottom.className = 'card-arrow bottom';
-            arrowBottom.textContent = '▼';
-
             content.appendChild(arrowTop);
             content.appendChild(title);
             content.appendChild(subtitle);
-            content.appendChild(arrowBottom);
             card.appendChild(content);
+
+            // Bottom Continuation Arrow (Pinned to bottom-right corner of the parent block)
+            const arrowBottom = document.createElement('div');
+            arrowBottom.className = 'card-arrow bottom';
+            arrowBottom.textContent = '▼';
+            card.appendChild(arrowBottom);
           }
 
           targetTrack.appendChild(card);
@@ -862,10 +873,12 @@
         const arrowTop = card.querySelector('.card-arrow.top');
         const arrowBottom = card.querySelector('.card-arrow.bottom');
 
-        if (arrowTop && arrowBottom) {
+        if (arrowTop) {
           // Top arrow shows ONLY if top boundary has scrolled above visible area
           arrowTop.style.display = (top < viewportTop && bottom > viewportTop + 20) ? 'block' : 'none';
+        }
 
+        if (arrowBottom) {
           // Bottom arrow shows ONLY if bottom boundary extends beyond visible area
           arrowBottom.style.display = (bottom > viewportBottom && top < viewportBottom - 20) ? 'block' : 'none';
         }
