@@ -561,6 +561,7 @@
         <option value="books-writings">Bible: Poetry, Wisdom & Epistles</option>
         <option value="kings-judah">Kings of Judah</option>
         <option value="kings-israel">Kings of Israel</option>
+        <option value="genealogy">Genealogy (Adam to Jesus)</option>
         <option value="prophets">Prophets & Writings</option>
         <option value="empires">Rulers & Empires</option>
       </select>
@@ -651,14 +652,16 @@
 
     const CANVAS_PADDING_TOP = 30;
 
-    const CATEGORY_NAMES = {
-      'books-narrative': 'Bible: Narrative Arc',
-      'books-writings': 'Bible: Poetry, Wisdom & Epistles',
-      'kings-judah': 'Kings of Judah',
-      'kings-israel': 'Kings of Israel',
-      'prophets': 'Prophets & Writings',
-      'empires': 'Rulers & Empires'
-    };
+    // In index.html script tag:
+const CATEGORY_NAMES = {
+  'books-narrative': 'Bible: Narrative Arc',
+  'books-writings': 'Bible: Poetry, Wisdom & Epistles',
+  'genealogy': 'Genealogy (Adam to Jesus)',
+  'kings-judah': 'Kings of Judah',
+  'kings-israel': 'Kings of Israel',
+  'prophets': 'Prophets & Writings',
+  'empires': 'Rulers & Empires'
+};
 
     const selects = [
       document.getElementById('select-col-1'),
