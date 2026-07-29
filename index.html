@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Interactive Bible Timeline</title>
+  <title>Bible Timeline</title>
   
   <!-- Scroll Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
@@ -47,41 +47,15 @@
       padding: 12px 16px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      justify-content: center;
     }
 
     .toolbar-title {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       color: var(--accent-gold);
-    }
-
-    .preset-pills {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .preset-pills::-webkit-scrollbar { display: none; }
-
-    .pill {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .pill.active {
-      border-color: var(--accent-gold);
-      color: var(--text-main);
-      background: rgba(245, 158, 11, 0.1);
     }
 
     /* --- Timeline Container --- */
@@ -96,7 +70,7 @@
     /* --- Column Selector Headers (Sticky) --- */
     .col-header {
       position: sticky;
-      top: 49px;
+      top: 45px; /* Directly below simplified toolbar */
       z-index: 90;
       background-color: var(--card-bg);
       border-bottom: 2px solid var(--border-color);
@@ -195,7 +169,7 @@
     .scrubber-rail {
       position: fixed;
       right: 0;
-      top: 98px; /* Below sticky headers */
+      top: 94px; /* Below sticky header stack */
       bottom: 0;
       width: 28px;
       z-index: 200;
@@ -208,7 +182,7 @@
       align-items: center;
       padding: 12px 0;
       user-select: none;
-      touch-action: none; /* Allows continuous touch-drag scrubbing */
+      touch-action: none;
     }
 
     .scrub-tick {
@@ -257,14 +231,9 @@
 </head>
 <body>
 
-  <!-- Top Toolbar -->
+  <!-- Simplified Top Toolbar -->
   <header class="toolbar">
-    <span class="toolbar-title">Chronos</span>
-    <div class="preset-pills">
-      <button class="pill active">Divided Kingdom</button>
-      <button class="pill">Prophetic Era</button>
-      <button class="pill">Life of Jesus</button>
-    </div>
+    <span class="toolbar-title">Bible Timeline</span>
   </header>
 
   <!-- Touch Scrubber Rail -->
@@ -307,7 +276,6 @@
     const scrubberRail = document.getElementById('scrubber-rail');
     const scrubIndicator = document.getElementById('scrub-indicator');
 
-    // Load JSON and build 10-year decade grid
     async function loadTimeline() {
       try {
         const response = await fetch('timeline.json');
@@ -323,7 +291,6 @@
       }
     }
 
-    // Generates a continuous row for every 10-year step from -4000 to +100
     function generate10YearGrid() {
       const dataMap = new Map();
       rawTimelineData.forEach(item => dataMap.set(item.yearNum, item));
@@ -331,7 +298,7 @@
       generated10YrData = [];
 
       for (let y = -4000; y <= 100; y += 10) {
-        if (y === 0) continue; // No year 0 in historical calendar
+        if (y === 0) continue;
 
         const existing = dataMap.get(y);
         const yearLabel = y < 0 ? `${Math.abs(y)} B.C.` : `${y} A.D.`;
@@ -355,7 +322,6 @@
       }
     }
 
-    // Render timeline grid
     function renderTimeline() {
       const key1 = col1Select.value;
       const key2 = col2Select.value;
@@ -370,7 +336,6 @@
         yearCell.className = 'timeline-cell year-cell';
         if (row.id) yearCell.id = row.id;
         
-        // Show year label on 50-year intervals or populated rows
         const hasContent = (row.columns[key1] && row.columns[key1].length > 0) || 
                            (row.columns[key2] && row.columns[key2].length > 0);
         if (row.yearNum % 50 === 0 || hasContent) {
@@ -414,9 +379,7 @@
       });
     }
 
-    // Build vertical ticks along right rail
     function buildScrubberRail() {
-      // Clear ticks except indicator
       scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
 
       const majorMilestones = new Map([
@@ -428,7 +391,6 @@
         [100, "100"]
       ]);
 
-      // Ticks for every 100 years
       for (let y = -4000; y <= 100; y += 100) {
         const tick = document.createElement('div');
         tick.className = 'scrub-tick';
@@ -445,7 +407,6 @@
       }
     }
 
-    // Drag-to-scrub controller
     function setupTouchScrubber() {
       function scrubToY(clientY) {
         const rect = scrubberRail.getBoundingClientRect();
@@ -460,7 +421,6 @@
 
       let isScrubbing = false;
 
-      // Mouse drag
       scrubberRail.addEventListener('mousedown', (e) => {
         isScrubbing = true;
         scrubToY(e.clientY);
@@ -472,7 +432,6 @@
 
       window.addEventListener('mouseup', () => isScrubbing = false);
 
-      // Touch drag on mobile
       scrubberRail.addEventListener('touchstart', (e) => {
         isScrubbing = true;
         scrubToY(e.touches[0].clientY);
@@ -484,7 +443,6 @@
 
       scrubberRail.addEventListener('touchend', () => isScrubbing = false);
 
-      // Keep indicator synced during normal scrolling
       window.addEventListener('scroll', () => {
         if (isScrubbing) return;
         const rect = scrubberRail.getBoundingClientRect();
