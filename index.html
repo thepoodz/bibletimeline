@@ -15,8 +15,9 @@
       --border-color: #334155;
       --accent-gold: #f59e0b;
       --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --scrubber-width: 48px;
+      --text-muted: #64748b; /* Subtle gray for decade ticks */
+      --col-year-width: 68px;
+      --scrubber-width: 28px;
     }
 
     * {
@@ -61,24 +62,24 @@
     /* --- Responsive Timeline Container --- */
     .timeline-container {
       display: grid;
-      /* Mobile Default: 2 equal selectable columns */
-      grid-template-columns: repeat(2, 1fr);
+      /* Fixed Year column + 2 equal selectable columns on mobile */
+      grid-template-columns: var(--col-year-width) repeat(2, 1fr);
       min-width: 100%;
       position: relative;
       padding-right: var(--scrubber-width);
     }
 
-    /* Tablet (3 Columns) */
+    /* Tablet (3 Data Columns) */
     @media (min-width: 768px) {
       .timeline-container {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: var(--col-year-width) repeat(3, 1fr);
       }
     }
 
-    /* Desktop (All 5 Categories Visible) */
+    /* Desktop (All 5 Data Columns Visible) */
     @media (min-width: 1100px) {
       .timeline-container {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: var(--col-year-width) repeat(5, 1fr);
       }
     }
 
@@ -96,11 +97,20 @@
       justify-content: center;
     }
 
-    /* Hide 3rd column header on mobile */
+    .col-header.year-header {
+      background-color: #161e2e;
+      z-index: 95;
+      left: 0;
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* Responsive Slot Hiding for Headers */
     .col-header.col-slot-3 { display: none; }
     @media (min-width: 768px) { .col-header.col-slot-3 { display: flex; } }
 
-    /* Hide 4th & 5th column headers below desktop */
     .col-header.col-slot-4,
     .col-header.col-slot-5 { display: none; }
     @media (min-width: 1100px) { 
@@ -135,6 +145,34 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+    }
+
+    /* Left Year Axis Cell */
+    .year-cell {
+      position: sticky;
+      left: 0;
+      background-color: #111827;
+      z-index: 80;
+      text-align: center;
+      justify-content: flex-start;
+      padding-top: 12px;
+      border-right: 2px solid var(--border-color);
+      scroll-margin-top: 100px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 10-Year Decades: Small & Grey */
+    .year-cell.decade {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    /* Major Milestones (100s / 0): Larger & White */
+    .year-cell.major {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #ffffff;
     }
 
     /* Responsive Cell Hiding */
@@ -177,7 +215,7 @@
     .event-card.patriarch { border-left-color: #10b981; }
     .event-card.empire { border-left-color: #f97316; }
 
-    /* --- Combined Scrubber & Year Track (Right Rail) --- */
+    /* --- Slim Touch Scrubber Rail (Right Side) --- */
     .scrubber-rail {
       position: fixed;
       right: 0;
@@ -185,7 +223,7 @@
       bottom: 0;
       width: var(--scrubber-width);
       z-index: 200;
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.9);
       backdrop-filter: blur(8px);
       border-left: 1px solid var(--border-color);
       display: flex;
@@ -208,26 +246,25 @@
 
     .scrub-tick.intermediate::before {
       content: "";
-      width: 8px;
+      width: 6px;
       height: 1px;
       background-color: var(--border-color);
     }
 
     .scrub-label {
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 700;
       color: var(--accent-gold);
       pointer-events: none;
       line-height: 1;
-      font-variant-numeric: tabular-nums;
     }
 
     .scrub-indicator {
       position: absolute;
       right: 2px;
-      left: 2px;
-      height: 18px;
-      background: rgba(245, 158, 11, 0.25);
+      width: 24px;
+      height: 16px;
+      background: rgba(245, 158, 11, 0.3);
       border: 1px solid var(--accent-gold);
       border-radius: 4px;
       pointer-events: none;
@@ -242,13 +279,16 @@
     <span class="toolbar-title">Bible Timeline</span>
   </header>
 
-  <!-- Touch Scrubber Rail & Year Axis -->
+  <!-- Slim Touch Scrubber Rail -->
   <div class="scrubber-rail" id="scrubber-rail">
     <div class="scrub-indicator" id="scrub-indicator"></div>
   </div>
 
   <!-- Main Timeline Grid -->
   <main class="timeline-container">
+
+    <!-- Header: Year Column -->
+    <div class="col-header year-header">Year</div>
 
     <!-- Slot 1 -->
     <div class="col-header col-slot-1">
@@ -365,6 +405,16 @@
             columns: { "books": [], "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] }
           });
         }
+
+        // Force a row for '0' right after -10
+        if (y === -10) {
+          const year1Data = dataMap.get(1);
+          generated10YrData.push({
+            yearNum: 0,
+            id: "year-0",
+            columns: year1Data ? year1Data.columns : { "books": [], "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] }
+          });
+        }
       }
     }
 
@@ -376,7 +426,24 @@
         const rowDiv = document.createElement('div');
         rowDiv.className = 'timeline-row';
 
-        // Append 5 cells per row; CSS media queries show/hide slot 3, 4, 5 dynamically
+        // 1. Render Left Sticky Year Cell
+        const yearCell = document.createElement('div');
+        yearCell.className = 'timeline-cell year-cell';
+        if (row.id) yearCell.id = row.id;
+
+        const displayNum = Math.abs(row.yearNum);
+        yearCell.textContent = displayNum;
+
+        // Major vs Decade styling logic
+        if (displayNum % 100 === 0) {
+          yearCell.classList.add('major');
+        } else {
+          yearCell.classList.add('decade');
+        }
+
+        rowDiv.appendChild(yearCell);
+
+        // 2. Render Data Cells for active category slots
         keys.forEach((key, index) => {
           const cell = document.createElement('div');
           cell.className = `timeline-cell col-slot-${index + 1}`;
@@ -412,14 +479,12 @@
     function buildScrubberRail() {
       scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
 
-      // Major numerical milestones (Full numbers, no B.C./A.D.)
       const majorMilestones = new Map([
-        [-4000, "4000"],
-        [-3000, "3000"],
-        [-2000, "2000"],
-        [-1000, "1000"],
-        [0, "0"],
-        [100, "100"]
+        [-4000, "4k"],
+        [-3000, "3k"],
+        [-2000, "2k"],
+        [-1000, "1k"],
+        [0, "0"]
       ]);
 
       for (let y = -4000; y <= 100; y += 100) {
@@ -449,7 +514,7 @@
         const targetScroll = percentage * maxScroll;
 
         window.scrollTo({ top: targetScroll, behavior: 'instant' });
-        scrubIndicator.style.top = `${percentage * (rect.height - 18)}px`;
+        scrubIndicator.style.top = `${percentage * (rect.height - 16)}px`;
       }
 
       let isScrubbing = false;
@@ -482,7 +547,7 @@
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         if (maxScroll <= 0) return;
         const percentage = Math.max(0, Math.min(1, window.scrollY / maxScroll));
-        scrubIndicator.style.top = `${percentage * (rect.height - 18)}px`;
+        scrubIndicator.style.top = `${percentage * (rect.height - 16)}px`;
       });
     }
 
