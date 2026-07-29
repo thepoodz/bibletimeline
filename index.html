@@ -60,7 +60,7 @@
       color: var(--accent-gold);
     }
 
-    /* Floating / Toolbar Zoom Controller */
+    /* Floating Zoom Controller */
     .zoom-controls {
       display: flex;
       align-items: center;
@@ -228,10 +228,9 @@
       .data-track.col-slot-5 { display: block; } 
     }
 
+    /* --- Continuous Span Event Blocks --- */
     .event-block {
       position: absolute;
-      left: 4px;
-      right: 4px;
       background: var(--card-bg);
       border-left: 4px solid var(--accent-gold);
       border-radius: 4px;
@@ -241,11 +240,16 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      transition: transform 0.1s ease;
+      transition: transform 0.15s ease, z-index 0.15s ease, width 0.15s ease;
       z-index: 15;
     }
 
-    .event-block:hover { z-index: 20; transform: scale(1.02); }
+    /* Hover State: Pops overlapping card forward so it's fully readable! */
+    .event-block:hover { 
+      z-index: 30 !important; 
+      transform: scale(1.03); 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    }
 
     .event-block .title {
       font-weight: 700;
@@ -265,13 +269,18 @@
       margin-top: 2px;
     }
 
+    /* --- Single Point Event Markers --- */
     .event-point {
       position: absolute;
-      left: 2px;
-      right: 2px;
       border-top: 2px solid var(--accent-gold);
       padding-top: 4px;
       z-index: 18;
+      transition: transform 0.15s ease, z-index 0.15s ease;
+    }
+
+    .event-point:hover {
+      z-index: 30 !important;
+      transform: scale(1.03);
     }
 
     .event-point::before {
@@ -614,8 +623,8 @@
       yearTrack.innerHTML = '';
       canvas.querySelectorAll('.grid-line').forEach(l => l.remove());
 
-      const showDecades = pixelsPerYear >= 1.5; // Hide 10-yr decades when zoomed out
-      const showAnnuals = pixelsPerYear > 6.0;  // Show 1-yr lines when zoomed in
+      const showDecades = pixelsPerYear >= 1.5;
+      const showAnnuals = pixelsPerYear > 6.0;
 
       for (let y = START_YEAR; y <= END_YEAR; y++) {
         if (y === 0) continue;
@@ -632,7 +641,6 @@
             addMarkerAndLine(topPos, absYear, 'decade');
           }
         } else if (showAnnuals) {
-          // 1-Year Micro Grid Line (No Text Label)
           const gridLine = document.createElement('div');
           gridLine.className = 'grid-line annual';
           gridLine.style.top = `${topPos}px`;
@@ -682,6 +690,49 @@
       });
     }
 
+    /* --- Smart Overlap Detection & Sub-Lane Layout Engine --- */
+    function calculateSubLanes(events) {
+      if (!events || events.length === 0) return [];
+
+      // 1. Sort chronologically by start year
+      const sorted = [...events].sort((a, b) => a.startYear - b.startYear);
+      
+      // Track active lanes
+      const laneEndYears = [];
+
+      const processed = sorted.map(event => {
+        let assignedLane = 0;
+
+        // Find the first lane that is free at this event's start year
+        while (laneEndYears[assignedLane] !== undefined && laneEndYears[assignedLane] > event.startYear) {
+          assignedLane++;
+        }
+
+        // Lock in the end year for this lane
+        laneEndYears[assignedLane] = event.endYear;
+
+        return {
+          ...event,
+          lane: assignedLane
+        };
+      });
+
+      // Find maximum overlapping lanes in any cluster
+      return processed.map(event => {
+        // Count how many events temporally overlap with this specific event
+        const overlappingCluster = processed.filter(other => 
+          Math.max(event.startYear, other.startYear) < Math.min(event.endYear, other.endYear)
+        );
+
+        const totalLanesInCluster = Math.max(1, ...overlappingCluster.map(e => e.lane + 1));
+
+        return {
+          ...event,
+          totalLanes: totalLanesInCluster
+        };
+      });
+    }
+
     function renderTimeline() {
       tracks.forEach(track => track.innerHTML = '');
 
@@ -691,9 +742,10 @@
 
         if (!catKey || !dataCache[catKey]) return;
 
-        const events = dataCache[catKey];
+        // Run smart overlap lane calculation on events
+        const eventsWithLanes = calculateSubLanes(dataCache[catKey]);
 
-        events.forEach(event => {
+        eventsWithLanes.forEach(event => {
           const card = document.createElement('div');
           let styleClass = event.type || 'book';
           if (event.classification) {
@@ -703,14 +755,25 @@
           const topPos = getYearOffset(event.startYear);
           const duration = event.endYear - event.startYear;
 
+          // Sub-lane Width and Offset Math
+          const totalLanes = event.totalLanes || 1;
+          const currentLane = event.lane || 0;
+          
+          const laneWidthPct = 100 / totalLanes;
+          const leftPosPct = laneWidthPct * currentLane;
+
           if (event.isPointEvent || duration === 0) {
             card.className = `event-point ${styleClass}`;
             card.style.top = `${topPos}px`;
+            card.style.left = `calc(${leftPosPct}% + 2px)`;
+            card.style.width = `calc(${laneWidthPct}% - 4px)`;
           } else {
             card.className = `event-block ${styleClass}`;
             const blockHeight = Math.max(24, duration * pixelsPerYear);
             card.style.top = `${topPos}px`;
             card.style.height = `${blockHeight}px`;
+            card.style.left = `calc(${leftPosPct}% + 2px)`;
+            card.style.width = `calc(${laneWidthPct}% - 4px)`;
           }
 
           const title = document.createElement('div');
