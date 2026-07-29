@@ -951,6 +951,10 @@
             card.appendChild(arrowBottom);
           }
 
+          // Add cursor style and click handler
+card.style.cursor = 'pointer';
+card.addEventListener('click', () => openEventModal(event));
+          
           targetTrack.appendChild(card);
         });
       });
