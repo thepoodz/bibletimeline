@@ -19,7 +19,7 @@
       --col-year-width: 68px;
       --scrubber-width: 28px;
       --pixels-per-year: 2.5; /* Scale factor: 10 years = 25px height */
-      --canvas-top-padding: 30px; /* Buffer so top '4000' label isn't cut off */
+      --canvas-top-padding: 30px; /* Prevents top '4000' label clipping */
     }
 
     * {
@@ -184,15 +184,15 @@
     }
 
     .grid-line.decade {
-      border-top: 1px dashed rgba(100, 116, 139, 0.2); /* Thin grey line */
+      border-top: 1px dashed rgba(100, 116, 139, 0.2);
     }
 
     .grid-line.century {
-      border-top: 1px solid rgba(255, 255, 255, 0.35); /* Medium white line */
+      border-top: 1px solid rgba(255, 255, 255, 0.35);
     }
 
     .grid-line.millennium {
-      border-top: 2px solid var(--accent-gold); /* Thick gold line */
+      border-top: 2px solid var(--accent-gold);
       z-index: 6;
     }
 
@@ -291,7 +291,6 @@
       cursor: pointer;
     }
 
-    /* White Dot for 100-Year Ticks */
     .scrub-tick.dot::before {
       content: "";
       width: 4px;
@@ -301,7 +300,6 @@
       opacity: 0.8;
     }
 
-    /* Bold Gold Milestone Text */
     .scrub-label {
       font-size: 0.72rem;
       font-weight: 800;
@@ -341,9 +339,10 @@
     <!-- Header: Year Column -->
     <div class="col-header year-header">Year</div>
 
-    <!-- Dropdown Slot 1 -->
+    <!-- Dropdown Slot 1 (Default: Books) -->
     <div class="col-header col-slot-1">
       <select class="column-select" id="select-col-1">
+        <option value="" disabled>Choose an option...</option>
         <option value="books" selected>Books of the Bible</option>
         <option value="kings-judah">Kings of Judah</option>
         <option value="kings-israel">Kings of Israel</option>
@@ -352,47 +351,51 @@
       </select>
     </div>
 
-    <!-- Dropdown Slot 2 -->
+    <!-- Dropdown Slot 2 (Default: Choose an option...) -->
     <div class="col-header col-slot-2">
       <select class="column-select" id="select-col-2">
+        <option value="" selected>Choose an option...</option>
         <option value="books">Books of the Bible</option>
         <option value="kings-judah">Kings of Judah</option>
         <option value="kings-israel">Kings of Israel</option>
-        <option value="prophets" selected>Prophets & Writings</option>
+        <option value="prophets">Prophets & Writings</option>
         <option value="empires">Rulers & Empires</option>
       </select>
     </div>
 
-    <!-- Dropdown Slot 3 -->
+    <!-- Dropdown Slot 3 (Default: Choose an option...) -->
     <div class="col-header col-slot-3">
       <select class="column-select" id="select-col-3">
+        <option value="" selected>Choose an option...</option>
         <option value="books">Books of the Bible</option>
         <option value="kings-judah">Kings of Judah</option>
-        <option value="kings-israel" selected>Kings of Israel</option>
+        <option value="kings-israel">Kings of Israel</option>
         <option value="prophets">Prophets & Writings</option>
         <option value="empires">Rulers & Empires</option>
       </select>
     </div>
 
-    <!-- Dropdown Slot 4 -->
+    <!-- Dropdown Slot 4 (Default: Choose an option...) -->
     <div class="col-header col-slot-4">
       <select class="column-select" id="select-col-4">
+        <option value="" selected>Choose an option...</option>
         <option value="books">Books of the Bible</option>
-        <option value="kings-judah" selected>Kings of Judah</option>
+        <option value="kings-judah">Kings of Judah</option>
         <option value="kings-israel">Kings of Israel</option>
         <option value="prophets">Prophets & Writings</option>
         <option value="empires">Rulers & Empires</option>
       </select>
     </div>
 
-    <!-- Dropdown Slot 5 -->
+    <!-- Dropdown Slot 5 (Default: Choose an option...) -->
     <div class="col-header col-slot-5">
       <select class="column-select" id="select-col-5">
+        <option value="" selected>Choose an option...</option>
         <option value="books">Books of the Bible</option>
         <option value="kings-judah">Kings of Judah</option>
         <option value="kings-israel">Kings of Israel</option>
         <option value="prophets">Prophets & Writings</option>
-        <option value="empires" selected>Rulers & Empires</option>
+        <option value="empires">Rulers & Empires</option>
       </select>
     </div>
 
@@ -412,7 +415,15 @@
     const START_YEAR = -4000;
     const END_YEAR = 100;
     const PIXELS_PER_YEAR = 2.5;
-    const CANVAS_PADDING_TOP = 30; // Prevents top 4000 label from clipping
+    const CANVAS_PADDING_TOP = 30;
+
+    const CATEGORY_NAMES = {
+      'books': 'Books of the Bible',
+      'kings-judah': 'Kings of Judah',
+      'kings-israel': 'Kings of Israel',
+      'prophets': 'Prophets & Writings',
+      'empires': 'Rulers & Empires'
+    };
 
     const selects = [
       document.getElementById('select-col-1'),
@@ -443,6 +454,7 @@
 
         setupCanvasHeight();
         renderYearAxisAndGridLines();
+        updateDropdownOptionsUI();
         renderTimeline();
         buildScrubberRail();
         setupTouchScrubber();
@@ -452,7 +464,6 @@
     }
 
     function getYearOffset(year) {
-      // Calculates pixel position with top padding buffer included
       return CANVAS_PADDING_TOP + ((year - START_YEAR) * PIXELS_PER_YEAR);
     }
 
@@ -472,13 +483,11 @@
         const absYear = Math.abs(y);
         const topPos = getYearOffset(y);
 
-        // 1. Render Left Year Text Marker
         const marker = document.createElement('div');
         marker.className = 'year-marker';
         marker.style.top = `${topPos}px`;
         marker.textContent = absYear;
 
-        // 2. Render Full Horizontal Grid Line across Canvas
         const gridLine = document.createElement('div');
         gridLine.className = 'grid-line';
         gridLine.style.top = `${topPos}px`;
@@ -487,8 +496,8 @@
           marker.classList.add('millennium');
           gridLine.classList.add('millennium');
         } else if (absYear % 100 === 0) {
-          marker.classList.add('century'); // White style
-          gridLine.classList.add('century'); // White style
+          marker.classList.add('century');
+          gridLine.classList.add('century');
         } else {
           marker.classList.add('decade');
           gridLine.classList.add('decade');
@@ -497,6 +506,35 @@
         yearTrack.appendChild(marker);
         canvas.appendChild(gridLine);
       }
+    }
+
+    function updateDropdownOptionsUI() {
+      // Map out where each category is currently active
+      const activeSelections = {};
+      selects.forEach((select, idx) => {
+        if (select.value) {
+          if (!activeSelections[select.value]) {
+            activeSelections[select.value] = [];
+          }
+          activeSelections[select.value].push(idx + 1); // Store 1-based column number
+        }
+      });
+
+      // Update all option labels across all dropdowns
+      selects.forEach((select) => {
+        Array.from(select.options).forEach(opt => {
+          if (!opt.value) return; // Skip placeholder option
+
+          const baseTitle = CATEGORY_NAMES[opt.value] || opt.value;
+          const activeCols = activeSelections[opt.value];
+
+          if (activeCols && activeCols.length > 0) {
+            opt.textContent = `${baseTitle} (In Col ${activeCols.join(', ')})`;
+          } else {
+            opt.textContent = baseTitle;
+          }
+        });
+      });
     }
 
     function renderTimeline() {
@@ -521,6 +559,10 @@
       selects.forEach((select, slotIndex) => {
         const catKey = select.value;
         const targetTrack = tracks[slotIndex];
+
+        // If 'Choose an option...' is selected, keep track empty
+        if (!catKey) return;
+
         const events = allEvents[catKey] || [];
 
         events.forEach(event => {
@@ -576,7 +618,6 @@
           label.textContent = majorMilestones.get(tickKey);
           tick.appendChild(label);
         } else {
-          // White dot for 100-year steps
           tick.classList.add('dot');
         }
 
@@ -630,7 +671,10 @@
       });
     }
 
-    selects.forEach(select => select.addEventListener('change', renderTimeline));
+    selects.forEach(select => select.addEventListener('change', () => {
+      updateDropdownOptionsUI();
+      renderTimeline();
+    }));
 
     loadTimeline();
   </script>
