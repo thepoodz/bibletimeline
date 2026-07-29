@@ -1,0 +1,299 @@
+[
+  {
+    "id": "job",
+    "title": "Job",
+    "subtitle": "Patriarchal Era Trials & Wisdom",
+    "startYear": -2000,
+    "endYear": -1800,
+    "type": "book",
+    "description": "Job's suffering, debates with friends, and God's discourse on divine sovereignty."
+  },
+  {
+    "id": "psalms",
+    "title": "Psalms",
+    "subtitle": "Hymns, Prayers & Messianic Prophecies",
+    "startYear": -1020,
+    "endYear": -450,
+    "type": "book",
+    "description": "Five books of Israel's worship poetry written by David, Asaph, the Sons of Korah, and Moses."
+  },
+  {
+    "id": "proverbs",
+    "title": "Proverbs",
+    "subtitle": "Practical Wisdom & Instruction",
+    "startYear": -970,
+    "endYear": -700,
+    "type": "book",
+    "description": "Wisdom sayings primarily compiled by Solomon, Agur, and Lemuel."
+  },
+  {
+    "id": "song-of-solomon",
+    "title": "Song of Solomon",
+    "subtitle": "Love Poetry of Solomon",
+    "startYear": -965,
+    "endYear": -950,
+    "type": "book",
+    "description": "Poetic celebration of marital love, affection, and devotion."
+  },
+  {
+    "id": "ecclesiastes",
+    "title": "Ecclesiastes",
+    "subtitle": "Wisdom Reflections of Qoheleth",
+    "startYear": -940,
+    "endYear": -931,
+    "type": "book",
+    "description": "Solomon's reflections on the meaning of life, human labor, and fearing God."
+  },
+  {
+    "id": "joel",
+    "title": "Joel",
+    "subtitle": "Locust Plague & Outpouring of Spirit",
+    "startYear": -835,
+    "endYear": -796,
+    "type": "book",
+    "description": "Uses a devastating locust swarm to call for repentance and prophesies the Holy Spirit."
+  },
+  {
+    "id": "jonah",
+    "title": "Jonah",
+    "subtitle": "Prophetic Mission to Nineveh",
+    "startYear": -785,
+    "endYear": -760,
+    "type": "book",
+    "description": "Jonah attempts to flee God's call, experiences the great fish, and preaches to Assyria."
+  },
+  {
+    "id": "amos",
+    "title": "Amos",
+    "subtitle": "Call for Social Justice & Judgment",
+    "startYear": -760,
+    "endYear": -750,
+    "type": "book",
+    "description": "Shepherd-prophet warning northern Israel against religious hypocrisy and injustice."
+  },
+  {
+    "id": "hosea",
+    "title": "Hosea",
+    "subtitle": "Unfaithfulness & Redeeming Love",
+    "startYear": -755,
+    "endYear": -715,
+    "type": "book",
+    "description": "Hosea's marriage to Gomer serves as a metaphor for God's steadfast love for rebellious Israel."
+  },
+  {
+    "id": "isaiah",
+    "title": "Isaiah",
+    "subtitle": "Assyrian Crisis & Servant Songs",
+    "startYear": -740,
+    "endYear": -680,
+    "type": "book",
+    "description": "Major prophet warning Judah of exile while declaring future messianic salvation."
+  },
+  {
+    "id": "micah",
+    "title": "Micah",
+    "subtitle": "Prophecy of Bethlehem & Messiah",
+    "startYear": -735,
+    "endYear": -700,
+    "type": "book",
+    "description": "Denounces exploitation in Israel and Judah while foretelling Messiah's birthplace in Bethlehem."
+  },
+  {
+    "id": "nahum",
+    "title": "Nahum",
+    "subtitle": "Judgment on Nineveh",
+    "startYear": -660,
+    "endYear": -620,
+    "type": "book",
+    "description": "Predicts the ultimate downfall and destruction of the cruel Assyrian empire."
+  },
+  {
+    "id": "zephaniah",
+    "title": "Zephaniah",
+    "subtitle": "The Day of the Lord Warning",
+    "startYear": -640,
+    "endYear": -620,
+    "type": "book",
+    "description": "Prophesies judgment coming on Judah and surrounding nations under King Josiah."
+  },
+  {
+    "id": "jeremiah",
+    "title": "Jeremiah",
+    "subtitle": "Weeping Prophet & New Covenant",
+    "startYear": -627,
+    "endYear": -585,
+    "type": "book",
+    "description": "Warns Jerusalem of Babylonian captivity for 40 years and promises the New Covenant."
+  },
+  {
+    "id": "habakkuk",
+    "title": "Habakkuk",
+    "subtitle": "Dialogue on the Babylonian Threat",
+    "startYear": -607,
+    "endYear": -598,
+    "type": "book",
+    "description": "Questions why God uses wicked Babylon to discipline Judah; affirms 'the just shall live by faith'."
+  },
+  {
+    "id": "daniel",
+    "title": "Daniel",
+    "subtitle": "Court Tales & Four Kingdom Visions",
+    "startYear": -605,
+    "endYear": -535,
+    "type": "book",
+    "description": "Faithfulness in Babylon (Lion's Den) and apocalyptic visions of future world empires."
+  },
+  {
+    "id": "ezekiel",
+    "title": "Ezekiel",
+    "subtitle": "Babylonian Exilic Visions & Restoration",
+    "startYear": -592,
+    "endYear": -570,
+    "type": "book",
+    "description": "Priestly prophet in Babylon detailing the departure and return of God's glory and dry bones."
+  },
+  {
+    "id": "lamentations",
+    "title": "Lamentations",
+    "subtitle": "Mourning the Fall of Jerusalem",
+    "startYear": -586,
+    "endYear": -585,
+    "type": "book",
+    "description": "Five acrostic poems weeping over the ruined city and temple after the 586 BC siege."
+  },
+  {
+    "id": "obadiah",
+    "title": "Obadiah",
+    "subtitle": "Condemnation of Edom",
+    "startYear": -586,
+    "endYear": -575,
+    "type": "book",
+    "description": "Shortest Old Testament book, rebuking Edom for celebrating Judah's tragic destruction."
+  },
+  {
+    "id": "haggai",
+    "title": "Haggai",
+    "subtitle": "Exhortation to Rebuild the Temple",
+    "startYear": -520,
+    "endYear": -519,
+    "type": "book",
+    "description": "Encourages returned exiles to stop delaying temple construction and prioritize God."
+  },
+  {
+    "id": "zechariah",
+    "title": "Zechariah",
+    "subtitle": "Post-Exilic Visions & Messianic King",
+    "startYear": -520,
+    "endYear": -480,
+    "type": "book",
+    "description": "Eight night visions encouraging Zerubbabel and Joshua; predicts Messiah on a donkey."
+  },
+  {
+    "id": "malachi",
+    "title": "Malachi",
+    "subtitle": "Final Old Testament Rebukes",
+    "startYear": -450,
+    "endYear": -430,
+    "type": "book",
+    "description": "Confronts dead orthodoxy, corrupt priests, and foretells Elijah's coming before Messiah."
+  },
+  {
+    "id": "james",
+    "title": "James",
+    "subtitle": "Faith Exhibited in Action",
+    "startYear": 45,
+    "endYear": 48,
+    "type": "book",
+    "description": "Practical exhortation on living out genuine faith through speech, trials, and good works."
+  },
+  {
+    "id": "galatians",
+    "title": "Galatians",
+    "subtitle": "Christian Liberty vs. Legalism",
+    "startYear": 48,
+    "endYear": 49,
+    "type": "book",
+    "description": "Paul's passionate defense of salvation by grace through faith apart from Mosaic law."
+  },
+  {
+    "id": "1-2-thessalonians",
+    "title": "1 & 2 Thessalonians",
+    "subtitle": "Hope in Christ's Return",
+    "startYear": 50,
+    "endYear": 52,
+    "type": "book",
+    "description": "Letters offering comfort regarding believers who died and clarifying the Second Coming."
+  },
+  {
+    "id": "1-2-corinthians",
+    "title": "1 & 2 Corinthians",
+    "subtitle": "Church Unity, Gifts & Resurrection",
+    "startYear": 53,
+    "endYear": 56,
+    "type": "book",
+    "description": "Addressing divisions, immorality, spiritual gifts, love, and Paul's apostolic authority."
+  },
+  {
+    "id": "romans",
+    "title": "Romans",
+    "subtitle": "Systematic Gospel Exposition",
+    "startYear": 57,
+    "endYear": 58,
+    "type": "book",
+    "description": "Paul's masterwork on human sinfulness, justification, sanctification, and Israel's role."
+  },
+  {
+    "id": "prison-epistles",
+    "title": "Ephesians, Philippians, Colossians, Philemon",
+    "subtitle": "Pauline Letters from Rome",
+    "startYear": 60,
+    "endYear": 62,
+    "type": "book",
+    "description": "Written from Roman imprisonment: Church unity, joy in Christ, supremacy of Jesus, and slave reconciliation."
+  },
+  {
+    "id": "pastoral-epistles",
+    "title": "1 & 2 Timothy, Titus",
+    "subtitle": "Church Governance & Sound Doctrine",
+    "startYear": 62,
+    "endYear": 67,
+    "type": "book",
+    "description": "Instructions for elders, deacons, combating heresy, and Paul's final words before martyrdom."
+  },
+  {
+    "id": "1-2-peter-jude",
+    "title": "1 & 2 Peter, Jude",
+    "subtitle": "Perseverance & False Teachers",
+    "startYear": 63,
+    "endYear": 68,
+    "type": "book",
+    "description": "Encouraging Christians under Roman persecution and warning against destructive apostasy."
+  },
+  {
+    "id": "hebrews",
+    "title": "Hebrews",
+    "subtitle": "Superiority of the New Covenant",
+    "startYear": 65,
+    "endYear": 69,
+    "type": "book",
+    "description": "Demonstrates Jesus' supremacy over angels, Moses, and Levitical priests."
+  },
+  {
+    "id": "1-2-3-john",
+    "title": "1, 2, 3 John",
+    "subtitle": "Fellowship, Love & Assurance",
+    "startYear": 85,
+    "endYear": 92,
+    "type": "book",
+    "description": "Tests of true faith: loving brethren, obeying commandments, and holding true doctrine."
+  },
+  {
+    "id": "revelation",
+    "title": "Revelation",
+    "subtitle": "Apocalypse & Final Victory",
+    "startYear": 95,
+    "endYear": 96,
+    "type": "book",
+    "description": "John's visions on Patmos depicting tribulation, Christ's return, Judgment, and New Jerusalem."
+  }
+]

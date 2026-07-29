@@ -1,0 +1,272 @@
+[
+  {
+    "id": "gen-1-4",
+    "title": "Genesis 1–4",
+    "subtitle": "Creation, Fall & First Generations",
+    "startYear": -4000,
+    "endYear": -3800,
+    "type": "book",
+    "description": "Creation of the universe, Adam and Eve in Eden, the Fall, and Cain and Abel."
+  },
+  {
+    "id": "gen-5",
+    "title": "Genesis 5",
+    "subtitle": "Genealogy: Adam to Noah",
+    "startYear": -3800,
+    "endYear": -2950,
+    "type": "book",
+    "description": "Spans the ten patriarchs from Adam down to the birth of Noah and his sons."
+  },
+  {
+    "id": "gen-6-11",
+    "title": "Genesis 6–11",
+    "subtitle": "Noah, Great Flood & Tower of Babel",
+    "startYear": -2950,
+    "endYear": -2095,
+    "type": "book",
+    "description": "The Great Deluge, God's covenant with Noah, and the dispersion of nations at Babel."
+  },
+  {
+    "id": "gen-12-50",
+    "title": "Genesis 12–50",
+    "subtitle": "Patriarchs: Abraham, Isaac, Jacob & Joseph",
+    "startYear": -2095,
+    "endYear": -1805,
+    "type": "book",
+    "description": "The call of Abraham, the birth of Isaac and Jacob, and Joseph's rise in Egypt."
+  },
+  {
+    "id": "exodus",
+    "title": "Exodus",
+    "subtitle": "Plagues, Red Sea, Law & Tabernacle",
+    "startYear": -1525,
+    "endYear": -1445,
+    "type": "book",
+    "description": "Moses leads Israel out of Egyptian slavery, receives the Ten Commandments, and builds the Tabernacle."
+  },
+  {
+    "id": "leviticus",
+    "title": "Leviticus",
+    "subtitle": "Sacrificial Laws & Priesthood at Sinai",
+    "startYear": -1445,
+    "endYear": -1444,
+    "type": "book",
+    "description": "Instructions for Israel's offerings, purity laws, holy days, and the Day of Atonement."
+  },
+  {
+    "id": "numbers",
+    "title": "Numbers",
+    "subtitle": "Wilderness Wandering & Census",
+    "startYear": -1444,
+    "endYear": -1406,
+    "type": "book",
+    "description": "38 years of wandering due to unbelief, ending at the plains of Moab."
+  },
+  {
+    "id": "deuteronomy",
+    "title": "Deuteronomy",
+    "subtitle": "Moses' Final Speeches & Death",
+    "startYear": -1406,
+    "endYear": -1405,
+    "type": "book",
+    "description": "Renewal of the Sinai covenant for the new generation before entering the Promised Land."
+  },
+  {
+    "id": "joshua",
+    "title": "Joshua",
+    "subtitle": "Conquest & Division of Canaan",
+    "startYear": -1405,
+    "endYear": -1385,
+    "type": "book",
+    "description": "Crossing the Jordan, the Jericho campaign, and the allotment of land among the 12 tribes."
+  },
+  {
+    "id": "judges-1-3",
+    "title": "Judges 1–3",
+    "subtitle": "Early Judges: Othniel, Ehud & Shamgar",
+    "startYear": -1380,
+    "endYear": -1220,
+    "type": "book",
+    "description": "The cycle of rebellion, oppression, and deliverance beginning after Joshua's death."
+  },
+  {
+    "id": "judges-4-8",
+    "title": "Judges 4–8",
+    "subtitle": "Deborah, Barak & Gideon",
+    "startYear": -1220,
+    "endYear": -1170,
+    "type": "book",
+    "description": "Victory over Sisera under Deborah and Gideon's defeat of the Midianites with 300 men."
+  },
+  {
+    "id": "judges-9-12",
+    "title": "Judges 9–12",
+    "subtitle": "Abimelech, Jephthah & Minor Judges",
+    "startYear": -1170,
+    "endYear": -1100,
+    "type": "book",
+    "description": "Civil strife under Abimelech and Jephthah's victory over the Ammonites."
+  },
+  {
+    "id": "judges-13-16",
+    "title": "Judges 13–16",
+    "subtitle": "Samson vs. Philistines",
+    "startYear": -1100,
+    "endYear": -1060,
+    "type": "book",
+    "description": "The Nazirite judge Samson and his exploits against the Philistine oppressors."
+  },
+  {
+    "id": "judges-17-21",
+    "title": "Judges 17–21",
+    "subtitle": "Epilogues of Moral & Tribal Anarchy",
+    "startYear": -1060,
+    "endYear": -1050,
+    "type": "book",
+    "description": "Micah's idol, the Danite migration, and the civil war against Benjamin."
+  },
+  {
+    "id": "ruth",
+    "title": "Ruth",
+    "subtitle": "Kinsman-Redeemer Story",
+    "startYear": -1150,
+    "endYear": -1100,
+    "type": "book",
+    "description": "Ruth's loyalty to Naomi and Boaz, leading to the ancestral line of King David."
+  },
+  {
+    "id": "1-samuel",
+    "title": "1 Samuel",
+    "subtitle": "Samuel, King Saul & David's Anointing",
+    "startYear": -1100,
+    "endYear": -1010,
+    "type": "book",
+    "description": "Transition from judges to monarchy; Saul's reign and David's rise."
+  },
+  {
+    "id": "2-samuel",
+    "title": "2 Samuel",
+    "subtitle": "Reign of King David",
+    "startYear": -1010,
+    "endYear": -970,
+    "type": "book",
+    "description": "David's unification of Israel, the Davidic Covenant, Jerusalem as capital, and family trials."
+  },
+  {
+    "id": "1-kings",
+    "title": "1 Kings",
+    "subtitle": "Solomon's Reign to Divided Kingdom",
+    "startYear": -970,
+    "endYear": -852,
+    "type": "book",
+    "description": "Building the Temple, Solomon's death, kingdom split into Israel and Judah, and Elijah's ministry."
+  },
+  {
+    "id": "2-kings",
+    "title": "2 Kings",
+    "subtitle": "Elisha, Divided Kings to Exile",
+    "startYear": -852,
+    "endYear": -561,
+    "type": "book",
+    "description": "Elisha's miracles, the fall of Israel to Assyria (722 BC), and Judah's exile to Babylon (586 BC)."
+  },
+  {
+    "id": "1-chronicles",
+    "title": "1 Chronicles",
+    "subtitle": "Genealogies & Davidic Temple Setup",
+    "startYear": -450,
+    "endYear": -430,
+    "type": "book",
+    "description": "Post-exilic re-retelling of Israel's history focusing on David and temple ministry."
+  },
+  {
+    "id": "2-chronicles",
+    "title": "2 Chronicles",
+    "subtitle": "Solomon to Cyrus Decree",
+    "startYear": -450,
+    "endYear": -430,
+    "type": "book",
+    "description": "Focuses on the kings of Judah who honored God's temple up to Cyrus' proclamation."
+  },
+  {
+    "id": "ezra-1-6",
+    "title": "Ezra 1–6",
+    "subtitle": "First Return & Second Temple",
+    "startYear": -538,
+    "endYear": -516,
+    "type": "book",
+    "description": "Zerubbabel leads exiles back to rebuild the altar and temple in Jerusalem."
+  },
+  {
+    "id": "esther",
+    "title": "Esther",
+    "subtitle": "Providential Preservation in Persia",
+    "startYear": -483,
+    "endYear": -473,
+    "type": "book",
+    "description": "Queen Esther and Mordecai foil Haman's plot to destroy the Jews, establishing Purim."
+  },
+  {
+    "id": "ezra-7-10",
+    "title": "Ezra 7–10",
+    "subtitle": "Second Return & Spiritual Revival",
+    "startYear": -458,
+    "endYear": -457,
+    "type": "book",
+    "description": "Ezra the scribe returns to teach the Law and confront intermarriage compromises."
+  },
+  {
+    "id": "nehemiah",
+    "title": "Nehemiah",
+    "subtitle": "Rebuilding Jerusalem's Walls",
+    "startYear": -444,
+    "endYear": -420,
+    "type": "book",
+    "description": "Cupbearer to Artaxerxes rebuilds Jerusalem's defensive walls in 52 days."
+  },
+  {
+    "id": "matthew",
+    "title": "Matthew",
+    "subtitle": "Gospel of Messiah King",
+    "startYear": 26,
+    "endYear": 30,
+    "type": "book",
+    "description": "Written primarily for Jewish readers, emphasizing Jesus as fulfillment of OT prophecies."
+  },
+  {
+    "id": "mark",
+    "title": "Mark",
+    "subtitle": "Gospel of Suffering Servant",
+    "startYear": 27,
+    "endYear": 30,
+    "type": "book",
+    "description": "Fast-paced account highlighting Jesus' actions, miracles, and ransom on the cross."
+  },
+  {
+    "id": "luke",
+    "title": "Luke",
+    "subtitle": "Gospel of Son of Man",
+    "startYear": 26,
+    "endYear": 30,
+    "type": "book",
+    "description": "Detailed historical record emphasizing Jesus' compassion for outcast groups and all humanity."
+  },
+  {
+    "id": "john",
+    "title": "John",
+    "subtitle": "Gospel of Divine Son of God",
+    "startYear": 27,
+    "endYear": 30,
+    "type": "book",
+    "description": "Focuses on seven sign miracles and 'I AM' statements declaring Jesus' deity."
+  },
+  {
+    "id": "acts",
+    "title": "Acts",
+    "subtitle": "Apostolic Era & Early Church Spread",
+    "startYear": 30,
+    "endYear": 62,
+    "type": "book",
+    "description": "Pentecost, Holy Spirit's arrival, Peter's ministry, and Paul's missionary journeys across the Roman Empire."
+  }
+]
