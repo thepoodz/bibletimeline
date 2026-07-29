@@ -1,0 +1,542 @@
+[
+  {
+    "id": "gen-adam",
+    "title": "Adam",
+    "subtitle": "Gen 5:3–5 | Lived 930 yrs",
+    "startYear": -4000,
+    "endYear": -3070,
+    "type": "good",
+    "description": "First man created by God. Father of Seth, Cain, and Abel. (AM 0–930)"
+  },
+  {
+    "id": "gen-seth",
+    "title": "Seth",
+    "subtitle": "Gen 5:6–8 | Lived 912 yrs",
+    "startYear": -3870,
+    "endYear": -2958,
+    "type": "good",
+    "description": "Son of Adam born when Adam was 130 years old. (AM 130–1042)"
+  },
+  {
+    "id": "gen-enos",
+    "title": "Enos (Enosh)",
+    "subtitle": "Gen 5:9–11 | Lived 905 yrs",
+    "startYear": -3765,
+    "endYear": -2860,
+    "type": "good",
+    "description": "Son of Seth. During his time, men began to call on the name of the Lord. (AM 235–1140)"
+  },
+  {
+    "id": "gen-cainan",
+    "title": "Cainan (Kenan)",
+    "subtitle": "Gen 5:12–14 | Lived 910 yrs",
+    "startYear": -3675,
+    "endYear": -2765,
+    "type": "good",
+    "description": "Son of Enos. (AM 325–1235)"
+  },
+  {
+    "id": "gen-mahaleel",
+    "title": "Mahalaleel",
+    "subtitle": "Gen 5:15–17 | Lived 895 yrs",
+    "startYear": -3605,
+    "endYear": -2710,
+    "type": "good",
+    "description": "Son of Cainan. (AM 395–1290)"
+  },
+  {
+    "id": "gen-jared",
+    "title": "Jared",
+    "subtitle": "Gen 5:18–20 | Lived 962 yrs",
+    "startYear": -3540,
+    "endYear": -2578,
+    "type": "good",
+    "description": "Father of Enoch; second longest-lived patriarch. (AM 460–1422)"
+  },
+  {
+    "id": "gen-enoch",
+    "title": "Enoch",
+    "subtitle": "Gen 5:21–24 | Lived 365 yrs",
+    "startYear": -3378,
+    "endYear": -3013,
+    "type": "good",
+    "description": "Walked with God and was taken by God without experiencing death. (AM 622–987)"
+  },
+  {
+    "id": "gen-methuselah",
+    "title": "Methuselah",
+    "subtitle": "Gen 5:25–27 | Lived 969 yrs",
+    "startYear": -3313,
+    "endYear": -2344,
+    "type": "good",
+    "description": "Oldest recorded human lifespan. Died in the year of the Great Flood. (AM 687–1656)"
+  },
+  {
+    "id": "gen-lamech",
+    "title": "Lamech",
+    "subtitle": "Gen 5:28–31 | Lived 777 yrs",
+    "startYear": -3126,
+    "endYear": -2349,
+    "type": "good",
+    "description": "Father of Noah; named his son expecting comfort from the cursed ground. (AM 874–1651)"
+  },
+  {
+    "id": "gen-noah",
+    "title": "Noah",
+    "subtitle": "Gen 5–9 | Lived 950 yrs",
+    "startYear": -2944,
+    "endYear": -1994,
+    "type": "good",
+    "description": "Built the Ark by faith; survived the Great Flood in 2344 BC (AM 1656). (AM 1056–2006)"
+  },
+  {
+    "id": "gen-shem",
+    "title": "Shem",
+    "subtitle": "Gen 11:10–11 | Lived 600 yrs",
+    "startYear": -2442,
+    "endYear": -1842,
+    "type": "good",
+    "description": "Son of Noah; ancestor of the Semitic peoples and Abraham. (AM 1558–2158)"
+  },
+  {
+    "id": "gen-arphaxad",
+    "title": "Arphaxad",
+    "subtitle": "Gen 11:12–13 | Lived 438 yrs",
+    "startYear": -2342,
+    "endYear": -1904,
+    "type": "good",
+    "description": "Born two years after the Flood. (AM 1658–2096)"
+  },
+  {
+    "id": "gen-salah",
+    "title": "Salah",
+    "subtitle": "Gen 11:14–15 | Lived 433 yrs",
+    "startYear": -2307,
+    "endYear": -1874,
+    "type": "good",
+    "description": "Son of Arphaxad. (AM 1693–2126)"
+  },
+  {
+    "id": "gen-eber",
+    "title": "Eber",
+    "subtitle": "Gen 11:16–17 | Lived 464 yrs",
+    "startYear": -2277,
+    "endYear": -1813,
+    "type": "good",
+    "description": "Eponymous ancestor of the Hebrew people. Outlived Abraham. (AM 1723–2187)"
+  },
+  {
+    "id": "gen-peleg",
+    "title": "Peleg",
+    "subtitle": "Gen 11:18–19 | Lived 239 yrs",
+    "startYear": -2243,
+    "endYear": -2004,
+    "type": "good",
+    "description": "In his days the earth was divided (Tower of Babel). (AM 1757–1996)"
+  },
+  {
+    "id": "gen-reu",
+    "title": "Reu",
+    "subtitle": "Gen 11:20–21 | Lived 239 yrs",
+    "startYear": -2213,
+    "endYear": -1974,
+    "type": "good",
+    "description": "Son of Peleg. (AM 1787–2026)"
+  },
+  {
+    "id": "gen-serug",
+    "title": "Serug",
+    "subtitle": "Gen 11:22–23 | Lived 230 yrs",
+    "startYear": -2181,
+    "endYear": -1951,
+    "type": "good",
+    "description": "Great-grandfather of Abraham. (AM 1819–2049)"
+  },
+  {
+    "id": "gen-nahor",
+    "title": "Nahor",
+    "subtitle": "Gen 11:24–25 | Lived 148 yrs",
+    "startYear": -2151,
+    "endYear": -2003,
+    "type": "good",
+    "description": "Grandfather of Abraham. (AM 1849–1997)"
+  },
+  {
+    "id": "gen-terah",
+    "title": "Terah",
+    "subtitle": "Gen 11:26–32 | Lived 205 yrs",
+    "startYear": -2122,
+    "endYear": -1917,
+    "type": "good",
+    "description": "Father of Abraham, Nahor, and Haran; moved family from Ur to Haran. (AM 1878–2083)"
+  },
+  {
+    "id": "gen-abraham",
+    "title": "Abraham",
+    "subtitle": "Gen 12–25 | Lived 175 yrs",
+    "startYear": -1992,
+    "endYear": -1817,
+    "type": "good",
+    "description": "Father of the faithful; called from Ur by God; received Abrahamic Covenant. (AM 2008–2183)"
+  },
+  {
+    "id": "gen-isaac",
+    "title": "Isaac",
+    "subtitle": "Gen 21–35 | Lived 180 yrs",
+    "startYear": -1892,
+    "endYear": -1712,
+    "type": "good",
+    "description": "Son of promise born to Abraham and Sarah in their old age."
+  },
+  {
+    "id": "gen-jacob",
+    "title": "Jacob (Israel)",
+    "subtitle": "Gen 25–49 | Lived 147 yrs",
+    "startYear": -1832,
+    "endYear": -1685,
+    "type": "good",
+    "description": "Renamed Israel by God; father of the 12 patriarchs of the tribes of Israel."
+  },
+  {
+    "id": "gen-judah",
+    "title": "Judah",
+    "subtitle": "Gen 29 / 49:10 | ~110 yrs",
+    "startYear": -1750,
+    "endYear": -1640,
+    "type": "good",
+    "description": "Fourth son of Jacob; received royal blessing that the scepter would not depart from his line."
+  },
+  {
+    "id": "gen-perez",
+    "title": "Perez",
+    "subtitle": "Gen 38 / Ruth 4:18 | Egyptian Sojourn",
+    "startYear": -1690,
+    "endYear": -1600,
+    "type": "good",
+    "description": "Twin son of Judah and Tamar; ancestor of King David and Jesus."
+  },
+  {
+    "id": "gen-hezron",
+    "title": "Hezron",
+    "subtitle": "Ruth 4:18 | Egyptian Sojourn",
+    "startYear": -1620,
+    "endYear": -1530,
+    "type": "good",
+    "description": "Entered Egypt with Jacob's household."
+  },
+  {
+    "id": "gen-ram",
+    "title": "Ram",
+    "subtitle": "Ruth 4:19 | Egyptian Sojourn",
+    "startYear": -1550,
+    "endYear": -1470,
+    "type": "good",
+    "description": "Ancestor of David during Israel's growth in Egypt."
+  },
+  {
+    "id": "gen-amminadab",
+    "title": "Amminadab",
+    "subtitle": "Exodus 6:23 / Ruth 4:19",
+    "startYear": -1490,
+    "endYear": -1420,
+    "type": "good",
+    "description": "Father-in-law of Aaron (Moses' brother) during the Exodus era."
+  },
+  {
+    "id": "gen-nahshon",
+    "title": "Nahshon",
+    "subtitle": "Num 1:7 | Tribal Leader of Judah",
+    "startYear": -1445,
+    "endYear": -1405,
+    "type": "good",
+    "description": "Leader of the tribe of Judah during the wilderness wanderings."
+  },
+  {
+    "id": "gen-salmon",
+    "title": "Salmon",
+    "subtitle": "Matt 1:5 | Conquest Era",
+    "startYear": -1405,
+    "endYear": -1340,
+    "type": "good",
+    "description": "Married Rahab of Jericho after the Conquest of Canaan."
+  },
+  {
+    "id": "gen-boaz",
+    "title": "Boaz",
+    "subtitle": "Book of Ruth / Matt 1:5",
+    "startYear": -1200,
+    "endYear": -1120,
+    "type": "good",
+    "description": "Wealthy Bethlehemite who served as kinsman-redeemer for Ruth."
+  },
+  {
+    "id": "gen-obed",
+    "title": "Obed",
+    "subtitle": "Ruth 4:21–22",
+    "startYear": -1130,
+    "endYear": -1060,
+    "type": "good",
+    "description": "Son of Boaz and Ruth; grandfather of King David."
+  },
+  {
+    "id": "gen-jesse",
+    "title": "Jesse",
+    "subtitle": "1 Sam 16 / Isa 11:1",
+    "startYear": -1080,
+    "endYear": -1010,
+    "type": "good",
+    "description": "Bethlehemite farmer and father of eight sons, including King David."
+  },
+  {
+    "id": "gen-david",
+    "title": "King David",
+    "subtitle": "2 Sam 5:4 | Lived 70 yrs",
+    "startYear": -1040,
+    "endYear": -970,
+    "type": "good",
+    "description": "Second king of Israel; man after God's own heart; established Davidic Dynasty."
+  },
+  {
+    "id": "gen-solomon",
+    "title": "Solomon",
+    "subtitle": "1 Kings 1–11 | Lived ~60 yrs",
+    "startYear": -991,
+    "endYear": -931,
+    "type": "good",
+    "description": "Son of David; built the First Temple; ancestral line of the Messiah."
+  },
+  {
+    "id": "gen-rehoboam",
+    "title": "Rehoboam",
+    "subtitle": "Matt 1:7 | 1 Kings 14",
+    "startYear": -948,
+    "endYear": -913,
+    "type": "good",
+    "description": "Son of Solomon; first king of Judah after the kingdom split."
+  },
+  {
+    "id": "gen-abijah",
+    "title": "Abijah",
+    "subtitle": "Matt 1:7",
+    "startYear": -931,
+    "endYear": -911,
+    "type": "good",
+    "description": "Son of Rehoboam in the messianic line."
+  },
+  {
+    "id": "gen-asa",
+    "title": "Asa",
+    "subtitle": "Matt 1:8",
+    "startYear": -930,
+    "endYear": -870,
+    "type": "good",
+    "description": "Godly reformer king of Judah."
+  },
+  {
+    "id": "gen-jehoshaphat",
+    "title": "Jehoshaphat",
+    "subtitle": "Matt 1:8",
+    "startYear": -908,
+    "endYear": -848,
+    "type": "good",
+    "description": "Son of Asa in the lineage of David."
+  },
+  {
+    "id": "gen-joram",
+    "title": "Joram (Jehoram)",
+    "subtitle": "Matt 1:8",
+    "startYear": -888,
+    "endYear": -841,
+    "type": "good",
+    "description": "Son of Jehoshaphat."
+  },
+  {
+    "id": "gen-uzziah",
+    "title": "Uzziah (Azariah)",
+    "subtitle": "Matt 1:9",
+    "startYear": -809,
+    "endYear": -739,
+    "type": "good",
+    "description": "King of Judah listed in Matthew's genealogy."
+  },
+  {
+    "id": "gen-jotham",
+    "title": "Jotham",
+    "subtitle": "Matt 1:9",
+    "startYear": -775,
+    "endYear": -731,
+    "type": "good",
+    "description": "Son of Uzziah."
+  },
+  {
+    "id": "gen-ahaz",
+    "title": "Ahaz",
+    "subtitle": "Matt 1:9",
+    "startYear": -755,
+    "endYear": -715,
+    "type": "good",
+    "description": "Son of Jotham, father of Hezekiah."
+  },
+  {
+    "id": "gen-hezekiah",
+    "title": "Hezekiah",
+    "subtitle": "Matt 1:10",
+    "startYear": -741,
+    "endYear": -695,
+    "type": "good",
+    "description": "Righteous king who repaired the Temple and trusted God during Assyrian siege."
+  },
+  {
+    "id": "gen-manasseh",
+    "title": "Manasseh",
+    "subtitle": "Matt 1:10",
+    "startYear": -709,
+    "endYear": -642,
+    "type": "good",
+    "description": "Son of Hezekiah."
+  },
+  {
+    "id": "gen-amon",
+    "title": "Amon",
+    "subtitle": "Matt 1:10",
+    "startYear": -664,
+    "endYear": -640,
+    "type": "good",
+    "description": "Father of King Josiah."
+  },
+  {
+    "id": "gen-josiah",
+    "title": "Josiah",
+    "subtitle": "Matt 1:10–11",
+    "startYear": -648,
+    "endYear": -609,
+    "type": "good",
+    "description": "Godly reformer king fathered the exilic generation."
+  },
+  {
+    "id": "gen-jeconiah",
+    "title": "Jeconiah (Jehoiachin)",
+    "subtitle": "Matt 1:11–12 | Babylonian Exile",
+    "startYear": -616,
+    "endYear": -560,
+    "type": "good",
+    "description": "Carried captive to Babylon during the 597 BC deportation."
+  },
+  {
+    "id": "gen-shealtiel",
+    "title": "Shealtiel",
+    "subtitle": "Matt 1:12 | Exilic Era",
+    "startYear": -580,
+    "endYear": -520,
+    "type": "good",
+    "description": "Son of Jeconiah born during the Babylonian Exile."
+  },
+  {
+    "id": "gen-zerubbabel",
+    "title": "Zerubbabel",
+    "subtitle": "Matt 1:12 / Ezra 3",
+    "startYear": -540,
+    "endYear": -480,
+    "type": "good",
+    "description": "Led first wave of exiles back to Jerusalem and rebuilt the Second Temple."
+  },
+  {
+    "id": "gen-abiud",
+    "title": "Abiud",
+    "subtitle": "Matt 1:13 | Post-Exilic Era",
+    "startYear": -490,
+    "endYear": -420,
+    "type": "good",
+    "description": "Son of Zerubbabel in Matthew's lineage."
+  },
+  {
+    "id": "gen-eliakim",
+    "title": "Eliakim",
+    "subtitle": "Matt 1:13",
+    "startYear": -430,
+    "endYear": -360,
+    "type": "good",
+    "description": "Post-exilic ancestor of Joseph."
+  },
+  {
+    "id": "gen-azor",
+    "title": "Azor",
+    "subtitle": "Matt 1:13–14",
+    "startYear": -370,
+    "endYear": -300,
+    "type": "good",
+    "description": "Ancestor in the royal Davidic line."
+  },
+  {
+    "id": "gen-zadok",
+    "title": "Zadok",
+    "subtitle": "Matt 1:14",
+    "startYear": -310,
+    "endYear": -240,
+    "type": "good",
+    "description": "Post-exilic patriarch."
+  },
+  {
+    "id": "gen-achim",
+    "title": "Achim",
+    "subtitle": "Matt 1:14",
+    "startYear": -250,
+    "endYear": -180,
+    "type": "good",
+    "description": "Intertestamental ancestor."
+  },
+  {
+    "id": "gen-eliud",
+    "title": "Eliud",
+    "subtitle": "Matt 1:14–15",
+    "startYear": -190,
+    "endYear": -120,
+    "type": "good",
+    "description": "Intertestamental patriarch."
+  },
+  {
+    "id": "gen-eleazar",
+    "title": "Eleazar",
+    "subtitle": "Matt 1:15",
+    "startYear": -130,
+    "endYear": -65,
+    "type": "good",
+    "description": "Great-grandfather of Joseph."
+  },
+  {
+    "id": "gen-matthan",
+    "title": "Matthan",
+    "subtitle": "Matt 1:15",
+    "startYear": -80,
+    "endYear": -20,
+    "type": "good",
+    "description": "Grandfather of Joseph."
+  },
+  {
+    "id": "gen-jacob-joseph",
+    "title": "Jacob (Father of Joseph)",
+    "subtitle": "Matt 1:16",
+    "startYear": -50,
+    "endYear": 10,
+    "type": "good",
+    "description": "Father of Joseph the carpenter."
+  },
+  {
+    "id": "gen-joseph",
+    "title": "Joseph",
+    "subtitle": "Matt 1:16 | Husband of Mary",
+    "startYear": -30,
+    "endYear": 20,
+    "type": "good",
+    "description": "Legal earthly father of Jesus Christ; line of King David."
+  },
+  {
+    "id": "gen-jesus",
+    "title": "Jesus Christ",
+    "subtitle": "Matt 1:16 / Luke 3:23 | Messiah",
+    "startYear": -4,
+    "endYear": 30,
+    "type": "good",
+    "description": "Son of God, Messiah, and Savior; seed of Abraham and Son of David."
+  }
+]
