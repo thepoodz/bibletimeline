@@ -152,22 +152,54 @@
       pointer-events: none;
     }
 
+    /* Small Grey: 10-Year Decades */
     .year-marker.decade {
       font-size: 0.65rem;
       font-weight: 500;
       color: var(--text-muted);
     }
 
-    .year-marker.major {
-      font-size: 0.82rem;
+    /* Medium Gold: 100-Year Milestones */
+    .year-marker.century {
+      font-size: 0.78rem;
       font-weight: 700;
-      color: #ffffff;
+      color: var(--accent-gold);
+    }
+
+    /* Big Gold: 1,000-Year Major Eras */
+    .year-marker.millennium {
+      font-size: 0.92rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+    }
+
+    /* --- Horizontal Grid Lines --- */
+    .grid-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .grid-line.decade {
+      border-top: 1px dashed rgba(100, 116, 139, 0.2); /* Thin grey line */
+    }
+
+    .grid-line.century {
+      border-top: 1px solid rgba(245, 158, 11, 0.4); /* Medium gold line */
+    }
+
+    .grid-line.millennium {
+      border-top: 2px solid var(--accent-gold); /* Thick gold line */
+      z-index: 6;
     }
 
     /* Track Columns for Data Blocks */
     .data-track {
       position: relative;
       border-right: 1px solid var(--border-color);
+      z-index: 10;
     }
 
     .data-track.col-slot-3 { display: none; }
@@ -195,10 +227,11 @@
       flex-direction: column;
       justify-content: center;
       transition: transform 0.1s ease;
+      z-index: 15;
     }
 
     .event-block:hover {
-      z-index: 10;
+      z-index: 20;
       transform: scale(1.02);
     }
 
@@ -220,7 +253,7 @@
       margin-top: 2px;
     }
 
-    /* Classification Colors matching user's chart */
+    /* Classification Colors */
     .event-block.good { border-left-color: #22c55e; background: #142e22; }      /* Good King - Green */
     .event-block.bad { border-left-color: #eab308; background: #2e2814; }       /* Bad King - Yellow */
     .event-block.evil { border-left-color: #ef4444; background: #33171a; }      /* Evil King - Red */
@@ -236,7 +269,7 @@
       bottom: 0;
       width: var(--scrubber-width);
       z-index: 200;
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(8px);
       border-left: 1px solid var(--border-color);
       display: flex;
@@ -257,16 +290,20 @@
       cursor: pointer;
     }
 
-    .scrub-tick.intermediate::before {
+    /* Orange Dot for 100-Year Ticks */
+    .scrub-tick.dot::before {
       content: "";
-      width: 6px;
-      height: 1px;
-      background-color: var(--border-color);
+      width: 4px;
+      height: 4px;
+      background-color: var(--accent-gold);
+      border-radius: 50%;
+      opacity: 0.8;
     }
 
+    /* Slightly Bigger Gold Milestone Text */
     .scrub-label {
-      font-size: 0.62rem;
-      font-weight: 700;
+      font-size: 0.72rem;
+      font-weight: 800;
       color: var(--accent-gold);
       pointer-events: none;
       line-height: 1;
@@ -403,7 +440,7 @@
         erasData = await response.json();
 
         setupCanvasHeight();
-        renderYearAxis();
+        renderYearAxisAndGridLines();
         renderTimeline();
         buildScrubberRail();
         setupTouchScrubber();
@@ -413,7 +450,6 @@
     }
 
     function getYearOffset(year) {
-      // Calculates pixel position from -4000 start point
       return (year - START_YEAR) * PIXELS_PER_YEAR;
     }
 
@@ -423,33 +459,48 @@
       canvas.style.height = `${totalHeight}px`;
     }
 
-    function renderYearAxis() {
+    function renderYearAxisAndGridLines() {
       yearTrack.innerHTML = '';
+
+      // Clear existing grid lines if re-rendered
+      canvas.querySelectorAll('.grid-line').forEach(l => l.remove());
+
       for (let y = START_YEAR; y <= END_YEAR; y += 10) {
         if (y === 0) continue;
 
+        const absYear = Math.abs(y);
+        const topPos = getYearOffset(y);
+
+        // 1. Render Left Year Text Marker
         const marker = document.createElement('div');
         marker.className = 'year-marker';
-        marker.style.top = `${getYearOffset(y)}px`;
-
-        const absYear = Math.abs(y);
+        marker.style.top = `${topPos}px`;
         marker.textContent = absYear;
 
-        if (absYear % 100 === 0) {
-          marker.classList.add('major');
+        // 2. Render Full Horizontal Grid Line across Canvas
+        const gridLine = document.createElement('div');
+        gridLine.className = 'grid-line';
+        gridLine.style.top = `${topPos}px`;
+
+        if (absYear % 1000 === 0) {
+          marker.classList.add('millennium');
+          gridLine.classList.add('millennium');
+        } else if (absYear % 100 === 0) {
+          marker.classList.add('century');
+          gridLine.classList.add('century');
         } else {
           marker.classList.add('decade');
+          gridLine.classList.add('decade');
         }
 
         yearTrack.appendChild(marker);
+        canvas.appendChild(gridLine);
       }
     }
 
     function renderTimeline() {
-      // Clear current data tracks
       tracks.forEach(track => track.innerHTML = '');
 
-      // Flatten items from JSON eras
       const allEvents = {
         'books': [],
         'kings-judah': [],
@@ -466,7 +517,6 @@
         });
       });
 
-      // Render cards to active tracks
       selects.forEach((select, slotIndex) => {
         const catKey = select.value;
         const targetTrack = tracks[slotIndex];
@@ -475,16 +525,15 @@
         events.forEach(event => {
           const block = document.createElement('div');
           
-          // Determine color classification class
           let styleClass = event.type || 'book';
           if (event.classification) {
-            styleClass = event.classification; // 'good', 'bad', 'evil'
+            styleClass = event.classification;
           }
           block.className = `event-block ${styleClass}`;
 
           const topPos = getYearOffset(event.startYear);
           const duration = Math.max(1, event.endYear - event.startYear);
-          const blockHeight = Math.max(24, duration * PIXELS_PER_YEAR); // Minimum height for readability
+          const blockHeight = Math.max(24, duration * PIXELS_PER_YEAR);
 
           block.style.top = `${topPos}px`;
           block.style.height = `${blockHeight}px`;
@@ -526,7 +575,8 @@
           label.textContent = majorMilestones.get(tickKey);
           tick.appendChild(label);
         } else {
-          tick.classList.add('intermediate');
+          // Orange dot for 100-year steps
+          tick.classList.add('dot');
         }
 
         scrubberRail.appendChild(tick);
