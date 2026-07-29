@@ -244,9 +244,9 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      cursor: pointer;
     }
 
-    /* Sticky Inner Content Box for Text Header */
     .event-block .card-content {
       position: sticky;
       top: 105px;
@@ -257,7 +257,6 @@
       overflow: hidden;
     }
 
-    /* Top Arrow (Inside sticky header) */
     .card-arrow.top {
       position: absolute;
       top: 4px;
@@ -271,7 +270,6 @@
       z-index: 20;
     }
 
-    /* Bottom Arrow (Floats sticky near bottom of viewport while scrolling inside block) */
     .card-arrow.bottom {
       position: sticky;
       bottom: 8px;
@@ -323,6 +321,7 @@
       backdrop-filter: blur(4px);
       box-shadow: 0 2px 6px rgba(0,0,0,0.4);
       transition: transform 0.15s ease, z-index 0.15s ease;
+      cursor: pointer;
     }
 
     .event-point:hover {
@@ -435,94 +434,92 @@
       transition: top 0.05s linear;
     }
 
-/* --- Modal Background Overlay --- */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
-  z-index: 300;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
+    /* --- Modal Popup Overlay --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
 
-.modal-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
-/* --- Modal Card --- */
-.modal-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-left: 5px solid var(--accent-gold);
-  border-radius: 8px;
-  width: 100%;
-  max-width: 480px;
-  padding: 20px;
-  position: relative;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-  transform: translateY(10px);
-  transition: transform 0.2s ease;
-}
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-left: 5px solid var(--accent-gold);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      transform: translateY(10px);
+      transition: transform 0.2s ease;
+    }
 
-.modal-overlay.active .modal-card {
-  transform: translateY(0);
-}
+    .modal-overlay.active .modal-card {
+      transform: translateY(0);
+    }
 
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-size: 1.4rem;
-  cursor: pointer;
-  line-height: 1;
-}
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+    }
 
-.modal-close:hover { color: var(--text-main); }
+    .modal-close:hover { color: var(--text-main); }
 
-.modal-type {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--accent-gold);
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-}
+    .modal-type {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
 
-.modal-title {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text-main);
-  margin-bottom: 4px;
-}
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
 
-.modal-dates {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-weight: 600;
-  margin-bottom: 12px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 8px;
-}
+    .modal-dates {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
 
-.modal-body {
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: #cbd5e1;
-}
-    
+    .modal-body {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #cbd5e1;
+    }
   </style>
 </head>
 <body>
@@ -609,6 +606,19 @@
     </div>
   </main>
 
+  <!-- Event Detail Modal Overlay -->
+  <div class="modal-overlay" id="event-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <div class="modal-type" id="modal-type">Category</div>
+      <h2 class="modal-title" id="modal-title">Event Title</h2>
+      <div class="modal-dates" id="modal-dates">Years</div>
+      <div class="modal-body" id="modal-body">
+        Description text goes here.
+      </div>
+    </div>
+  </div>
+
   <script>
     const dataCache = {};
 
@@ -655,9 +665,17 @@
     const btnZoomOut = document.getElementById('btn-zoom-out');
     const zoomLevelText = document.getElementById('zoom-level-text');
 
+    const modal = document.getElementById('event-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalType = document.getElementById('modal-type');
+    const modalDates = document.getElementById('modal-dates');
+    const modalBody = document.getElementById('modal-body');
+    const modalClose = document.getElementById('modal-close');
+
     async function loadTimeline() {
       rebuildCanvasLayout();
       setupZoomListeners();
+      setupModalListeners();
 
       await fetchCategoryData('books');
       updateDropdownOptionsUI();
@@ -731,6 +749,33 @@
       }, { passive: true });
 
       window.addEventListener('touchend', () => initialTouchDistance = null);
+    }
+
+    function openEventModal(event) {
+      modalTitle.textContent = event.title;
+      modalType.textContent = event.subtitle || 'Event Details';
+      
+      const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
+      const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
+      modalDates.textContent = event.startYear === event.endYear ? startStr : `${startStr} – ${endStr}`;
+      
+      modalBody.textContent = event.description || "Detailed notes, key verses, or historical context for this period can be populated in your JSON files.";
+
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    function setupModalListeners() {
+      modalClose.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+      });
     }
 
     async function fetchCategoryData(categoryKey) {
@@ -895,6 +940,8 @@
           const laneWidthPct = 100 / totalLanes;
           const leftPosPct = laneWidthPct * currentLane;
 
+          card.addEventListener('click', () => openEventModal(event));
+
           if (event.isPointEffective) {
             card.className = `event-point ${styleClass}`;
             card.style.top = `${topPos}px`;
@@ -922,11 +969,9 @@
             card.dataset.top = topPos;
             card.dataset.bottom = topPos + blockHeight;
 
-            // Inner Sticky Content Container for Header
             const content = document.createElement('div');
             content.className = 'card-content';
 
-            // Top Arrow (Sits in sticky header)
             const arrowTop = document.createElement('div');
             arrowTop.className = 'card-arrow top';
             arrowTop.textContent = '▲';
@@ -944,17 +989,12 @@
             content.appendChild(subtitle);
             card.appendChild(content);
 
-            // Bottom Arrow (Sits at bottom of card container)
             const arrowBottom = document.createElement('div');
             arrowBottom.className = 'card-arrow bottom';
             arrowBottom.textContent = '▼';
             card.appendChild(arrowBottom);
           }
 
-          // Add cursor style and click handler
-card.style.cursor = 'pointer';
-card.addEventListener('click', () => openEventModal(event));
-          
           targetTrack.appendChild(card);
         });
       });
@@ -962,10 +1002,9 @@ card.addEventListener('click', () => openEventModal(event));
       updateCardContinuationArrows();
     }
 
-    // Toggle continuation arrows based on viewport scroll bounds
     function updateCardContinuationArrows() {
       const scrollY = window.scrollY;
-      const viewportTop = scrollY + 105; // Header height offset
+      const viewportTop = scrollY + 105;
       const viewportBottom = scrollY + window.innerHeight;
 
       document.querySelectorAll('.event-block').forEach(card => {
@@ -976,12 +1015,10 @@ card.addEventListener('click', () => openEventModal(event));
         const arrowBottom = card.querySelector('.card-arrow.bottom');
 
         if (arrowTop) {
-          // Top arrow shows ONLY if top boundary has scrolled above visible area
           arrowTop.style.display = (top < viewportTop && bottom > viewportTop + 20) ? 'block' : 'none';
         }
 
         if (arrowBottom) {
-          // Bottom arrow shows ONLY if bottom boundary is strictly below the visible viewport bottom
           const isBottomOffscreen = bottom > viewportBottom - 12;
           const isTopAboveScreen = top < viewportBottom;
 
@@ -1075,55 +1112,6 @@ card.addEventListener('click', () => openEventModal(event));
     }));
 
     loadTimeline();
-
-    const modal = document.getElementById('event-modal');
-const modalTitle = document.getElementById('modal-title');
-const modalType = document.getElementById('modal-type');
-const modalDates = document.getElementById('modal-dates');
-const modalBody = document.getElementById('modal-body');
-const modalClose = document.getElementById('modal-close');
-
-function openEventModal(event) {
-  modalTitle.textContent = event.title;
-  modalType.textContent = event.subtitle || 'Event Details';
-
-  // Format BC/AD display
-  const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
-  const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
-  modalDates.textContent = event.startYear === event.endYear ? startStr : `${startStr} – ${endStr}`;
-
-  // Display description from JSON, or fall back to default text
-  modalBody.textContent = event.description || "Detailed notes, key verses, or historical context for this period can be populated in your JSON files.";
-
-  modal.classList.add('active');
-}
-
-function closeModal() {
-  modal.classList.remove('active');
-}
-
-modalClose.addEventListener('click', closeModal);
-modal.addEventListener('click', (e) => {
-  if (e.target === modal) closeModal();
-});
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeModal();
-});
-    
   </script>
-
-  <!-- Event Detail Modal -->
-<div class="modal-overlay" id="event-modal">
-  <div class="modal-card">
-    <button class="modal-close" id="modal-close">&times;</button>
-    <div class="modal-type" id="modal-type">Category</div>
-    <h2 class="modal-title" id="modal-title">Event Title</h2>
-    <div class="modal-dates" id="modal-dates">Years</div>
-    <div class="modal-body" id="modal-body">
-      Detailed description or scripture reference goes here.
-    </div>
-  </div>
-</div>
-  
 </body>
 </html>
