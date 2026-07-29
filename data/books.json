@@ -33,7 +33,7 @@
   },
   {
     "id": "job",
-    "title": "Book of Job",
+    "title": "Job",
     "subtitle": "Patriarchal Era Wisdom",
     "startYear": -2000,
     "endYear": -1800,
@@ -41,7 +41,7 @@
   },
   {
     "id": "exodus",
-    "title": "Book of Exodus",
+    "title": "Exodus",
     "subtitle": "Bondage, Wilderness & Tabernacle",
     "startYear": -1525,
     "endYear": -1445,
@@ -49,7 +49,7 @@
   },
   {
     "id": "leviticus",
-    "title": "Book of Leviticus",
+    "title": "Leviticus",
     "subtitle": "Priesthood & Law at Sinai",
     "startYear": -1445,
     "endYear": -1444,
@@ -57,7 +57,7 @@
   },
   {
     "id": "numbers",
-    "title": "Book of Numbers",
+    "title": "Numbers",
     "subtitle": "Wilderness Wanderings",
     "startYear": -1444,
     "endYear": -1406,
@@ -65,7 +65,7 @@
   },
   {
     "id": "deuteronomy",
-    "title": "Book of Deuteronomy",
+    "title": "Deuteronomy",
     "subtitle": "Moab Covenant & Death of Moses",
     "startYear": -1406,
     "endYear": -1405,
@@ -73,7 +73,7 @@
   },
   {
     "id": "joshua",
-    "title": "Book of Joshua",
+    "title": "Joshua",
     "subtitle": "Conquest & Division of Canaan",
     "startYear": -1405,
     "endYear": -1385,
@@ -121,7 +121,7 @@
   },
   {
     "id": "ruth",
-    "title": "Book of Ruth",
+    "title": "Ruth",
     "subtitle": "Story of Boaz & Ruth",
     "startYear": -1150,
     "endYear": -1100,
@@ -145,7 +145,7 @@
   },
   {
     "id": "psalms",
-    "title": "Book of Psalms",
+    "title": "Psalms",
     "subtitle": "Davidic & Temple Hymnal",
     "startYear": -1020,
     "endYear": -450,
@@ -153,7 +153,7 @@
   },
   {
     "id": "proverbs",
-    "title": "Book of Proverbs",
+    "title": "Proverbs",
     "subtitle": "Wisdom of Solomon & Scribes",
     "startYear": -970,
     "endYear": -700,
@@ -193,7 +193,7 @@
   },
   {
     "id": "jonah",
-    "title": "Book of Jonah",
+    "title": "Jonah",
     "subtitle": "Mission to Nineveh",
     "startYear": -780,
     "endYear": -760,
@@ -201,7 +201,7 @@
   },
   {
     "id": "amos",
-    "title": "Book of Amos",
+    "title": "Amos",
     "subtitle": "Prophecy to Northern Israel",
     "startYear": -760,
     "endYear": -750,
@@ -209,7 +209,7 @@
   },
   {
     "id": "hosea",
-    "title": "Book of Hosea",
+    "title": "Hosea",
     "subtitle": "Unfaithfulness of Israel",
     "startYear": -755,
     "endYear": -725,
@@ -217,7 +217,7 @@
   },
   {
     "id": "micah",
-    "title": "Book of Micah",
+    "title": "Micah",
     "subtitle": "Judgment & Messianic Hope",
     "startYear": -735,
     "endYear": -700,
@@ -225,7 +225,7 @@
   },
   {
     "id": "isaiah",
-    "title": "Book of Isaiah",
+    "title": "Isaiah",
     "subtitle": "Assyrian Crisis & Consolation",
     "startYear": -740,
     "endYear": -680,
@@ -233,7 +233,7 @@
   },
   {
     "id": "nahum",
-    "title": "Book of Nahum",
+    "title": "Nahum",
     "subtitle": "Fall of Nineveh Predicted",
     "startYear": -660,
     "endYear": -630,
@@ -241,7 +241,7 @@
   },
   {
     "id": "zephaniah",
-    "title": "Book of Zephaniah",
+    "title": "Zephaniah",
     "subtitle": "Day of the Lord Warning",
     "startYear": -640,
     "endYear": -620,
@@ -249,7 +249,7 @@
   },
   {
     "id": "habakkuk",
-    "title": "Book of Habakkuk",
+    "title": "Habakkuk",
     "subtitle": "Dialogue on Babylonian Threat",
     "startYear": -608,
     "endYear": -598,
@@ -257,7 +257,7 @@
   },
   {
     "id": "jeremiah",
-    "title": "Book of Jeremiah",
+    "title": "Jeremiah",
     "subtitle": "Warnings & Fall of Jerusalem",
     "startYear": -627,
     "endYear": -580,
@@ -273,7 +273,7 @@
   },
   {
     "id": "obadiah",
-    "title": "Book of Obadiah",
+    "title": "Obadiah",
     "subtitle": "Judgment on Edom",
     "startYear": -585,
     "endYear": -575,
@@ -281,7 +281,7 @@
   },
   {
     "id": "ezekiel",
-    "title": "Book of Ezekiel",
+    "title": "Ezekiel",
     "subtitle": "Exilic Visions in Babylon",
     "startYear": -593,
     "endYear": -570,
@@ -289,7 +289,7 @@
   },
   {
     "id": "daniel",
-    "title": "Book of Daniel",
+    "title": "Daniel",
     "subtitle": "Court Tales & Apocalyptic Visions",
     "startYear": -605,
     "endYear": -535,
@@ -321,7 +321,7 @@
   },
   {
     "id": "haggai",
-    "title": "Book of Haggai",
+    "title": "Haggai",
     "subtitle": "Call to Rebuild Second Temple",
     "startYear": -520,
     "endYear": -519,
@@ -329,7 +329,7 @@
   },
   {
     "id": "zechariah",
-    "title": "Book of Zechariah",
+    "title": "Zechariah",
     "subtitle": "Post-Exilic Messianic Visions",
     "startYear": -520,
     "endYear": -480,
@@ -337,7 +337,7 @@
   },
   {
     "id": "esther",
-    "title": "Book of Esther",
+    "title": "Esther",
     "subtitle": "Jewish Deliverance in Persia",
     "startYear": -483,
     "endYear": -473,
@@ -353,7 +353,7 @@
   },
   {
     "id": "nehemiah",
-    "title": "Book of Nehemiah",
+    "title": "Nehemiah",
     "subtitle": "Rebuilding Walls of Jerusalem",
     "startYear": -445,
     "endYear": -420,
@@ -361,7 +361,7 @@
   },
   {
     "id": "malachi",
-    "title": "Book of Malachi",
+    "title": "Malachi",
     "subtitle": "Final Old Testament Prophecy",
     "startYear": -433,
     "endYear": -420,
@@ -369,7 +369,7 @@
   },
   {
     "id": "joel",
-    "title": "Book of Joel",
+    "title": "Joel",
     "subtitle": "Locust Plague & Outpouring of Spirit",
     "startYear": -400,
     "endYear": -350,
@@ -377,7 +377,7 @@
   },
   {
     "id": "matthew",
-    "title": "Gospel of Matthew",
+    "title": "Matthew",
     "subtitle": "Life & Ministry of Jesus Christ",
     "startYear": 26,
     "endYear": 30,
@@ -385,7 +385,7 @@
   },
   {
     "id": "mark",
-    "title": "Gospel of Mark",
+    "title": "Mark",
     "subtitle": "Servant Ministry of Jesus",
     "startYear": 27,
     "endYear": 30,
@@ -393,7 +393,7 @@
   },
   {
     "id": "luke",
-    "title": "Gospel of Luke",
+    "title": "Luke",
     "subtitle": "Son of Man Narrative",
     "startYear": 26,
     "endYear": 30,
@@ -401,7 +401,7 @@
   },
   {
     "id": "john",
-    "title": "Gospel of John",
+    "title": "John",
     "subtitle": "Sign Miracles & Divine Sonship",
     "startYear": 27,
     "endYear": 30,
@@ -409,7 +409,7 @@
   },
   {
     "id": "acts",
-    "title": "Book of Acts",
+    "title": "Acts",
     "subtitle": "Early Church & Apostolic Expansion",
     "startYear": 30,
     "endYear": 62,
@@ -417,7 +417,7 @@
   },
   {
     "id": "james",
-    "title": "Epistle of James",
+    "title": "James",
     "subtitle": "Letter to Diaspora Believers",
     "startYear": 45,
     "endYear": 48,
@@ -449,7 +449,7 @@
   },
   {
     "id": "romans",
-    "title": "Epistle to Romans",
+    "title": "Romans",
     "subtitle": "Paul's Systematic Theology",
     "startYear": 57,
     "endYear": 58,
@@ -481,7 +481,7 @@
   },
   {
     "id": "hebrews",
-    "title": "Epistle to Hebrews",
+    "title": "Hebrews",
     "subtitle": "Supremacy of Christ Covenant",
     "startYear": 65,
     "endYear": 69,
@@ -497,7 +497,7 @@
   },
   {
     "id": "revelation",
-    "title": "Book of Revelation",
+    "title": "Revelation",
     "subtitle": "Apocalypse of John at Patmos",
     "startYear": 95,
     "endYear": 96,
