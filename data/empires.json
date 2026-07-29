@@ -1,0 +1,8 @@
+[
+  { "title": "Patriarchal Era", "subtitle": "Genesis 1–50", "startYear": -4000, "endYear": -1800, "type": "empire" },
+  { "title": "Egyptian New Kingdom", "subtitle": "Pharaoh of Exodus", "startYear": -1550, "endYear": -1077, "type": "empire" },
+  { "title": "Assyrian Empire", "subtitle": "722 B.C. Captivity of Israel", "startYear": -745, "endYear": -612, "type": "empire" },
+  { "title": "Babylonian Empire", "subtitle": "586 B.C. Destruction of Judah", "startYear": -612, "endYear": -539, "type": "empire" },
+  { "title": "Roman Empire", "subtitle": "Rule over Judea & Mediterranean", "startYear": -63, "endYear": 100, "type": "empire" },
+  { "title": "70 A.D. Fall of Jerusalem", "subtitle": "Titus Destroys 2nd Temple", "startYear": 70, "endYear": 70, "isPointEvent": true, "type": "empire" }
+]

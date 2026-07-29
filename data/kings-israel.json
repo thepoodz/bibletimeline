@@ -1,0 +1,23 @@
+[
+  { "title": "Ish-bosheth", "subtitle": "2 Sa 2–4 • 1006–1004 B.C.", "startYear": -1006, "endYear": -1004, "type": "king-israel", "classification": "bad" },
+  { "title": "Jeroboam I", "subtitle": "1 Ki 11:26–14:20 • Evil King", "startYear": -930, "endYear": -910, "type": "king-israel", "classification": "evil" },
+  { "title": "Nadab", "subtitle": "1 Ki 15:25-32 • Evil King", "startYear": -910, "endYear": -909, "type": "king-israel", "classification": "evil" },
+  { "title": "Baasha", "subtitle": "1 Ki 15:27-34 • Evil King", "startYear": -909, "endYear": -886, "type": "king-israel", "classification": "evil" },
+  { "title": "Elah", "subtitle": "1 Ki 16:8-14 • Evil King", "startYear": -886, "endYear": -885, "type": "king-israel", "classification": "evil" },
+  { "title": "Zimri", "subtitle": "1 Ki 16:15-20 • Evil King (7 Days)", "startYear": -885, "endYear": -885, "type": "king-israel", "classification": "evil" },
+  { "title": "Tibni", "subtitle": "1 Ki 16:21-22 • Throne Contested", "startYear": -885, "endYear": -880, "type": "king-israel", "classification": "bad" },
+  { "title": "Omri", "subtitle": "1 Ki 16:15-28 • Evil King", "startYear": -885, "endYear": -874, "type": "king-israel", "classification": "evil" },
+  { "title": "Ahab", "subtitle": "1 Ki 16:20–22:40 • Evil King", "startYear": -874, "endYear": -853, "type": "king-israel", "classification": "evil" },
+  { "title": "Ahaziah", "subtitle": "1 Ki 22:51–2 Ki 1 • Evil King", "startYear": -853, "endYear": -852, "type": "king-israel", "classification": "evil" },
+  { "title": "Joram", "subtitle": "2 Ki 3:1-3 • Bad King", "startYear": -852, "endYear": -841, "type": "king-israel", "classification": "bad" },
+  { "title": "Jehu", "subtitle": "2 Ki 9–10 • Bad King", "startYear": -841, "endYear": -814, "type": "king-israel", "classification": "bad" },
+  { "title": "Jehoahaz", "subtitle": "2 Ki 13:1-9 • Evil King", "startYear": -814, "endYear": -798, "type": "king-israel", "classification": "evil" },
+  { "title": "Jehoash", "subtitle": "2 Ki 13:10-13 • Evil King", "startYear": -798, "endYear": -782, "type": "king-israel", "classification": "evil" },
+  { "title": "Jeroboam II", "subtitle": "2 Ki 14:23-29 • Evil King", "startYear": -793, "endYear": -753, "type": "king-israel", "classification": "evil" },
+  { "title": "Zechariah", "subtitle": "2 Ki 15:8-12 • Evil King", "startYear": -753, "endYear": -752, "type": "king-israel", "classification": "evil" },
+  { "title": "Shallum", "subtitle": "2 Ki 15:13-16 • Evil King", "startYear": -752, "endYear": -752, "type": "king-israel", "classification": "evil" },
+  { "title": "Menahem", "subtitle": "2 Ki 15:17-22 • Evil King", "startYear": -752, "endYear": -742, "type": "king-israel", "classification": "evil" },
+  { "title": "Pekahiah", "subtitle": "2 Ki 15:23-26 • Evil King", "startYear": -742, "endYear": -740, "type": "king-israel", "classification": "evil" },
+  { "title": "Pekah", "subtitle": "2 Ki 15:27-31 • Evil King", "startYear": -752, "endYear": -732, "type": "king-israel", "classification": "evil" },
+  { "title": "Hoshea", "subtitle": "2 Ki 17:1-6 • Evil King", "startYear": -732, "endYear": -722, "type": "king-israel", "classification": "evil" }
+]

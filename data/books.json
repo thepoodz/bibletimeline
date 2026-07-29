@@ -1,0 +1,20 @@
+[
+  { "title": "Genesis 1–3", "subtitle": "Creation, Eden & The Fall", "startYear": -4000, "endYear": -3900, "type": "book" },
+  { "title": "Genesis 6–9", "subtitle": "Noah & The Great Flood", "startYear": -2350, "endYear": -2300, "type": "book" },
+  { "title": "Genesis 12–25", "subtitle": "Covenant with Abraham", "startYear": -2095, "endYear": -1920, "type": "book" },
+  { "title": "Job", "subtitle": "Traditional Era setting", "startYear": -2000, "endYear": -1900, "type": "book" },
+  { "title": "Genesis 37–50", "subtitle": "Joseph & Descent into Egypt", "startYear": -1915, "endYear": -1805, "type": "book" },
+  { "title": "Exodus & Leviticus", "subtitle": "Exodus & Law at Sinai", "startYear": -1446, "endYear": -1445, "type": "book" },
+  { "title": "Numbers & Deuteronomy", "subtitle": "Wilderness Wanderings", "startYear": -1445, "endYear": -1406, "type": "book" },
+  { "title": "Joshua", "subtitle": "Conquest of Canaan", "startYear": -1406, "endYear": -1375, "type": "book" },
+  { "title": "Judges & Ruth", "subtitle": "Period of the Judges", "startYear": -1375, "endYear": -1050, "type": "book" },
+  { "title": "1 & 2 Samuel", "subtitle": "Reigns of Saul & David", "startYear": -1050, "endYear": -970, "type": "book" },
+  { "title": "1 Kings 1–11", "subtitle": "Reign of Solomon & Wisdom Books", "startYear": -970, "endYear": -931, "type": "book" },
+  { "title": "1 Kings 12–22", "subtitle": "Kingdom Splits (Israel / Judah)", "startYear": -931, "endYear": -850, "type": "book" },
+  { "title": "2 Kings 1–17", "subtitle": "Elijah/Elisha to Fall of Israel", "startYear": -850, "endYear": -722, "type": "book" },
+  { "title": "2 Kings 18–25", "subtitle": "Judah Alone to Babylonian Exile", "startYear": -722, "endYear": -586, "type": "book" },
+  { "title": "Matthew, Mark, Luke, John", "subtitle": "Life & Ministry of Jesus", "startYear": -4, "endYear": 30, "type": "book" },
+  { "title": "Acts 1–12", "subtitle": "Early Church in Jerusalem", "startYear": 30, "endYear": 45, "type": "book" },
+  { "title": "Acts 13–28 & Epistles", "subtitle": "Paul's Journeys & Letters", "startYear": 45, "endYear": 68, "type": "book" },
+  { "title": "General Epistles & Revelation", "subtitle": "Apostolic Era Closes", "startYear": 68, "endYear": 95, "type": "book" }
+]
