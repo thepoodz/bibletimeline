@@ -224,6 +224,15 @@
       background: var(--accent-gold);
       color: var(--bg-color);
     }
+
+    /* Gives quiet decades consistent spacing */
+.timeline-cell:empty::after {
+  content: "•";
+  color: var(--border-color);
+  text-align: center;
+  font-size: 0.75rem;
+}
+    
   </style>
 </head>
 <body>
