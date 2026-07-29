@@ -18,8 +18,8 @@
       --text-muted: #64748b;
       --col-year-width: 68px;
       --scrubber-width: 28px;
-      --pixels-per-year: 2.5; /* Scale factor: 10 years = 25px height */
-      --canvas-top-padding: 30px; /* Prevents top '4000' label clipping */
+      --pixels-per-year: 2.5;
+      --canvas-top-padding: 30px;
     }
 
     * {
@@ -40,7 +40,6 @@
       touch-action: pan-y;
     }
 
-    /* --- Top Controls Toolbar --- */
     .toolbar {
       position: sticky;
       top: 0;
@@ -61,7 +60,6 @@
       color: var(--accent-gold);
     }
 
-    /* --- Responsive Timeline Canvas Grid --- */
     .timeline-container {
       display: grid;
       grid-template-columns: var(--col-year-width) repeat(2, 1fr);
@@ -78,7 +76,6 @@
       .timeline-container { grid-template-columns: var(--col-year-width) repeat(5, 1fr); }
     }
 
-    /* --- Column Selector Headers --- */
     .col-header {
       position: sticky;
       top: 45px;
@@ -126,7 +123,6 @@
       text-overflow: ellipsis;
     }
 
-    /* --- Continuous Map Canvas --- */
     .timeline-canvas {
       position: relative;
       grid-column: 1 / -1;
@@ -135,7 +131,6 @@
       width: 100%;
     }
 
-    /* --- Left Sticky Year Track --- */
     .year-track {
       position: relative;
       background-color: #111827;
@@ -153,28 +148,10 @@
       pointer-events: none;
     }
 
-    /* Small Grey: 10-Year Decades */
-    .year-marker.decade {
-      font-size: 0.65rem;
-      font-weight: 500;
-      color: var(--text-muted);
-    }
+    .year-marker.decade { font-size: 0.65rem; font-weight: 500; color: var(--text-muted); }
+    .year-marker.century { font-size: 0.78rem; font-weight: 700; color: #ffffff; }
+    .year-marker.millennium { font-size: 0.92rem; font-weight: 900; color: var(--accent-gold); }
 
-    /* Medium White: 100-Year Milestones */
-    .year-marker.century {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    /* Big Gold: 1,000-Year Major Eras */
-    .year-marker.millennium {
-      font-size: 0.92rem;
-      font-weight: 900;
-      color: var(--accent-gold);
-    }
-
-    /* --- Horizontal Grid Lines --- */
     .grid-line {
       position: absolute;
       left: 0;
@@ -183,20 +160,10 @@
       z-index: 5;
     }
 
-    .grid-line.decade {
-      border-top: 1px dashed rgba(100, 116, 139, 0.2);
-    }
+    .grid-line.decade { border-top: 1px dashed rgba(100, 116, 139, 0.2); }
+    .grid-line.century { border-top: 1px solid rgba(255, 255, 255, 0.35); }
+    .grid-line.millennium { border-top: 2px solid var(--accent-gold); z-index: 6; }
 
-    .grid-line.century {
-      border-top: 1px solid rgba(255, 255, 255, 0.35);
-    }
-
-    .grid-line.millennium {
-      border-top: 2px solid var(--accent-gold);
-      z-index: 6;
-    }
-
-    /* Track Columns for Data Blocks */
     .data-track {
       position: relative;
       border-right: 1px solid var(--border-color);
@@ -213,7 +180,6 @@
       .data-track.col-slot-5 { display: block; } 
     }
 
-    /* --- Continuous Span Event Blocks --- */
     .event-block {
       position: absolute;
       left: 4px;
@@ -231,10 +197,7 @@
       z-index: 15;
     }
 
-    .event-block:hover {
-      z-index: 20;
-      transform: scale(1.02);
-    }
+    .event-block:hover { z-index: 20; transform: scale(1.02); }
 
     .event-block .title {
       font-weight: 700;
@@ -254,7 +217,6 @@
       margin-top: 2px;
     }
 
-    /* --- Single Point Event Markers (Line + Node + Floating Text) --- */
     .event-point {
       position: absolute;
       left: 2px;
@@ -264,7 +226,6 @@
       z-index: 18;
     }
 
-    /* Small dot node on the pin line */
     .event-point::before {
       content: "";
       position: absolute;
@@ -295,31 +256,24 @@
       text-overflow: ellipsis;
     }
 
-    /* Point Event Specific Colors */
     .event-point.good::before { background: #22c55e; }
     .event-point.good { border-top-color: #22c55e; }
-
     .event-point.evil::before, .event-point.bad::before { background: #ef4444; }
     .event-point.evil, .event-point.bad { border-top-color: #ef4444; }
-
     .event-point.empire::before { background: #f97316; }
     .event-point.empire { border-top-color: #f97316; }
-
     .event-point.prophet::before { background: #a855f7; }
     .event-point.prophet { border-top-color: #a855f7; }
-
     .event-point.book::before { background: #3b82f6; }
     .event-point.book { border-top-color: #3b82f6; }
 
-    /* Classification Colors for Spans */
-    .event-block.good { border-left-color: #22c55e; background: #142e22; }      /* Good King - Green */
-    .event-block.bad { border-left-color: #eab308; background: #2e2814; }       /* Bad King - Yellow */
-    .event-block.evil { border-left-color: #ef4444; background: #33171a; }      /* Evil King - Red */
-    .event-block.prophet { border-left-color: #a855f7; background: #261738; }   /* Prophet - Purple */
-    .event-block.empire { border-left-color: #f97316; background: #2e1e14; }    /* Empire - Orange */
-    .event-block.book { border-left-color: #3b82f6; background: #172438; }      /* Book - Blue */
+    .event-block.good { border-left-color: #22c55e; background: #142e22; }
+    .event-block.bad { border-left-color: #eab308; background: #2e2814; }
+    .event-block.evil { border-left-color: #ef4444; background: #33171a; }
+    .event-block.prophet { border-left-color: #a855f7; background: #261738; }
+    .event-block.empire { border-left-color: #f97316; background: #2e1e14; }
+    .event-block.book { border-left-color: #3b82f6; background: #172438; }
 
-    /* --- Slim Touch Scrubber Rail --- */
     .scrubber-rail {
       position: fixed;
       right: 0;
@@ -380,23 +334,17 @@
 </head>
 <body>
 
-  <!-- Top Toolbar -->
   <header class="toolbar">
     <span class="toolbar-title">Bible Timeline</span>
   </header>
 
-  <!-- Touch Scrubber Rail -->
   <div class="scrubber-rail" id="scrubber-rail">
     <div class="scrub-indicator" id="scrub-indicator"></div>
   </div>
 
-  <!-- Main Timeline Container -->
   <main class="timeline-container">
-
-    <!-- Header: Year Column -->
     <div class="col-header year-header">Year</div>
 
-    <!-- Dropdown Slot 1 (Default: Books) -->
     <div class="col-header col-slot-1">
       <select class="column-select" id="select-col-1">
         <option value="" disabled>Choose an option...</option>
@@ -408,7 +356,6 @@
       </select>
     </div>
 
-    <!-- Dropdown Slot 2 -->
     <div class="col-header col-slot-2">
       <select class="column-select" id="select-col-2">
         <option value="" selected>Choose an option...</option>
@@ -420,7 +367,6 @@
       </select>
     </div>
 
-    <!-- Dropdown Slot 3 -->
     <div class="col-header col-slot-3">
       <select class="column-select" id="select-col-3">
         <option value="" selected>Choose an option...</option>
@@ -432,7 +378,6 @@
       </select>
     </div>
 
-    <!-- Dropdown Slot 4 -->
     <div class="col-header col-slot-4">
       <select class="column-select" id="select-col-4">
         <option value="" selected>Choose an option...</option>
@@ -444,7 +389,6 @@
       </select>
     </div>
 
-    <!-- Dropdown Slot 5 -->
     <div class="col-header col-slot-5">
       <select class="column-select" id="select-col-5">
         <option value="" selected>Choose an option...</option>
@@ -456,7 +400,6 @@
       </select>
     </div>
 
-    <!-- Canvas area where continuous timeline is drawn -->
     <div class="timeline-canvas" id="timeline-canvas">
       <div class="year-track" id="year-track"></div>
       <div class="data-track col-slot-1" id="track-1"></div>
@@ -468,7 +411,9 @@
   </main>
 
   <script>
-    let erasData = [];
+    // Local memory cache for category data loaded on demand
+    const dataCache = {};
+
     const START_YEAR = -4000;
     const END_YEAR = 100;
     const PIXELS_PER_YEAR = 2.5;
@@ -504,19 +449,30 @@
     const scrubIndicator = document.getElementById('scrub-indicator');
 
     async function loadTimeline() {
-      try {
-        const response = await fetch('timeline.json');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        erasData = await response.json();
+      setupCanvasHeight();
+      renderYearAxisAndGridLines();
+      buildScrubberRail();
+      setupTouchScrubber();
 
-        setupCanvasHeight();
-        renderYearAxisAndGridLines();
-        updateDropdownOptionsUI();
-        renderTimeline();
-        buildScrubberRail();
-        setupTouchScrubber();
+      // Load initial default dataset (books.json)
+      await fetchCategoryData('books');
+      updateDropdownOptionsUI();
+      renderTimeline();
+    }
+
+    // Lazy Loading Helper: Fetches file on-demand if not in cache
+    async function fetchCategoryData(categoryKey) {
+      if (!categoryKey || dataCache[categoryKey]) return dataCache[categoryKey];
+
+      try {
+        const response = await fetch(`data/${categoryKey}.json`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        dataCache[categoryKey] = data; // Cache in memory
+        return data;
       } catch (error) {
-        console.error('Error loading timeline data:', error);
+        console.error(`Error loading dataset 'data/${categoryKey}.json':`, error);
+        return [];
       }
     }
 
@@ -595,29 +551,13 @@
     function renderTimeline() {
       tracks.forEach(track => track.innerHTML = '');
 
-      const allEvents = {
-        'books': [],
-        'kings-judah': [],
-        'kings-israel': [],
-        'prophets': [],
-        'empires': []
-      };
-
-      erasData.forEach(era => {
-        Object.keys(allEvents).forEach(cat => {
-          if (era.columns && era.columns[cat]) {
-            allEvents[cat].push(...era.columns[cat]);
-          }
-        });
-      });
-
       selects.forEach((select, slotIndex) => {
         const catKey = select.value;
         const targetTrack = tracks[slotIndex];
 
-        if (!catKey) return;
+        if (!catKey || !dataCache[catKey]) return;
 
-        const events = allEvents[catKey] || [];
+        const events = dataCache[catKey];
 
         events.forEach(event => {
           const card = document.createElement('div');
@@ -629,12 +569,10 @@
           const topPos = getYearOffset(event.startYear);
           const duration = event.endYear - event.startYear;
 
-          // Check if item is an instantaneous Point Event
           if (event.isPointEvent || duration === 0) {
             card.className = `event-point ${styleClass}`;
             card.style.top = `${topPos}px`;
           } else {
-            // Standard continuous duration block
             card.className = `event-block ${styleClass}`;
             const blockHeight = Math.max(24, duration * PIXELS_PER_YEAR);
             card.style.top = `${topPos}px`;
@@ -731,7 +669,12 @@
       });
     }
 
-    selects.forEach(select => select.addEventListener('change', () => {
+    // Dropdown Change Handler with On-Demand Loading
+    selects.forEach(select => select.addEventListener('change', async () => {
+      const chosenCategory = select.value;
+      if (chosenCategory) {
+        await fetchCategoryData(chosenCategory); // Fetches only if not already loaded
+      }
       updateDropdownOptionsUI();
       renderTimeline();
     }));
