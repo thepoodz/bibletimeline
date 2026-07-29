@@ -235,28 +235,35 @@
     <div class="scrub-indicator" id="scrub-indicator"></div>
   </div>
 
-  <!-- Main Timeline Grid -->
+<!-- Main Timeline Grid -->
   <main class="timeline-container">
+    
+    <!-- Header 1: Fixed Year Column -->
     <div class="col-header year-header">Year</div>
 
-    <select class="column-select" id="select-col-1">
-  <option value="books" selected>Books of the Bible</option>
-  <option value="kings-judah">Kings of Judah</option>
-  <option value="kings-israel">Kings of Israel</option>
-  <option value="prophets">Prophets & Writings</option>
-  <option value="empires">Rulers & Empires</option>
-</select>
-
+    <!-- Header 2: Column 1 Dropdown -->
     <div class="col-header">
-      <select class="column-select" id="select-col-2">
+      <select class="column-select" id="select-col-1">
         <option value="books" selected>Books of the Bible</option>
-  <option value="kings-judah">Kings of Judah</option>
-  <option value="kings-israel">Kings of Israel</option>
-  <option value="prophets">Prophets & Writings</option>
-  <option value="empires">Rulers & Empires</option>
+        <option value="kings-judah">Kings of Judah</option>
+        <option value="kings-israel">Kings of Israel</option>
+        <option value="prophets">Prophets & Writings</option>
+        <option value="empires">Rulers & Empires</option>
       </select>
     </div>
 
+    <!-- Header 3: Column 2 Dropdown -->
+    <div class="col-header">
+      <select class="column-select" id="select-col-2">
+        <option value="books">Books of the Bible</option>
+        <option value="kings-judah">Kings of Judah</option>
+        <option value="kings-israel">Kings of Israel</option>
+        <option value="prophets" selected>Prophets & Writings</option>
+        <option value="empires">Rulers & Empires</option>
+      </select>
+    </div>
+
+    <!-- Rows injected dynamically by JS -->
     <div id="timeline-rows-container" style="display: contents;"></div>
   </main>
 
