@@ -20,7 +20,7 @@
       --scrubber-width: 28px;
       --canvas-top-padding: 30px;
       --active-cols: 1;
-      --has-add-btn: 1; /* 1 if add button visible, 0 if at max limit */
+      --has-add-btn: 1;
     }
 
     * {
@@ -121,7 +121,6 @@
     /* --- Dynamic Grid Layout --- */
     .timeline-container {
       display: grid;
-      /* Grid = Year Track + Active Data Tracks + Optional Add Button Track */
       grid-template-columns: var(--col-year-width) repeat(var(--active-cols), 1fr) calc(var(--has-add-btn) * 110px);
       min-width: 100%;
       position: relative;
@@ -479,7 +478,7 @@
       transition: top 0.05s linear;
     }
 
-    /* --- Modal Popup Overlay --- */
+    /* --- Modals Styling --- */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -565,6 +564,43 @@
       line-height: 1.5;
       color: #cbd5e1;
     }
+
+    /* Category Selector List inside Add Modal */
+    .category-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .category-option-btn {
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.15s ease;
+    }
+
+    .category-option-btn:hover {
+      border-color: var(--accent-gold);
+      background: #1e293b;
+      color: var(--accent-gold);
+    }
+
+    .category-option-btn .badge {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
@@ -613,6 +649,16 @@
     </div>
   </div>
 
+  <!-- Add Column Selection Modal Overlay -->
+  <div class="modal-overlay" id="add-column-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="add-modal-close">&times;</button>
+      <div class="modal-type">New Column</div>
+      <h2 class="modal-title">Select Dataset</h2>
+      <div class="category-options-list" id="category-options-list"></div>
+    </div>
+  </div>
+
   <script>
     const dataCache = {};
 
@@ -654,12 +700,18 @@
     const zoomSlider = document.getElementById('zoom-slider');
     const zoomLevelText = document.getElementById('zoom-level-text');
 
+    // Event Modal
     const modal = document.getElementById('event-modal');
     const modalTitle = document.getElementById('modal-title');
     const modalType = document.getElementById('modal-type');
     const modalDates = document.getElementById('modal-dates');
     const modalBody = document.getElementById('modal-body');
     const modalClose = document.getElementById('modal-close');
+
+    // Add Column Modal
+    const addColumnModal = document.getElementById('add-column-modal');
+    const addModalClose = document.getElementById('add-modal-close');
+    const categoryOptionsList = document.getElementById('category-options-list');
 
     function getMaxAllowedColumns() {
       return window.innerWidth < 768 ? 3 : 5;
@@ -668,7 +720,6 @@
     function renderColumnStructure() {
       const maxCols = getMaxAllowedColumns();
       
-      // Update CSS Grid Template variables
       container.style.setProperty('--active-cols', activeColumns.length);
       
       if (activeColumns.length >= maxCols) {
@@ -731,7 +782,7 @@
 
         headersContainer.appendChild(headerDiv);
 
-        // Build Track Canvas
+        // Build Track Canvas Slot
         const trackDiv = document.createElement('div');
         trackDiv.className = 'data-track';
         trackDiv.id = `track-${index}`;
@@ -741,12 +792,54 @@
       updateDropdownOptionsUI();
     }
 
+    // Open Add Column Popup Modal
+    function openAddColumnModal() {
+      categoryOptionsList.innerHTML = '';
+
+      Object.entries(CATEGORIES).forEach(([key, title]) => {
+        const btn = document.createElement('button');
+        btn.className = 'category-option-btn';
+
+        const titleSpan = document.createElement('span');
+        titleSpan.textContent = title;
+        btn.appendChild(titleSpan);
+
+        const activeIndex = activeColumns.indexOf(key);
+        if (activeIndex !== -1) {
+          const badge = document.createElement('span');
+          badge.className = 'badge';
+          badge.textContent = `In Col ${activeIndex + 1}`;
+          btn.appendChild(badge);
+        }
+
+        btn.addEventListener('click', async () => {
+          closeAddColumnModal();
+          activeColumns.push(key);
+          await fetchCategoryData(key);
+          renderColumnStructure();
+          renderTimeline();
+        });
+
+        categoryOptionsList.appendChild(btn);
+      });
+
+      addColumnModal.classList.add('active');
+    }
+
+    function closeAddColumnModal() {
+      addColumnModal.classList.remove('active');
+    }
+
     btnAddCol.addEventListener('click', () => {
       const maxCols = getMaxAllowedColumns();
       if (activeColumns.length < maxCols) {
-        activeColumns.push('');
-        renderColumnStructure();
+        openAddColumnModal();
       }
+    });
+
+    addModalClose.addEventListener('click', closeAddColumnModal);
+    addColumnModal.addEventListener('click', (e) => {
+      if (e.target === addColumnModal) closeAddColumnModal();
     });
 
     async function loadTimeline() {
@@ -871,7 +964,10 @@
         if (e.target === modal) closeModal();
       });
       window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeModal();
+        if (e.key === 'Escape') {
+          closeModal();
+          closeAddColumnModal();
+        }
       });
     }
 
