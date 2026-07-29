@@ -1,5 +1,40 @@
 [
   {
+    "title": "King Saul",
+    "subtitle": "1st King of United Israel",
+    "startYear": -1050,
+    "endYear": -1010,
+    "classification": "bad",
+    "description": "The first king of Israel, anointed by the prophet Samuel. Ruled over the united tribes until his death at Mount Gilboa."
+  },
+  {
+    "title": "King Ish-bosheth",
+    "subtitle": "Son of Saul (2-Year Reign)",
+    "startYear": -1010,
+    "endYear": -1008,
+    "classification": "bad",
+    "description": "Saul's surviving son who was proclaimed king over the northern tribes by Abner, while David ruled Judah in Hebron."
+  },
+  {
+    "title": "King David",
+    "subtitle": "2nd King of United Israel",
+    "startYear": -1010,
+    "endYear": -970,
+    "classification": "good",
+    "description": "Anointed king of Judah at Hebron, then king over all Israel. Defeated Goliath, captured Jerusalem as capital, and established the Davidic covenant."
+  },
+  {
+    "title": "King Solomon",
+    "subtitle": "3rd King of United Israel",
+    "startYear": -970,
+    "endYear": -931,
+    "classification": "good",
+    "description": "Son of David known for his great wisdom, wealth, and for building the First Temple in Jerusalem."
+  }
+]
+
+[
+  {
     "id": "rehoboam",
     "title": "Rehoboam",
     "subtitle": "1 Kings 12–14 | 17 yrs",
