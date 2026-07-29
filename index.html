@@ -213,7 +213,7 @@
       .data-track.col-slot-5 { display: block; } 
     }
 
-    /* --- Variable Height Event Blocks --- */
+    /* --- Continuous Span Event Blocks --- */
     .event-block {
       position: absolute;
       left: 4px;
@@ -254,7 +254,64 @@
       margin-top: 2px;
     }
 
-    /* Classification Colors */
+    /* --- Single Point Event Markers (Line + Node + Floating Text) --- */
+    .event-point {
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      border-top: 2px solid var(--accent-gold);
+      padding-top: 4px;
+      z-index: 18;
+    }
+
+    /* Small dot node on the pin line */
+    .event-point::before {
+      content: "";
+      position: absolute;
+      top: -4px;
+      left: 0;
+      width: 6px;
+      height: 6px;
+      background: var(--accent-gold);
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(245, 158, 11, 0.8);
+    }
+
+    .event-point .title {
+      font-weight: 800;
+      font-size: 0.70rem;
+      line-height: 1.1;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .event-point .subtitle {
+      font-size: 0.60rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Point Event Specific Colors */
+    .event-point.good::before { background: #22c55e; }
+    .event-point.good { border-top-color: #22c55e; }
+
+    .event-point.evil::before, .event-point.bad::before { background: #ef4444; }
+    .event-point.evil, .event-point.bad { border-top-color: #ef4444; }
+
+    .event-point.empire::before { background: #f97316; }
+    .event-point.empire { border-top-color: #f97316; }
+
+    .event-point.prophet::before { background: #a855f7; }
+    .event-point.prophet { border-top-color: #a855f7; }
+
+    .event-point.book::before { background: #3b82f6; }
+    .event-point.book { border-top-color: #3b82f6; }
+
+    /* Classification Colors for Spans */
     .event-block.good { border-left-color: #22c55e; background: #142e22; }      /* Good King - Green */
     .event-block.bad { border-left-color: #eab308; background: #2e2814; }       /* Bad King - Yellow */
     .event-block.evil { border-left-color: #ef4444; background: #33171a; }      /* Evil King - Red */
@@ -351,7 +408,7 @@
       </select>
     </div>
 
-    <!-- Dropdown Slot 2 (Default: Choose an option...) -->
+    <!-- Dropdown Slot 2 -->
     <div class="col-header col-slot-2">
       <select class="column-select" id="select-col-2">
         <option value="" selected>Choose an option...</option>
@@ -363,7 +420,7 @@
       </select>
     </div>
 
-    <!-- Dropdown Slot 3 (Default: Choose an option...) -->
+    <!-- Dropdown Slot 3 -->
     <div class="col-header col-slot-3">
       <select class="column-select" id="select-col-3">
         <option value="" selected>Choose an option...</option>
@@ -375,7 +432,7 @@
       </select>
     </div>
 
-    <!-- Dropdown Slot 4 (Default: Choose an option...) -->
+    <!-- Dropdown Slot 4 -->
     <div class="col-header col-slot-4">
       <select class="column-select" id="select-col-4">
         <option value="" selected>Choose an option...</option>
@@ -387,7 +444,7 @@
       </select>
     </div>
 
-    <!-- Dropdown Slot 5 (Default: Choose an option...) -->
+    <!-- Dropdown Slot 5 -->
     <div class="col-header col-slot-5">
       <select class="column-select" id="select-col-5">
         <option value="" selected>Choose an option...</option>
@@ -509,21 +566,19 @@
     }
 
     function updateDropdownOptionsUI() {
-      // Map out where each category is currently active
       const activeSelections = {};
       selects.forEach((select, idx) => {
         if (select.value) {
           if (!activeSelections[select.value]) {
             activeSelections[select.value] = [];
           }
-          activeSelections[select.value].push(idx + 1); // Store 1-based column number
+          activeSelections[select.value].push(idx + 1);
         }
       });
 
-      // Update all option labels across all dropdowns
       selects.forEach((select) => {
         Array.from(select.options).forEach(opt => {
-          if (!opt.value) return; // Skip placeholder option
+          if (!opt.value) return;
 
           const baseTitle = CATEGORY_NAMES[opt.value] || opt.value;
           const activeCols = activeSelections[opt.value];
@@ -560,26 +615,31 @@
         const catKey = select.value;
         const targetTrack = tracks[slotIndex];
 
-        // If 'Choose an option...' is selected, keep track empty
         if (!catKey) return;
 
         const events = allEvents[catKey] || [];
 
         events.forEach(event => {
-          const block = document.createElement('div');
-          
+          const card = document.createElement('div');
           let styleClass = event.type || 'book';
           if (event.classification) {
             styleClass = event.classification;
           }
-          block.className = `event-block ${styleClass}`;
 
           const topPos = getYearOffset(event.startYear);
-          const duration = Math.max(1, event.endYear - event.startYear);
-          const blockHeight = Math.max(24, duration * PIXELS_PER_YEAR);
+          const duration = event.endYear - event.startYear;
 
-          block.style.top = `${topPos}px`;
-          block.style.height = `${blockHeight}px`;
+          // Check if item is an instantaneous Point Event
+          if (event.isPointEvent || duration === 0) {
+            card.className = `event-point ${styleClass}`;
+            card.style.top = `${topPos}px`;
+          } else {
+            // Standard continuous duration block
+            card.className = `event-block ${styleClass}`;
+            const blockHeight = Math.max(24, duration * PIXELS_PER_YEAR);
+            card.style.top = `${topPos}px`;
+            card.style.height = `${blockHeight}px`;
+          }
 
           const title = document.createElement('div');
           title.className = 'title';
@@ -589,9 +649,9 @@
           subtitle.className = 'subtitle';
           subtitle.textContent = event.subtitle;
 
-          block.appendChild(title);
-          block.appendChild(subtitle);
-          targetTrack.appendChild(block);
+          card.appendChild(title);
+          card.appendChild(subtitle);
+          targetTrack.appendChild(card);
         });
       });
     }
