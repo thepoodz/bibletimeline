@@ -20,7 +20,6 @@
       --scrubber-width: 28px;
       --canvas-top-padding: 30px;
       --active-cols: 1;
-      --has-add-btn: 1;
     }
 
     * {
@@ -121,7 +120,8 @@
     /* --- Dynamic Grid Layout --- */
     .timeline-container {
       display: grid;
-      grid-template-columns: var(--col-year-width) repeat(var(--active-cols), 1fr) calc(var(--has-add-btn) * 110px);
+      /* Grid spans Year Track + Active Data Columns with scrubber padding on right */
+      grid-template-columns: var(--col-year-width) repeat(var(--active-cols), 1fr);
       min-width: 100%;
       position: relative;
       padding-right: var(--scrubber-width);
@@ -182,43 +182,34 @@
       background: rgba(239, 68, 68, 0.1);
     }
 
-    /* Add Column Header Slot */
-    .add-col-header {
-      position: sticky;
-      top: 45px;
-      z-index: 95;
-      background-color: var(--card-bg);
-      border-bottom: 2px solid var(--border-color);
-      padding: 8px 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .add-col-btn {
+    /* Floating Plus Button (Overlaps header & scrubber boundary) */
+    .floating-add-btn {
+      position: fixed;
+      top: 50px;
+      right: 14px; /* Positions half in last column, half in scrubber column */
+      z-index: 210;
       background: var(--bg-color);
-      border: 1px dashed var(--accent-gold);
+      border: 1.5px solid var(--accent-gold);
       color: var(--accent-gold);
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-size: 0.75rem;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 1.2rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
-      transition: all 0.15s ease;
-      height: 32px;
-      white-space: nowrap;
-      user-select: none;
-      width: 100%;
       justify-content: center;
+      line-height: 1;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      transition: all 0.15s ease;
+      user-select: none;
     }
 
-    .add-col-btn:hover {
+    .floating-add-btn:hover {
       background: var(--accent-gold);
       color: #000;
-      border-style: solid;
+      transform: scale(1.1);
     }
 
     /* --- Continuous Map Canvas --- */
@@ -421,6 +412,7 @@
     .event-block.empire { border-left-color: #f97316; background: #2e1e14; }
     .event-block.book { border-left-color: #3b82f6; background: #172438; }
 
+    /* Scrubber Rail Starts Under Header Row */
     .scrubber-rail {
       position: fixed;
       right: 0;
@@ -624,10 +616,8 @@
     <!-- Dynamic Headers Container -->
     <div id="headers-container" style="display: contents;"></div>
 
-    <!-- Sticky Header Slot for Add Button -->
-    <div class="add-col-header" id="add-col-header">
-      <button class="add-col-btn" id="btn-add-col" title="Add Column">+ Add</button>
-    </div>
+    <!-- Floating Plus Button -->
+    <button class="floating-add-btn" id="btn-add-col" title="Add Column">+</button>
 
     <!-- Continuous Canvas Container -->
     <div class="timeline-canvas" id="timeline-canvas">
@@ -690,7 +680,6 @@
     const headersContainer = document.getElementById('headers-container');
     const tracksContainer = document.getElementById('tracks-container');
     const btnAddCol = document.getElementById('btn-add-col');
-    const addColHeader = document.getElementById('add-col-header');
 
     const yearTrack = document.getElementById('year-track');
     const canvas = document.getElementById('timeline-canvas');
@@ -723,11 +712,9 @@
       container.style.setProperty('--active-cols', activeColumns.length);
       
       if (activeColumns.length >= maxCols) {
-        container.style.setProperty('--has-add-btn', 0);
-        addColHeader.style.display = 'none';
+        btnAddCol.style.display = 'none';
       } else {
-        container.style.setProperty('--has-add-btn', 1);
-        addColHeader.style.display = 'flex';
+        btnAddCol.style.display = 'flex';
       }
 
       headersContainer.innerHTML = '';
