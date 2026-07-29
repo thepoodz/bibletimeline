@@ -246,26 +246,29 @@
     /* Sticky Inner Content Box */
     .event-block .card-content {
       position: sticky;
-      top: 105px; /* Stays visible right under the fixed column headers */
-      padding: 4px 6px;
+      top: 105px;
+      padding: 4px 18px 4px 6px; /* Right padding preserves room for top-right / bottom-right arrows */
       display: flex;
       flex-direction: column;
       max-height: calc(100vh - 120px);
       overflow: hidden;
     }
 
-    /* Continuation Arrows */
+    /* Top-Right & Bottom-Right Corner Continuation Arrows */
     .card-arrow {
+      position: absolute;
+      right: 4px;
       font-size: 0.55rem;
       color: var(--accent-gold);
       line-height: 1;
       user-select: none;
       pointer-events: none;
-      display: none; /* Controlled by JS scroll calculations */
+      display: none;
+      z-index: 5;
     }
 
-    .card-arrow.top { margin-bottom: 2px; }
-    .card-arrow.bottom { margin-top: 2px; }
+    .card-arrow.top { top: 4px; }
+    .card-arrow.bottom { bottom: 4px; }
 
     .event-block:hover { 
       z-index: 40 !important; 
@@ -553,7 +556,6 @@
       updateDropdownOptionsUI();
       renderTimeline();
 
-      // Listen for scroll to dynamically toggle top/bottom continuation arrows
       window.addEventListener('scroll', updateCardContinuationArrows, { passive: true });
     }
 
@@ -810,14 +812,13 @@
             card.style.left = `calc(${leftPosPct}% + 2px)`;
             card.style.width = `calc(${laneWidthPct}% - 4px)`;
 
-            // Store pixel boundaries as dataset attributes for scroll arrow checks
             card.dataset.top = topPos;
             card.dataset.bottom = topPos + blockHeight;
 
-            // Inner Sticky Content Container
             const content = document.createElement('div');
             content.className = 'card-content';
 
+            // Corner Continuation Arrows
             const arrowTop = document.createElement('div');
             arrowTop.className = 'card-arrow top';
             arrowTop.textContent = '▲';
@@ -851,7 +852,7 @@
     // Toggle continuation arrows based on current viewport scroll bounds
     function updateCardContinuationArrows() {
       const scrollY = window.scrollY;
-      const viewportTop = scrollY + 105; // Sticky header offset
+      const viewportTop = scrollY + 105; // Fixed header height offset
       const viewportBottom = scrollY + window.innerHeight;
 
       document.querySelectorAll('.event-block').forEach(card => {
@@ -862,11 +863,11 @@
         const arrowBottom = card.querySelector('.card-arrow.bottom');
 
         if (arrowTop && arrowBottom) {
-          // Show top arrow if event started above visible area
-          arrowTop.style.display = (top < viewportTop && bottom > viewportTop + 30) ? 'block' : 'none';
+          // Top arrow shows ONLY if top boundary has scrolled above visible area
+          arrowTop.style.display = (top < viewportTop && bottom > viewportTop + 20) ? 'block' : 'none';
 
-          // Show bottom arrow if event continues below visible viewport
-          arrowBottom.style.display = (bottom > viewportBottom && top < viewportBottom - 30) ? 'block' : 'none';
+          // Bottom arrow shows ONLY if bottom boundary extends beyond visible area
+          arrowBottom.style.display = (bottom > viewportBottom && top < viewportBottom - 20) ? 'block' : 'none';
         }
       });
     }
