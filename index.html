@@ -286,45 +286,46 @@
     }
 
     function generate10YearGrid() {
-      const dataMap = new Map();
-      rawTimelineData.forEach(item => dataMap.set(item.yearNum, item));
+  const dataMap = new Map();
+  rawTimelineData.forEach(item => dataMap.set(item.yearNum, item));
 
-      generated10YrData = [];
+  generated10YrData = [];
 
-      for (let y = -4000; y <= 100; y += 10) {
-        if (y === 0) continue;
+  // Stepping by 10
+  for (let y = -4000; y <= 100; y += 10) {
+    if (y === 0) continue;
 
-        const existing = dataMap.get(y);
-        
-        // Displays "0" explicitly at 1 A.D. for the timeline axis
-        let yearLabel = "";
-        if (y === 1) {
-          yearLabel = "0";
-        } else if (y < 0) {
-          yearLabel = `${Math.abs(y)} B.C.`;
-        } else {
-          yearLabel = `${y} A.D.`;
-        }
+    const existing = dataMap.get(y);
+    const elemId = `year-${y < 0 ? Math.abs(y) + 'bc' : y + 'ad'}`;
 
-        const elemId = `year-${y < 0 ? Math.abs(y) + 'bc' : y + 'ad'}`;
-
-        if (existing) {
-          generated10YrData.push({
-            ...existing,
-            year: yearLabel,
-            id: existing.id || elemId,
-            yearNum: y
-          });
-        } else {
-          generated10YrData.push({
-            yearNum: y,
-            year: yearLabel,
-            id: elemId,
-            columns: { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] }
-          });
-        }
-      }
+    if (existing) {
+      generated10YrData.push({
+        ...existing,
+        year: y < 0 ? `${Math.abs(y)} B.C.` : `${y} A.D.`,
+        id: existing.id || elemId,
+        yearNum: y
+      });
+    } else {
+      generated10YrData.push({
+        yearNum: y,
+        year: y < 0 ? `${Math.abs(y)} B.C.` : `${y} A.D.`,
+        id: elemId,
+        columns: { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] }
+      });
     }
+
+    // Explicitly insert a "0" row right at 1 A.D. so the axis marks the transition
+    if (y === -10) {
+      const year1Data = dataMap.get(1);
+      generated10YrData.push({
+        yearNum: 0,
+        year: "0",
+        id: "year-0",
+        columns: year1Data ? year1Data.columns : { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] }
+      });
+    }
+  }
+}
 
     function renderTimeline() {
       const key1 = col1Select.value;
@@ -386,35 +387,34 @@
     }
 
     function buildScrubberRail() {
-      scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
+  scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
 
-      // Major milestones map: 4k, 3k, 2k, 1k, 0
-      const majorMilestones = new Map([
-        [-4000, "4k"],
-        [-3000, "3k"],
-        [-2000, "2k"],
-        [-1000, "1k"],
-        [1, "0"]
-      ]);
+  // Major milestones map: 4k, 3k, 2k, 1k, 0
+  const majorMilestones = new Map([
+    [-4000, "4k"],
+    [-3000, "3k"],
+    [-2000, "2k"],
+    [-1000, "1k"],
+    [0, "0"]
+  ]);
 
-      for (let y = -4000; y <= 100; y += 100) {
-        const tick = document.createElement('div');
-        tick.className = 'scrub-tick';
+  for (let y = -4000; y <= 100; y += 100) {
+    const tickKey = (y === 0) ? 0 : y;
+    const tick = document.createElement('div');
+    tick.className = 'scrub-tick';
 
-        if (majorMilestones.has(y)) {
-          // Clean text-only label (no dash)
-          const label = document.createElement('span');
-          label.className = 'scrub-label';
-          label.textContent = majorMilestones.get(y);
-          tick.appendChild(label);
-        } else {
-          // Intermediate tick line for 100-year steps (including the tick after 0 at 100 A.D.)
-          tick.classList.add('intermediate');
-        }
-
-        scrubberRail.appendChild(tick);
-      }
+    if (majorMilestones.has(tickKey)) {
+      const label = document.createElement('span');
+      label.className = 'scrub-label';
+      label.textContent = majorMilestones.get(tickKey);
+      tick.appendChild(label);
+    } else {
+      tick.classList.add('intermediate');
     }
+
+    scrubberRail.appendChild(tick);
+  }
+}
 
     function setupTouchScrubber() {
       function scrubToY(clientY) {
