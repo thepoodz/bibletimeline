@@ -62,7 +62,7 @@
       color: var(--accent-gold);
     }
 
-    /* Hybrid Zoom Controls (Buttons + Slider) */
+    /* Hybrid Zoom Controls */
     .zoom-controls {
       display: flex;
       align-items: center;
@@ -70,18 +70,28 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 20px;
-      padding: 3px 10px;
+      padding: 3px 12px;
+    }
+
+    .zoom-level-text {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      min-width: 36px;
+      text-align: left;
+      font-variant-numeric: tabular-nums;
+      user-select: none;
     }
 
     .zoom-btn {
       background: transparent;
       border: none;
       color: var(--accent-gold);
-      font-size: 1rem;
+      font-size: 1.15rem;
       font-weight: 800;
       cursor: pointer;
-      width: 20px;
-      height: 20px;
+      width: 26px;
+      height: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -98,7 +108,7 @@
     .zoom-slider {
       -webkit-appearance: none;
       appearance: none;
-      width: 90px;
+      width: 85px;
       height: 4px;
       background: var(--border-color);
       border-radius: 2px;
@@ -128,16 +138,6 @@
       background: var(--accent-gold);
       border: none;
       cursor: pointer;
-    }
-
-    .zoom-level-text {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-main);
-      min-width: 42px;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-      user-select: none;
     }
 
     /* --- Dynamic Grid Layout --- */
@@ -175,10 +175,6 @@
       justify-content: center;
     }
 
-    .col-header.has-add-pad {
-      padding-right: 44px;
-    }
-
     .column-select {
       background: var(--bg-color);
       color: var(--text-main);
@@ -210,33 +206,30 @@
       background: rgba(239, 68, 68, 0.1);
     }
 
-    /* Flush Square Plus Button in Header Bar */
-    .square-add-btn {
-      position: fixed;
-      top: 45px;
-      right: 0;
-      z-index: 210;
-      background: var(--card-bg);
-      border: none;
-      border-left: 1px solid var(--border-color);
-      border-bottom: 2px solid var(--border-color);
+    /* Square Plus Button as part of the header structure */
+    .header-add-btn {
+      background: var(--bg-color);
+      border: 1px dashed var(--accent-gold);
       color: var(--accent-gold);
-      width: var(--scrubber-width);
-      height: var(--header-height);
-      font-size: 1.25rem;
+      border-radius: 6px;
+      width: 30px;
+      height: 30px;
+      font-size: 1.2rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      line-height: 0;
-      transition: background 0.15s ease, color 0.15s ease;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
       user-select: none;
     }
 
-    .square-add-btn:hover {
+    .header-add-btn:hover {
       background: var(--accent-gold);
       color: #000;
+      border-style: solid;
     }
 
     /* --- Continuous Map Canvas --- */
@@ -628,10 +621,10 @@
     <span class="toolbar-title">Bible Timeline</span>
 
     <div class="zoom-controls">
+      <span class="zoom-level-text" id="zoom-level-text">1.0×</span>
       <button class="zoom-btn" id="btn-zoom-out" title="Zoom Out">−</button>
       <input type="range" id="zoom-slider" class="zoom-slider" min="0" max="11" step="1" value="3">
       <button class="zoom-btn" id="btn-zoom-in" title="Zoom In">+</button>
-      <span class="zoom-level-text" id="zoom-level-text">1.0×</span>
     </div>
   </header>
 
@@ -644,9 +637,6 @@
 
     <!-- Dynamic Headers Container -->
     <div id="headers-container" style="display: contents;"></div>
-
-    <!-- Flush Square Plus Button in Header Bar -->
-    <button class="square-add-btn" id="btn-add-col" title="Add Column">+</button>
 
     <!-- Continuous Canvas Container -->
     <div class="timeline-canvas" id="timeline-canvas">
@@ -708,7 +698,6 @@
     const container = document.getElementById('timeline-container');
     const headersContainer = document.getElementById('headers-container');
     const tracksContainer = document.getElementById('tracks-container');
-    const btnAddCol = document.getElementById('btn-add-col');
 
     const yearTrack = document.getElementById('year-track');
     const canvas = document.getElementById('timeline-canvas');
@@ -743,7 +732,6 @@
       container.style.setProperty('--active-cols', activeColumns.length);
       
       const showAddBtn = activeColumns.length < maxCols;
-      btnAddCol.style.display = showAddBtn ? 'flex' : 'none';
 
       headersContainer.innerHTML = '';
       tracksContainer.innerHTML = '';
@@ -752,11 +740,6 @@
         // Build Header
         const headerDiv = document.createElement('div');
         headerDiv.className = 'col-header';
-        
-        // Add right padding to last header so dropdown text doesn't hit + button
-        if (showAddBtn && index === activeColumns.length - 1) {
-          headerDiv.classList.add('has-add-pad');
-        }
 
         const select = document.createElement('select');
         select.className = 'column-select';
@@ -798,6 +781,20 @@
             renderTimeline();
           });
           headerDiv.appendChild(removeBtn);
+        }
+
+        // Embed Plus button inside the last header row
+        if (showAddBtn && index === activeColumns.length - 1) {
+          const addBtn = document.createElement('button');
+          addBtn.className = 'header-add-btn';
+          addBtn.textContent = '+';
+          addBtn.title = 'Add Column';
+          addBtn.addEventListener('click', () => {
+            if (activeColumns.length < getMaxAllowedColumns()) {
+              openAddColumnModal();
+            }
+          });
+          headerDiv.appendChild(addBtn);
         }
 
         headersContainer.appendChild(headerDiv);
@@ -849,13 +846,6 @@
     function closeAddColumnModal() {
       addColumnModal.classList.remove('active');
     }
-
-    btnAddCol.addEventListener('click', () => {
-      const maxCols = getMaxAllowedColumns();
-      if (activeColumns.length < maxCols) {
-        openAddColumnModal();
-      }
-    });
 
     addModalClose.addEventListener('click', closeAddColumnModal);
     addColumnModal.addEventListener('click', (e) => {
