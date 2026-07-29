@@ -92,17 +92,6 @@
       position: relative;
     }
 
-    /* Desktop View: Auto-expand to 4 selectable columns if screen space allows */
-    @media (min-width: 768px) {
-      .timeline-container {
-        grid-template-columns: 100px repeat(4, 1fr);
-      }
-      .col-header:nth-child(n+4),
-      .timeline-cell:nth-child(n+4) {
-        display: flex; /* Reveal extra columns on larger screens */
-      }
-    }
-
     /* --- Column Selector Headers (Sticky below Toolbar) --- */
     .col-header {
       position: sticky;
