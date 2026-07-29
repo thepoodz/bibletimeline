@@ -1,114 +1,198 @@
 [
   {
+    "yearNum": -4000,
     "year": "4000 B.C.",
     "id": "year-4000bc",
     "columns": {
       "kings-judah": [],
       "kings-israel": [],
-      "prophets": [
-        { "title": "Genesis", "subtitle": "Book of Beginnings", "type": "book" }
-      ],
-      "empires": [
-        { "title": "Creation & Patriarchs", "subtitle": "Genesis 1–5", "type": "patriarch" }
-      ]
+      "prophets": [{ "title": "Genesis", "subtitle": "Book of Beginnings", "type": "book" }],
+      "empires": [{ "title": "Creation & Patriarchs", "subtitle": "Genesis 1–5", "type": "patriarch" }]
     }
   },
-  { "year": "3950 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] } },
-  { "year": "3900 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] } },
-  { "year": "2050 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] } },
   {
+    "yearNum": -2000,
     "year": "2000 B.C.",
     "id": "year-2000bc",
     "columns": {
       "kings-judah": [],
       "kings-israel": [],
-      "prophets": [
-        { "title": "Job", "subtitle": "Traditional Era", "type": "prophet" }
-      ],
-      "empires": [
-        { "title": "Covenant with Abraham", "subtitle": "Genesis 12–15", "type": "patriarch" }
-      ]
+      "prophets": [{ "title": "Job", "subtitle": "Traditional Era", "type": "prophet" }],
+      "empires": [{ "title": "Covenant with Abraham", "subtitle": "Genesis 12–15", "type": "patriarch" }]
     }
   },
-  { "year": "1950 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] } },
-  { "year": "1900 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] } },
-  { "year": "1050 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] } },
   {
+    "yearNum": -1000,
     "year": "1000 B.C.",
     "id": "year-1000bc",
     "columns": {
-      "kings-judah": [
-        { "title": "King David", "subtitle": "United Monarchy", "type": "king-judah" }
-      ],
+      "kings-judah": [{ "title": "King David", "subtitle": "United Monarchy", "type": "king-judah" }],
       "kings-israel": [],
-      "prophets": [
-        { "title": "Psalms", "subtitle": "Davidic Psalms compiled", "type": "prophet" }
-      ],
+      "prophets": [{ "title": "Psalms", "subtitle": "Davidic Psalms compiled", "type": "prophet" }],
       "empires": []
     }
   },
-  { "year": "950 B.C.", "columns": { "kings-judah": [{ "title": "Solomon", "subtitle": "Temple Built", "type": "king-judah" }], "kings-israel": [], "prophets": [], "empires": [] } },
-  { "year": "900 B.C.", "columns": { "kings-judah": [{ "title": "Asa", "subtitle": "1 Kings 15", "type": "king-judah" }], "kings-israel": [{ "title": "Baasha", "subtitle": "1 Kings 15", "type": "king-israel" }], "prophets": [], "empires": [] } },
-  { "year": "850 B.C.", "columns": { "kings-judah": [{ "title": "Jehoshaphat", "subtitle": "2 Chronicles 17", "type": "king-judah" }], "kings-israel": [{ "title": "Ahab", "subtitle": "1 Kings 16", "type": "king-israel" }], "prophets": [{ "title": "Elijah", "subtitle": "Mount Carmel", "type": "prophet" }], "empires": [] } },
-  { "year": "800 B.C.", "columns": { "kings-judah": [{ "title": "Joash", "subtitle": "2 Kings 12", "type": "king-judah" }], "kings-israel": [{ "title": "Jehoash", "subtitle": "2 Kings 13", "type": "king-israel" }], "prophets": [{ "title": "Elisha", "subtitle": "Ministry", "type": "prophet" }], "empires": [] } },
-  { "year": "750 B.C.", "columns": { "kings-judah": [{ "title": "Uzziah", "subtitle": "2 Kings 15", "type": "king-judah" }], "kings-israel": [{ "title": "Jeroboam II", "subtitle": "2 Kings 14", "type": "king-israel" }], "prophets": [{ "title": "Amos / Hosea", "subtitle": "Prophetic Warnings", "type": "prophet" }], "empires": [] } },
   {
-    "year": "700 B.C.",
+    "yearNum": -930,
+    "year": "930 B.C.",
+    "id": "year-930bc",
     "columns": {
-      "kings-judah": [
-        { "title": "Hezekiah", "subtitle": "Sennacherib Siege", "type": "king-judah" }
-      ],
-      "kings-israel": [
-        { "title": "Fall of Samaria (722)", "subtitle": "Northern Kingdom Ends", "type": "king-israel" }
-      ],
-      "prophets": [
-        { "title": "Isaiah / Micah", "subtitle": "Judah Ministry", "type": "prophet" }
-      ],
-      "empires": [
-        { "title": "Assyrian Empire", "subtitle": "Dominant Power", "type": "empire" }
-      ]
+      "kings-judah": [{ "title": "Rehoboam", "subtitle": "Kingdom Splits", "type": "king-judah" }],
+      "kings-israel": [{ "title": "Jeroboam I", "subtitle": "Northern Kingdom", "type": "king-israel" }],
+      "prophets": [],
+      "empires": []
     }
   },
-  { "year": "650 B.C.", "columns": { "kings-judah": [{ "title": "Manasseh", "subtitle": "2 Kings 21", "type": "king-judah" }], "kings-israel": [], "prophets": [], "empires": [] } },
-  { "year": "600 B.C.", "columns": { "kings-judah": [{ "title": "Josiah / Jehoiakim", "subtitle": "Babylonian Exile Begins", "type": "king-judah" }], "kings-israel": [], "prophets": [{ "title": "Jeremiah", "subtitle": "Weeping Prophet", "type": "prophet" }], "empires": [{ "title": "Babylonian Empire", "subtitle": "Nebuchadnezzar", "type": "empire" }] } },
-  { "year": "550 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [{ "title": "Ezekiel / Daniel", "subtitle": "Exile Writings", "type": "prophet" }], "empires": [] } },
-  { "year": "500 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [{ "title": "Zerubbabel", "subtitle": "Second Temple Built", "type": "prophet" }], "empires": [{ "title": "Persian Empire", "subtitle": "Cyrus the Great", "type": "empire" }] } },
-  { "year": "450 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [{ "title": "Ezra / Nehemiah / Malachi", "subtitle": "Walls Rebuilt / Old Testament Closes", "type": "prophet" }], "empires": [] } },
-  { "year": "400 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] } },
-  { "year": "350 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [{ "title": "Alexander the Great", "subtitle": "Greek Conquests (330s)", "type": "empire" }] } },
-  { "year": "300 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] } },
-  { "year": "250 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [{ "title": "Septuagint (LXX)", "subtitle": "Greek Old Testament Translation", "type": "book" }], "empires": [] } },
-  { "year": "200 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] } },
-  { "year": "150 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [{ "title": "Hasmonean Dynasty", "subtitle": "Maccabean Revolt", "type": "empire" }] } },
-  { "year": "100 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] } },
-  { "year": "50 B.C.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [{ "title": "Roman Conquest of Judea", "subtitle": "Pompey (63 B.C.)", "type": "empire" }] } },
   {
+    "yearNum": -850,
+    "year": "850 B.C.",
+    "columns": {
+      "kings-judah": [{ "title": "Jehoshaphat", "subtitle": "2 Chronicles 17", "type": "king-judah" }],
+      "kings-israel": [{ "title": "Ahab", "subtitle": "1 Kings 16", "type": "king-israel" }],
+      "prophets": [{ "title": "Elijah", "subtitle": "Mount Carmel", "type": "prophet" }],
+      "empires": []
+    }
+  },
+  {
+    "yearNum": -740,
+    "year": "740 B.C.",
+    "columns": {
+      "kings-judah": [{ "title": "Uzziah", "subtitle": "2 Kings 15", "type": "king-judah" }],
+      "kings-israel": [{ "title": "Pekahiah", "subtitle": "2 Kings 15", "type": "king-israel" }],
+      "prophets": [{ "title": "Isaiah (Called)", "subtitle": "\"In the year King Uzziah died...\"", "type": "prophet" }],
+      "empires": [{ "title": "Assyrian Expansion", "subtitle": "Tiglath-Pileser III", "type": "empire" }]
+    }
+  },
+  {
+    "yearNum": -720,
+    "year": "720 B.C.",
+    "columns": {
+      "kings-judah": [{ "title": "Hezekiah", "subtitle": "Sennacherib Siege", "type": "king-judah" }],
+      "kings-israel": [{ "title": "Fall of Samaria (722)", "subtitle": "Exile to Assyria", "type": "king-israel" }],
+      "prophets": [{ "title": "Micah", "subtitle": "Judah Ministry", "type": "prophet" }],
+      "empires": []
+    }
+  },
+  {
+    "yearNum": -600,
+    "year": "600 B.C.",
+    "columns": {
+      "kings-judah": [{ "title": "Jehoiakim / Zedekiah", "subtitle": "Babylon Siege Begins", "type": "king-judah" }],
+      "kings-israel": [],
+      "prophets": [{ "title": "Jeremiah", "subtitle": "Weeping Prophet", "type": "prophet" }],
+      "empires": [{ "title": "Babylonian Empire", "subtitle": "Nebuchadnezzar", "type": "empire" }]
+    }
+  },
+  {
+    "yearNum": -580,
+    "year": "580 B.C.",
+    "columns": {
+      "kings-judah": [{ "title": "Fall of Jerusalem (586)", "subtitle": "Temple Destroyed", "type": "king-judah" }],
+      "kings-israel": [],
+      "prophets": [{ "title": "Ezekiel / Daniel", "subtitle": "Exile Writings", "type": "prophet" }],
+      "empires": []
+    }
+  },
+  {
+    "yearNum": -530,
+    "year": "530 B.C.",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [{ "title": "Zerubbabel", "subtitle": "Returnees Rebuild Temple", "type": "prophet" }],
+      "empires": [{ "title": "Persian Empire", "subtitle": "Cyrus Decree", "type": "empire" }]
+    }
+  },
+  {
+    "yearNum": -440,
+    "year": "440 B.C.",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [{ "title": "Ezra / Nehemiah / Malachi", "subtitle": "Walls Rebuilt / OT Closes", "type": "prophet" }],
+      "empires": []
+    }
+  },
+  {
+    "yearNum": -330,
+    "year": "330 B.C.",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [],
+      "empires": [{ "title": "Alexander the Great", "subtitle": "Greek Conquests", "type": "empire" }]
+    }
+  },
+  {
+    "yearNum": -160,
+    "year": "160 B.C.",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [],
+      "empires": [{ "title": "Maccabean Revolt", "subtitle": "Hasmonean Era", "type": "empire" }]
+    }
+  },
+  {
+    "yearNum": -60,
+    "year": "60 B.C.",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [],
+      "empires": [{ "title": "Pompey Takes Judea (63)", "subtitle": "Roman Rule Begins", "type": "empire" }]
+    }
+  },
+  {
+    "yearNum": 1,
     "year": "1 A.D.",
     "id": "year-1ad",
     "columns": {
       "kings-judah": [],
       "kings-israel": [],
-      "prophets": [
-        { "title": "Birth of Jesus", "subtitle": "Gospels (Matthew / Luke)", "type": "prophet" }
-      ],
-      "empires": [
-        { "title": "Caesar Augustus", "subtitle": "Roman Emperor", "type": "empire" }
-      ]
+      "prophets": [{ "title": "Birth of Jesus", "subtitle": "Gospels (Matthew / Luke)", "type": "prophet" }],
+      "empires": [{ "title": "Caesar Augustus", "subtitle": "Roman Emperor", "type": "empire" }]
     }
   },
-  { "year": "50 A.D.", "columns": { "kings-judah": [], "kings-israel": [], "prophets": [{ "title": "Paul's Missionary Journeys", "subtitle": "Epistles Written", "type": "prophet" }], "empires": [{ "title": "Nero", "subtitle": "Roman Emperor", "type": "empire" }] } },
   {
+    "yearNum": 30,
+    "year": "30 A.D.",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [{ "title": "Crucifixion & Resurrection", "subtitle": "Pentecost / Early Church", "type": "prophet" }],
+      "empires": [{ "title": "Tiberius Caesar", "subtitle": "Roman Emperor", "type": "empire" }]
+    }
+  },
+  {
+    "yearNum": 50,
+    "year": "50 A.D.",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [{ "title": "Paul's Journeys", "subtitle": "Epistles Written", "type": "prophet" }],
+      "empires": [{ "title": "Nero", "subtitle": "Roman Emperor", "type": "empire" }]
+    }
+  },
+  {
+    "yearNum": 70,
+    "year": "70 A.D.",
+    "columns": {
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [],
+      "empires": [{ "title": "Fall of Jerusalem (70)", "subtitle": "Titus Destroys Temple", "type": "empire" }]
+    }
+  },
+  {
+    "yearNum": 100,
     "year": "100 A.D.",
     "id": "year-100ad",
     "columns": {
       "kings-judah": [],
       "kings-israel": [],
-      "prophets": [
-        { "title": "Revelation / John's Epistles", "subtitle": "Apostolic Era Closes", "type": "prophet" }
-      ],
-      "empires": [
-        { "title": "Trajan", "subtitle": "Roman Empire Peak", "type": "empire" }
-      ]
+      "prophets": [{ "title": "Revelation / John's Writings", "subtitle": "Apostolic Era Closes", "type": "prophet" }],
+      "empires": [{ "title": "Trajan", "subtitle": "Roman Emperor", "type": "empire" }]
     }
   }
 ]
