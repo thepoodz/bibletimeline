@@ -18,7 +18,6 @@
       --text-muted: #64748b;
       --col-year-width: 68px;
       --scrubber-width: 28px;
-      --pixels-per-year: 2.5;
       --canvas-top-padding: 30px;
     }
 
@@ -40,16 +39,17 @@
       touch-action: pan-y;
     }
 
+    /* --- Top Controls Toolbar --- */
     .toolbar {
       position: sticky;
       top: 0;
       z-index: 100;
       background-color: #090d16;
       border-bottom: 1px solid var(--border-color);
-      padding: 12px 16px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
     }
 
     .toolbar-title {
@@ -60,6 +60,49 @@
       color: var(--accent-gold);
     }
 
+    /* Floating / Toolbar Zoom Controller */
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 3px 8px;
+    }
+
+    .zoom-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      transition: background 0.15s;
+    }
+
+    .zoom-btn:hover {
+      background: var(--border-color);
+      color: var(--accent-gold);
+    }
+
+    .zoom-level-text {
+      font-size: 0.70rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 42px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* --- Responsive Timeline Canvas Grid --- */
     .timeline-container {
       display: grid;
       grid-template-columns: var(--col-year-width) repeat(2, 1fr);
@@ -76,6 +119,7 @@
       .timeline-container { grid-template-columns: var(--col-year-width) repeat(5, 1fr); }
     }
 
+    /* --- Column Selector Headers --- */
     .col-header {
       position: sticky;
       top: 45px;
@@ -123,6 +167,7 @@
       text-overflow: ellipsis;
     }
 
+    /* --- Continuous Map Canvas --- */
     .timeline-canvas {
       position: relative;
       grid-column: 1 / -1;
@@ -131,6 +176,7 @@
       width: 100%;
     }
 
+    /* --- Left Sticky Year Track --- */
     .year-track {
       position: relative;
       background-color: #111827;
@@ -336,6 +382,13 @@
 
   <header class="toolbar">
     <span class="toolbar-title">Bible Timeline</span>
+
+    <!-- Desktop & Mobile Zoom Control Pill -->
+    <div class="zoom-controls">
+      <button class="zoom-btn" id="btn-zoom-out" title="Zoom Out (−)">−</button>
+      <span class="zoom-level-text" id="zoom-level-text">1.0×</span>
+      <button class="zoom-btn" id="btn-zoom-in" title="Zoom In (+)">+</button>
+    </div>
   </header>
 
   <div class="scrubber-rail" id="scrubber-rail">
@@ -411,12 +464,17 @@
   </main>
 
   <script>
-    // Local memory cache for category data loaded on demand
     const dataCache = {};
 
     const START_YEAR = -4000;
     const END_YEAR = 100;
-    const PIXELS_PER_YEAR = 2.5;
+    
+    // Dynamic Zoom Bounds
+    const BASE_PIXELS_PER_YEAR = 2.5; // Default 1.0x Scale
+    let pixelsPerYear = BASE_PIXELS_PER_YEAR;
+    const MIN_PIXELS_PER_YEAR = 0.5;  // Zoomed Out Max (0.2x)
+    const MAX_PIXELS_PER_YEAR = 15.0; // Zoomed In Max (6.0x)
+
     const CANVAS_PADDING_TOP = 30;
 
     const CATEGORY_NAMES = {
@@ -448,19 +506,93 @@
     const scrubberRail = document.getElementById('scrubber-rail');
     const scrubIndicator = document.getElementById('scrub-indicator');
 
-    async function loadTimeline() {
-      setupCanvasHeight();
-      renderYearAxisAndGridLines();
-      buildScrubberRail();
-      setupTouchScrubber();
+    const btnZoomIn = document.getElementById('btn-zoom-in');
+    const btnZoomOut = document.getElementById('btn-zoom-out');
+    const zoomLevelText = document.getElementById('zoom-level-text');
 
-      // Load initial default dataset (books.json)
+    async function loadTimeline() {
+      rebuildCanvasLayout();
+      setupZoomListeners();
+
       await fetchCategoryData('books');
       updateDropdownOptionsUI();
       renderTimeline();
     }
 
-    // Lazy Loading Helper: Fetches file on-demand if not in cache
+    function rebuildCanvasLayout() {
+      setupCanvasHeight();
+      renderYearAxisAndGridLines();
+      renderTimeline();
+      buildScrubberRail();
+      setupTouchScrubber();
+    }
+
+    function setZoom(newScaleFactor) {
+      // 1. Calculate historical year at center of current viewport before scale shift
+      const currentScrollY = window.scrollY;
+      const centerViewportY = currentScrollY + (window.innerHeight / 2);
+      const yearAtCenter = START_YEAR + ((centerViewportY - CANVAS_PADDING_TOP) / pixelsPerYear);
+
+      // 2. Clamp scale within boundaries
+      pixelsPerYear = Math.max(MIN_PIXELS_PER_YEAR, Math.min(MAX_PIXELS_PER_YEAR, newScaleFactor));
+
+      // 3. Update Zoom UI Pill
+      const multiplier = (pixelsPerYear / BASE_PIXELS_PER_YEAR).toFixed(1);
+      zoomLevelText.textContent = `${multiplier}×`;
+
+      // 4. Re-render timeline canvas
+      rebuildCanvasLayout();
+
+      // 5. Restore scroll position so user remains anchored to the same year!
+      const newCenterViewportY = CANVAS_PADDING_TOP + ((yearAtCenter - START_YEAR) * pixelsPerYear);
+      const newScrollY = newCenterViewportY - (window.innerHeight / 2);
+      window.scrollTo({ top: newScrollY, behavior: 'instant' });
+    }
+
+    function setupZoomListeners() {
+      btnZoomIn.addEventListener('click', () => setZoom(pixelsPerYear * 1.3));
+      btnZoomOut.addEventListener('click', () => setZoom(pixelsPerYear / 1.3));
+
+      // Reset Zoom on double click text
+      zoomLevelText.addEventListener('dblclick', () => setZoom(BASE_PIXELS_PER_YEAR));
+
+      // Desktop Ctrl + Wheel or Trackpad Pinch
+      window.addEventListener('wheel', (e) => {
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
+          setZoom(pixelsPerYear * zoomFactor);
+        }
+      }, { passive: false });
+
+      // Mobile Touchscreen Pinch-to-Zoom
+      let initialTouchDistance = null;
+      let initialZoom = pixelsPerYear;
+
+      window.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+          initialTouchDistance = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          initialZoom = pixelsPerYear;
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && initialTouchDistance) {
+          const currentDistance = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          const pinchScale = currentDistance / initialTouchDistance;
+          setZoom(initialZoom * pinchScale);
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => initialTouchDistance = null);
+    }
+
     async function fetchCategoryData(categoryKey) {
       if (!categoryKey || dataCache[categoryKey]) return dataCache[categoryKey];
 
@@ -468,7 +600,7 @@
         const response = await fetch(`data/${categoryKey}.json`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
-        dataCache[categoryKey] = data; // Cache in memory
+        dataCache[categoryKey] = data;
         return data;
       } catch (error) {
         console.error(`Error loading dataset 'data/${categoryKey}.json':`, error);
@@ -477,12 +609,12 @@
     }
 
     function getYearOffset(year) {
-      return CANVAS_PADDING_TOP + ((year - START_YEAR) * PIXELS_PER_YEAR);
+      return CANVAS_PADDING_TOP + ((year - START_YEAR) * pixelsPerYear);
     }
 
     function setupCanvasHeight() {
       const totalYears = END_YEAR - START_YEAR;
-      const totalHeight = (totalYears * PIXELS_PER_YEAR) + (CANVAS_PADDING_TOP * 2);
+      const totalHeight = (totalYears * pixelsPerYear) + (CANVAS_PADDING_TOP * 2);
       canvas.style.height = `${totalHeight}px`;
     }
 
@@ -574,7 +706,7 @@
             card.style.top = `${topPos}px`;
           } else {
             card.className = `event-block ${styleClass}`;
-            const blockHeight = Math.max(24, duration * PIXELS_PER_YEAR);
+            const blockHeight = Math.max(24, duration * pixelsPerYear);
             card.style.top = `${topPos}px`;
             card.style.height = `${blockHeight}px`;
           }
@@ -669,11 +801,10 @@
       });
     }
 
-    // Dropdown Change Handler with On-Demand Loading
     selects.forEach(select => select.addEventListener('change', async () => {
       const chosenCategory = select.value;
       if (chosenCategory) {
-        await fetchCategoryData(chosenCategory); // Fetches only if not already loaded
+        await fetchCategoryData(chosenCategory);
       }
       updateDropdownOptionsUI();
       renderTimeline();
