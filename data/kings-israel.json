@@ -1,5 +1,8 @@
 [
-  { "title": "Ish-bosheth", "subtitle": "2 Sa 2–4 • 1006–1004 B.C.", "startYear": -1006, "endYear": -1004, "type": "king-israel", "classification": "bad" },
+  { "title": "Saul", "subtitle": "1 Sa 9–31 • United Kingdom", "startYear": -1051, "endYear": -1011, "type": "king-israel", "classification": "bad" },
+  { "title": "David", "subtitle": "1 Sa 16–1 Ki 2 • United Kingdom", "startYear": -1011, "endYear": -971, "type": "king-israel", "classification": "good" },
+  { "title": "Ish-bosheth", "subtitle": "2 Sa 2–4 • Contested Reign", "startYear": -1006, "endYear": -1004, "type": "king-israel", "classification": "bad" },
+  { "title": "Solomon", "subtitle": "1 Ki 1–11 • United Kingdom", "startYear": -971, "endYear": -931, "type": "king-israel", "classification": "good" },
   { "title": "Jeroboam I", "subtitle": "1 Ki 11:26–14:20 • Evil King", "startYear": -930, "endYear": -910, "type": "king-israel", "classification": "evil" },
   { "title": "Nadab", "subtitle": "1 Ki 15:25-32 • Evil King", "startYear": -910, "endYear": -909, "type": "king-israel", "classification": "evil" },
   { "title": "Baasha", "subtitle": "1 Ki 15:27-34 • Evil King", "startYear": -909, "endYear": -886, "type": "king-israel", "classification": "evil" },
