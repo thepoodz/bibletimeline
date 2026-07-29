@@ -1075,6 +1075,41 @@ card.addEventListener('click', () => openEventModal(event));
     }));
 
     loadTimeline();
+
+    const modal = document.getElementById('event-modal');
+const modalTitle = document.getElementById('modal-title');
+const modalType = document.getElementById('modal-type');
+const modalDates = document.getElementById('modal-dates');
+const modalBody = document.getElementById('modal-body');
+const modalClose = document.getElementById('modal-close');
+
+function openEventModal(event) {
+  modalTitle.textContent = event.title;
+  modalType.textContent = event.subtitle || 'Event Details';
+
+  // Format BC/AD display
+  const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
+  const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
+  modalDates.textContent = event.startYear === event.endYear ? startStr : `${startStr} – ${endStr}`;
+
+  // Display description from JSON, or fall back to default text
+  modalBody.textContent = event.description || "Detailed notes, key verses, or historical context for this period can be populated in your JSON files.";
+
+  modal.classList.add('active');
+}
+
+function closeModal() {
+  modal.classList.remove('active');
+}
+
+modalClose.addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) closeModal();
+});
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+    
   </script>
 
   <!-- Event Detail Modal -->
