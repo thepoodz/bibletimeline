@@ -19,6 +19,7 @@
       --col-year-width: 68px;
       --scrubber-width: 28px;
       --pixels-per-year: 2.5; /* Scale factor: 10 years = 25px height */
+      --canvas-top-padding: 30px; /* Buffer so top '4000' label isn't cut off */
     }
 
     * {
@@ -159,11 +160,11 @@
       color: var(--text-muted);
     }
 
-    /* Medium Gold: 100-Year Milestones */
+    /* Medium White: 100-Year Milestones */
     .year-marker.century {
       font-size: 0.78rem;
       font-weight: 700;
-      color: var(--accent-gold);
+      color: #ffffff;
     }
 
     /* Big Gold: 1,000-Year Major Eras */
@@ -187,7 +188,7 @@
     }
 
     .grid-line.century {
-      border-top: 1px solid rgba(245, 158, 11, 0.4); /* Medium gold line */
+      border-top: 1px solid rgba(255, 255, 255, 0.35); /* Medium white line */
     }
 
     .grid-line.millennium {
@@ -290,17 +291,17 @@
       cursor: pointer;
     }
 
-    /* Orange Dot for 100-Year Ticks */
+    /* White Dot for 100-Year Ticks */
     .scrub-tick.dot::before {
       content: "";
       width: 4px;
       height: 4px;
-      background-color: var(--accent-gold);
+      background-color: #ffffff;
       border-radius: 50%;
       opacity: 0.8;
     }
 
-    /* Slightly Bigger Gold Milestone Text */
+    /* Bold Gold Milestone Text */
     .scrub-label {
       font-size: 0.72rem;
       font-weight: 800;
@@ -411,6 +412,7 @@
     const START_YEAR = -4000;
     const END_YEAR = 100;
     const PIXELS_PER_YEAR = 2.5;
+    const CANVAS_PADDING_TOP = 30; // Prevents top 4000 label from clipping
 
     const selects = [
       document.getElementById('select-col-1'),
@@ -450,19 +452,18 @@
     }
 
     function getYearOffset(year) {
-      return (year - START_YEAR) * PIXELS_PER_YEAR;
+      // Calculates pixel position with top padding buffer included
+      return CANVAS_PADDING_TOP + ((year - START_YEAR) * PIXELS_PER_YEAR);
     }
 
     function setupCanvasHeight() {
       const totalYears = END_YEAR - START_YEAR;
-      const totalHeight = totalYears * PIXELS_PER_YEAR;
+      const totalHeight = (totalYears * PIXELS_PER_YEAR) + (CANVAS_PADDING_TOP * 2);
       canvas.style.height = `${totalHeight}px`;
     }
 
     function renderYearAxisAndGridLines() {
       yearTrack.innerHTML = '';
-
-      // Clear existing grid lines if re-rendered
       canvas.querySelectorAll('.grid-line').forEach(l => l.remove());
 
       for (let y = START_YEAR; y <= END_YEAR; y += 10) {
@@ -486,8 +487,8 @@
           marker.classList.add('millennium');
           gridLine.classList.add('millennium');
         } else if (absYear % 100 === 0) {
-          marker.classList.add('century');
-          gridLine.classList.add('century');
+          marker.classList.add('century'); // White style
+          gridLine.classList.add('century'); // White style
         } else {
           marker.classList.add('decade');
           gridLine.classList.add('decade');
@@ -575,7 +576,7 @@
           label.textContent = majorMilestones.get(tickKey);
           tick.appendChild(label);
         } else {
-          // Orange dot for 100-year steps
+          // White dot for 100-year steps
           tick.classList.add('dot');
         }
 
