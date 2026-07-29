@@ -16,7 +16,7 @@
       --accent-gold: #f59e0b;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --col-year-width: 80px;
+      --scrubber-width: 48px;
     }
 
     * {
@@ -58,13 +58,28 @@
       color: var(--accent-gold);
     }
 
-    /* --- Timeline Container --- */
+    /* --- Responsive Timeline Container --- */
     .timeline-container {
       display: grid;
-      grid-template-columns: var(--col-year-width) repeat(2, 1fr);
+      /* Mobile Default: 2 equal selectable columns */
+      grid-template-columns: repeat(2, 1fr);
       min-width: 100%;
       position: relative;
-      padding-right: 28px;
+      padding-right: var(--scrubber-width);
+    }
+
+    /* Tablet (3 Columns) */
+    @media (min-width: 768px) {
+      .timeline-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Desktop (All 5 Categories Visible) */
+    @media (min-width: 1100px) {
+      .timeline-container {
+        grid-template-columns: repeat(5, 1fr);
+      }
     }
 
     /* --- Column Selector Headers --- */
@@ -75,20 +90,22 @@
       background-color: var(--card-bg);
       border-bottom: 2px solid var(--border-color);
       border-right: 1px solid var(--border-color);
-      padding: 10px 8px;
+      padding: 10px 6px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .col-header.year-header {
-      background-color: #161e2e;
-      z-index: 95;
-      left: 0;
-      font-weight: 700;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
+    /* Hide 3rd column header on mobile */
+    .col-header.col-slot-3 { display: none; }
+    @media (min-width: 768px) { .col-header.col-slot-3 { display: flex; } }
+
+    /* Hide 4th & 5th column headers below desktop */
+    .col-header.col-slot-4,
+    .col-header.col-slot-5 { display: none; }
+    @media (min-width: 1100px) { 
+      .col-header.col-slot-4,
+      .col-header.col-slot-5 { display: flex; } 
     }
 
     .column-select {
@@ -96,8 +113,8 @@
       color: var(--text-main);
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      padding: 6px 8px;
-      font-size: 0.8rem;
+      padding: 6px 4px;
+      font-size: 0.78rem;
       font-weight: 600;
       width: 100%;
       outline: none;
@@ -105,7 +122,7 @@
       text-overflow: ellipsis;
     }
 
-    /* --- Timeline Rows --- */
+    /* --- Timeline Rows & Cells --- */
     .timeline-row {
       display: contents;
     }
@@ -113,26 +130,22 @@
     .timeline-cell {
       border-bottom: 1px solid var(--border-color);
       border-right: 1px solid var(--border-color);
-      padding: 8px 10px;
+      padding: 8px 8px;
       min-height: 48px;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
 
-    .year-cell {
-      position: sticky;
-      left: 0;
-      background-color: #111827;
-      z-index: 80;
-      font-weight: 700;
-      font-size: 0.75rem;
-      color: var(--accent-gold);
-      text-align: center;
-      justify-content: flex-start;
-      padding-top: 12px;
-      border-right: 2px solid var(--border-color);
-      scroll-margin-top: 100px;
+    /* Responsive Cell Hiding */
+    .timeline-cell.col-slot-3 { display: none; }
+    @media (min-width: 768px) { .timeline-cell.col-slot-3 { display: flex; } }
+
+    .timeline-cell.col-slot-4,
+    .timeline-cell.col-slot-5 { display: none; }
+    @media (min-width: 1100px) { 
+      .timeline-cell.col-slot-4,
+      .timeline-cell.col-slot-5 { display: flex; } 
     }
 
     .timeline-cell:empty::after {
@@ -164,15 +177,15 @@
     .event-card.patriarch { border-left-color: #10b981; }
     .event-card.empire { border-left-color: #f97316; }
 
-    /* --- Clean Scrubber Rail --- */
+    /* --- Combined Scrubber & Year Track (Right Rail) --- */
     .scrubber-rail {
       position: fixed;
       right: 0;
       top: 94px;
       bottom: 0;
-      width: 28px;
+      width: var(--scrubber-width);
       z-index: 200;
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(8px);
       border-left: 1px solid var(--border-color);
       display: flex;
@@ -193,29 +206,28 @@
       cursor: pointer;
     }
 
-    /* Small tick line for intermediate 100-year steps */
     .scrub-tick.intermediate::before {
       content: "";
-      width: 6px;
+      width: 8px;
       height: 1px;
       background-color: var(--border-color);
     }
 
-    /* Clean text display for major milestones (no background tick line) */
     .scrub-label {
       font-size: 0.65rem;
       font-weight: 700;
       color: var(--accent-gold);
       pointer-events: none;
       line-height: 1;
+      font-variant-numeric: tabular-nums;
     }
 
     .scrub-indicator {
       position: absolute;
       right: 2px;
-      width: 24px;
-      height: 16px;
-      background: rgba(245, 158, 11, 0.3);
+      left: 2px;
+      height: 18px;
+      background: rgba(245, 158, 11, 0.25);
       border: 1px solid var(--accent-gold);
       border-radius: 4px;
       pointer-events: none;
@@ -230,19 +242,16 @@
     <span class="toolbar-title">Bible Timeline</span>
   </header>
 
-  <!-- Touch Scrubber Rail -->
+  <!-- Touch Scrubber Rail & Year Axis -->
   <div class="scrubber-rail" id="scrubber-rail">
     <div class="scrub-indicator" id="scrub-indicator"></div>
   </div>
 
-<!-- Main Timeline Grid -->
+  <!-- Main Timeline Grid -->
   <main class="timeline-container">
-    
-    <!-- Header 1: Fixed Year Column -->
-    <div class="col-header year-header">Year</div>
 
-    <!-- Header 2: Column 1 Dropdown -->
-    <div class="col-header">
+    <!-- Slot 1 -->
+    <div class="col-header col-slot-1">
       <select class="column-select" id="select-col-1">
         <option value="books" selected>Books of the Bible</option>
         <option value="kings-judah">Kings of Judah</option>
@@ -252,14 +261,47 @@
       </select>
     </div>
 
-    <!-- Header 3: Column 2 Dropdown -->
-    <div class="col-header">
+    <!-- Slot 2 -->
+    <div class="col-header col-slot-2">
       <select class="column-select" id="select-col-2">
         <option value="books">Books of the Bible</option>
         <option value="kings-judah">Kings of Judah</option>
         <option value="kings-israel">Kings of Israel</option>
         <option value="prophets" selected>Prophets & Writings</option>
         <option value="empires">Rulers & Empires</option>
+      </select>
+    </div>
+
+    <!-- Slot 3 (Visible on Tablet / Desktop) -->
+    <div class="col-header col-slot-3">
+      <select class="column-select" id="select-col-3">
+        <option value="books">Books of the Bible</option>
+        <option value="kings-judah">Kings of Judah</option>
+        <option value="kings-israel" selected>Kings of Israel</option>
+        <option value="prophets">Prophets & Writings</option>
+        <option value="empires">Rulers & Empires</option>
+      </select>
+    </div>
+
+    <!-- Slot 4 (Visible on Desktop) -->
+    <div class="col-header col-slot-4">
+      <select class="column-select" id="select-col-4">
+        <option value="books">Books of the Bible</option>
+        <option value="kings-judah" selected>Kings of Judah</option>
+        <option value="kings-israel">Kings of Israel</option>
+        <option value="prophets">Prophets & Writings</option>
+        <option value="empires">Rulers & Empires</option>
+      </select>
+    </div>
+
+    <!-- Slot 5 (Visible on Desktop) -->
+    <div class="col-header col-slot-5">
+      <select class="column-select" id="select-col-5">
+        <option value="books">Books of the Bible</option>
+        <option value="kings-judah">Kings of Judah</option>
+        <option value="kings-israel">Kings of Israel</option>
+        <option value="prophets">Prophets & Writings</option>
+        <option value="empires" selected>Rulers & Empires</option>
       </select>
     </div>
 
@@ -271,8 +313,14 @@
     let rawTimelineData = [];
     let generated10YrData = [];
 
-    const col1Select = document.getElementById('select-col-1');
-    const col2Select = document.getElementById('select-col-2');
+    const selects = [
+      document.getElementById('select-col-1'),
+      document.getElementById('select-col-2'),
+      document.getElementById('select-col-3'),
+      document.getElementById('select-col-4'),
+      document.getElementById('select-col-5')
+    ];
+
     const rowsContainer = document.getElementById('timeline-rows-container');
     const scrubberRail = document.getElementById('scrubber-rail');
     const scrubIndicator = document.getElementById('scrub-indicator');
@@ -293,80 +341,48 @@
     }
 
     function generate10YearGrid() {
-  const dataMap = new Map();
-  rawTimelineData.forEach(item => dataMap.set(item.yearNum, item));
+      const dataMap = new Map();
+      rawTimelineData.forEach(item => dataMap.set(item.yearNum, item));
 
-  generated10YrData = [];
+      generated10YrData = [];
 
-  // Stepping by 10
-  for (let y = -4000; y <= 100; y += 10) {
-    if (y === 0) continue;
+      for (let y = -4000; y <= 100; y += 10) {
+        if (y === 0) continue;
 
-    const existing = dataMap.get(y);
-    const elemId = `year-${y < 0 ? Math.abs(y) + 'bc' : y + 'ad'}`;
+        const existing = dataMap.get(y);
+        const elemId = `year-${y < 0 ? Math.abs(y) + 'bc' : y + 'ad'}`;
 
-    if (existing) {
-      generated10YrData.push({
-        ...existing,
-        year: y < 0 ? `${Math.abs(y)} B.C.` : `${y} A.D.`,
-        id: existing.id || elemId,
-        yearNum: y
-      });
-    } else {
-      generated10YrData.push({
-        yearNum: y,
-        year: y < 0 ? `${Math.abs(y)} B.C.` : `${y} A.D.`,
-        id: elemId,
-        columns: { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] }
-      });
+        if (existing) {
+          generated10YrData.push({
+            ...existing,
+            id: existing.id || elemId,
+            yearNum: y
+          });
+        } else {
+          generated10YrData.push({
+            yearNum: y,
+            id: elemId,
+            columns: { "books": [], "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] }
+          });
+        }
+      }
     }
-
-    // Explicitly insert a "0" row right at 1 A.D. so the axis marks the transition
-    if (y === -10) {
-      const year1Data = dataMap.get(1);
-      generated10YrData.push({
-        yearNum: 0,
-        year: "0",
-        id: "year-0",
-        columns: year1Data ? year1Data.columns : { "kings-judah": [], "kings-israel": [], "prophets": [], "empires": [] }
-      });
-    }
-  }
-}
 
     function renderTimeline() {
-      const key1 = col1Select.value;
-      const key2 = col2Select.value;
-
+      const keys = selects.map(s => s.value);
       rowsContainer.innerHTML = '';
 
       generated10YrData.forEach(row => {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'timeline-row';
 
-        const yearCell = document.createElement('div');
-        yearCell.className = 'timeline-cell year-cell';
-        if (row.id) yearCell.id = row.id;
-        
-        const hasContent = (row.columns[key1] && row.columns[key1].length > 0) || 
-                           (row.columns[key2] && row.columns[key2].length > 0);
-        
-        // Always force rendering "0" at 1 A.D.
-        if (row.yearNum === 1 || row.yearNum % 50 === 0 || hasContent) {
-          yearCell.textContent = row.year;
-        }
-
-        rowDiv.appendChild(yearCell);
-
-        const cell1 = document.createElement('div');
-        cell1.className = 'timeline-cell';
-        renderCards(cell1, row.columns[key1] || []);
-        rowDiv.appendChild(cell1);
-
-        const cell2 = document.createElement('div');
-        cell2.className = 'timeline-cell';
-        renderCards(cell2, row.columns[key2] || []);
-        rowDiv.appendChild(cell2);
+        // Append 5 cells per row; CSS media queries show/hide slot 3, 4, 5 dynamically
+        keys.forEach((key, index) => {
+          const cell = document.createElement('div');
+          cell.className = `timeline-cell col-slot-${index + 1}`;
+          renderCards(cell, row.columns[key] || []);
+          rowDiv.appendChild(cell);
+        });
 
         rowsContainer.appendChild(rowDiv);
       });
@@ -394,34 +410,35 @@
     }
 
     function buildScrubberRail() {
-  scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
+      scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
 
-  // Major milestones map: 4k, 3k, 2k, 1k, 0
-  const majorMilestones = new Map([
-    [-4000, "4k"],
-    [-3000, "3k"],
-    [-2000, "2k"],
-    [-1000, "1k"],
-    [0, "0"]
-  ]);
+      // Major numerical milestones (Full numbers, no B.C./A.D.)
+      const majorMilestones = new Map([
+        [-4000, "4000"],
+        [-3000, "3000"],
+        [-2000, "2000"],
+        [-1000, "1000"],
+        [0, "0"],
+        [100, "100"]
+      ]);
 
-  for (let y = -4000; y <= 100; y += 100) {
-    const tickKey = (y === 0) ? 0 : y;
-    const tick = document.createElement('div');
-    tick.className = 'scrub-tick';
+      for (let y = -4000; y <= 100; y += 100) {
+        const tickKey = (y === 0) ? 0 : y;
+        const tick = document.createElement('div');
+        tick.className = 'scrub-tick';
 
-    if (majorMilestones.has(tickKey)) {
-      const label = document.createElement('span');
-      label.className = 'scrub-label';
-      label.textContent = majorMilestones.get(tickKey);
-      tick.appendChild(label);
-    } else {
-      tick.classList.add('intermediate');
+        if (majorMilestones.has(tickKey)) {
+          const label = document.createElement('span');
+          label.className = 'scrub-label';
+          label.textContent = majorMilestones.get(tickKey);
+          tick.appendChild(label);
+        } else {
+          tick.classList.add('intermediate');
+        }
+
+        scrubberRail.appendChild(tick);
+      }
     }
-
-    scrubberRail.appendChild(tick);
-  }
-}
 
     function setupTouchScrubber() {
       function scrubToY(clientY) {
@@ -432,7 +449,7 @@
         const targetScroll = percentage * maxScroll;
 
         window.scrollTo({ top: targetScroll, behavior: 'instant' });
-        scrubIndicator.style.top = `${percentage * (rect.height - 16)}px`;
+        scrubIndicator.style.top = `${percentage * (rect.height - 18)}px`;
       }
 
       let isScrubbing = false;
@@ -465,12 +482,11 @@
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         if (maxScroll <= 0) return;
         const percentage = Math.max(0, Math.min(1, window.scrollY / maxScroll));
-        scrubIndicator.style.top = `${percentage * (rect.height - 16)}px`;
+        scrubIndicator.style.top = `${percentage * (rect.height - 18)}px`;
       });
     }
 
-    col1Select.addEventListener('change', renderTimeline);
-    col2Select.addEventListener('change', renderTimeline);
+    selects.forEach(select => select.addEventListener('change', renderTimeline));
 
     loadTimeline();
   </script>
