@@ -1,7 +1,7 @@
 [
-  { "title": "Saul", "subtitle": "1 Sa 9–31 • 1051–1011 B.C.", "startYear": -1051, "endYear": -1011, "type": "king-israel", "classification": "bad" },
-  { "title": "David", "subtitle": "1 Sa 16–1 Ki 2:10 • 1011–971 B.C.", "startYear": -1011, "endYear": -971, "type": "king-judah", "classification": "good" },
-  { "title": "Solomon", "subtitle": "1 Ki 1–11:41 • 971–931 B.C.", "startYear": -971, "endYear": -931, "type": "king-judah", "classification": "good" },
+  { "title": "Saul", "subtitle": "1 Sa 9–31 • United Kingdom", "startYear": -1051, "endYear": -1011, "type": "king-judah", "classification": "bad" },
+  { "title": "David", "subtitle": "1 Sa 16–1 Ki 2 • United Kingdom", "startYear": -1011, "endYear": -971, "type": "king-judah", "classification": "good" },
+  { "title": "Solomon", "subtitle": "1 Ki 1–11 • United Kingdom", "startYear": -971, "endYear": -931, "type": "king-judah", "classification": "good" },
   { "title": "Rehoboam", "subtitle": "1 Ki 14:21-31 • Bad King", "startYear": -931, "endYear": -913, "type": "king-judah", "classification": "bad" },
   { "title": "Abijah", "subtitle": "1 Ki 15:1-8 • Bad King", "startYear": -913, "endYear": -911, "type": "king-judah", "classification": "bad" },
   { "title": "Asa", "subtitle": "1 Ki 15:9-24 • Good King", "startYear": -911, "endYear": -870, "type": "king-judah", "classification": "good" },
