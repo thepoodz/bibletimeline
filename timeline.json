@@ -4,10 +4,26 @@
     "year": "4000 B.C.",
     "id": "year-4000bc",
     "columns": {
+      "books": [
+        { "title": "Genesis 1–3", "subtitle": "Creation, Eden & The Fall", "type": "patriarch" }
+      ],
       "kings-judah": [],
       "kings-israel": [],
-      "prophets": [{ "title": "Genesis", "subtitle": "Book of Beginnings", "type": "book" }],
+      "prophets": [],
       "empires": [{ "title": "Creation & Patriarchs", "subtitle": "Genesis 1–5", "type": "patriarch" }]
+    }
+  },
+  {
+    "yearNum": -2350,
+    "year": "2350 B.C.",
+    "columns": {
+      "books": [
+        { "title": "Genesis 6–9", "subtitle": "Noah & The Great Flood", "type": "patriarch" }
+      ],
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [],
+      "empires": []
     }
   },
   {
@@ -15,10 +31,68 @@
     "year": "2000 B.C.",
     "id": "year-2000bc",
     "columns": {
+      "books": [
+        { "title": "Genesis 12–25", "subtitle": "Covenant with Abraham", "type": "patriarch" },
+        { "title": "Job", "subtitle": "Traditional Era setting", "type": "prophet" }
+      ],
       "kings-judah": [],
       "kings-israel": [],
       "prophets": [{ "title": "Job", "subtitle": "Traditional Era", "type": "prophet" }],
-      "empires": [{ "title": "Covenant with Abraham", "subtitle": "Genesis 12–15", "type": "patriarch" }]
+      "empires": [{ "title": "Patriarchal Period", "subtitle": "Genesis 12–50", "type": "patriarch" }]
+    }
+  },
+  {
+    "yearNum": -1800,
+    "year": "1800 B.C.",
+    "columns": {
+      "books": [
+        { "title": "Genesis 37–50", "subtitle": "Joseph & Descent into Egypt", "type": "patriarch" }
+      ],
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [],
+      "empires": []
+    }
+  },
+  {
+    "yearNum": -1440,
+    "year": "1440 B.C.",
+    "columns": {
+      "books": [
+        { "title": "Exodus & Leviticus", "subtitle": "The Exodus & Law given at Sinai", "type": "patriarch" }
+      ],
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [{ "title": "Moses", "subtitle": "The Law / Torah", "type": "prophet" }],
+      "empires": [{ "title": "Egyptian New Kingdom", "subtitle": "Pharaoh of Exodus", "type": "empire" }]
+    }
+  },
+  {
+    "yearNum": -1400,
+    "year": "1400 B.C.",
+    "columns": {
+      "books": [
+        { "title": "Numbers & Deuteronomy", "subtitle": "Wilderness Wanderings", "type": "patriarch" },
+        { "title": "Joshua", "subtitle": "Conquest of Canaan", "type": "patriarch" }
+      ],
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [],
+      "empires": []
+    }
+  },
+  {
+    "yearNum": -1100,
+    "year": "1100 B.C.",
+    "columns": {
+      "books": [
+        { "title": "Judges", "subtitle": "Period of the Judges", "type": "patriarch" },
+        { "title": "Ruth", "subtitle": "Story of Ruth & Boaz", "type": "patriarch" }
+      ],
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [{ "title": "Samuel", "subtitle": "Last Judge of Israel", "type": "prophet" }],
+      "empires": []
     }
   },
   {
@@ -26,9 +100,27 @@
     "year": "1000 B.C.",
     "id": "year-1000bc",
     "columns": {
+      "books": [
+        { "title": "1 & 2 Samuel", "subtitle": "Reigns of Saul & David", "type": "king-judah" },
+        { "title": "Psalms", "subtitle": "Davidic Worship Songs", "type": "prophet" }
+      ],
       "kings-judah": [{ "title": "King David", "subtitle": "United Monarchy", "type": "king-judah" }],
       "kings-israel": [],
       "prophets": [{ "title": "Psalms", "subtitle": "Davidic Psalms compiled", "type": "prophet" }],
+      "empires": []
+    }
+  },
+  {
+    "yearNum": -950,
+    "year": "950 B.C.",
+    "columns": {
+      "books": [
+        { "title": "1 Kings 1–11", "subtitle": "Reign of Solomon", "type": "king-judah" },
+        { "title": "Proverbs, Ecclesiastes, Song of Solomon", "subtitle": "Wisdom Literature", "type": "prophet" }
+      ],
+      "kings-judah": [{ "title": "Solomon", "subtitle": "Temple Built", "type": "king-judah" }],
+      "kings-israel": [],
+      "prophets": [],
       "empires": []
     }
   },
@@ -37,6 +129,9 @@
     "year": "930 B.C.",
     "id": "year-930bc",
     "columns": {
+      "books": [
+        { "title": "1 Kings 12–22", "subtitle": "Kingdom Splits (Israel / Judah)", "type": "king-israel" }
+      ],
       "kings-judah": [{ "title": "Rehoboam", "subtitle": "Kingdom Splits", "type": "king-judah" }],
       "kings-israel": [{ "title": "Jeroboam I", "subtitle": "Northern Kingdom", "type": "king-israel" }],
       "prophets": [],
@@ -47,6 +142,9 @@
     "yearNum": -850,
     "year": "850 B.C.",
     "columns": {
+      "books": [
+        { "title": "2 Kings 1–10", "subtitle": "Elijah & Elisha Narratives", "type": "prophet" }
+      ],
       "kings-judah": [{ "title": "Jehoshaphat", "subtitle": "2 Chronicles 17", "type": "king-judah" }],
       "kings-israel": [{ "title": "Ahab", "subtitle": "1 Kings 16", "type": "king-israel" }],
       "prophets": [{ "title": "Elijah", "subtitle": "Mount Carmel", "type": "prophet" }],
@@ -57,6 +155,9 @@
     "yearNum": -740,
     "year": "740 B.C.",
     "columns": {
+      "books": [
+        { "title": "Amos & Hosea", "subtitle": "Prophetic Warnings to Israel", "type": "prophet" }
+      ],
       "kings-judah": [{ "title": "Uzziah", "subtitle": "2 Kings 15", "type": "king-judah" }],
       "kings-israel": [{ "title": "Pekahiah", "subtitle": "2 Kings 15", "type": "king-israel" }],
       "prophets": [{ "title": "Isaiah (Called)", "subtitle": "\"In the year King Uzziah died...\"", "type": "prophet" }],
@@ -67,6 +168,10 @@
     "yearNum": -720,
     "year": "720 B.C.",
     "columns": {
+      "books": [
+        { "title": "2 Kings 17", "subtitle": "Fall of Northern Kingdom", "type": "king-israel" },
+        { "title": "Isaiah (Ch. 1–39)", "subtitle": "Assyrian Crisis", "type": "prophet" }
+      ],
       "kings-judah": [{ "title": "Hezekiah", "subtitle": "Sennacherib Siege", "type": "king-judah" }],
       "kings-israel": [{ "title": "Fall of Samaria (722)", "subtitle": "Exile to Assyria", "type": "king-israel" }],
       "prophets": [{ "title": "Micah", "subtitle": "Judah Ministry", "type": "prophet" }],
@@ -77,6 +182,9 @@
     "yearNum": -600,
     "year": "600 B.C.",
     "columns": {
+      "books": [
+        { "title": "Jeremiah, Habakkuk, Zephaniah", "subtitle": "Warning of Babylon's Siege", "type": "prophet" }
+      ],
       "kings-judah": [{ "title": "Jehoiakim / Zedekiah", "subtitle": "Babylon Siege Begins", "type": "king-judah" }],
       "kings-israel": [],
       "prophets": [{ "title": "Jeremiah", "subtitle": "Weeping Prophet", "type": "prophet" }],
@@ -87,6 +195,10 @@
     "yearNum": -580,
     "year": "580 B.C.",
     "columns": {
+      "books": [
+        { "title": "2 Kings 25 / 2 Chronicles 36", "subtitle": "Destruction of Jerusalem", "type": "king-judah" },
+        { "title": "Lamentations, Ezekiel, Daniel", "subtitle": "Exile Books", "type": "prophet" }
+      ],
       "kings-judah": [{ "title": "Fall of Jerusalem (586)", "subtitle": "Temple Destroyed", "type": "king-judah" }],
       "kings-israel": [],
       "prophets": [{ "title": "Ezekiel / Daniel", "subtitle": "Exile Writings", "type": "prophet" }],
@@ -97,6 +209,9 @@
     "yearNum": -530,
     "year": "530 B.C.",
     "columns": {
+      "books": [
+        { "title": "Ezra 1–6, Haggai, Zechariah", "subtitle": "Returnees Rebuild Temple", "type": "prophet" }
+      ],
       "kings-judah": [],
       "kings-israel": [],
       "prophets": [{ "title": "Zerubbabel", "subtitle": "Returnees Rebuild Temple", "type": "prophet" }],
@@ -104,9 +219,25 @@
     }
   },
   {
+    "yearNum": -480,
+    "year": "480 B.C.",
+    "columns": {
+      "books": [
+        { "title": "Esther", "subtitle": "Events in Susa, Persia", "type": "prophet" }
+      ],
+      "kings-judah": [],
+      "kings-israel": [],
+      "prophets": [],
+      "empires": []
+    }
+  },
+  {
     "yearNum": -440,
     "year": "440 B.C.",
     "columns": {
+      "books": [
+        { "title": "Ezra 7–10, Nehemiah, Malachi", "subtitle": "Walls Rebuilt / OT Closes", "type": "prophet" }
+      ],
       "kings-judah": [],
       "kings-israel": [],
       "prophets": [{ "title": "Ezra / Nehemiah / Malachi", "subtitle": "Walls Rebuilt / OT Closes", "type": "prophet" }],
@@ -117,6 +248,7 @@
     "yearNum": -330,
     "year": "330 B.C.",
     "columns": {
+      "books": [],
       "kings-judah": [],
       "kings-israel": [],
       "prophets": [],
@@ -127,6 +259,7 @@
     "yearNum": -160,
     "year": "160 B.C.",
     "columns": {
+      "books": [],
       "kings-judah": [],
       "kings-israel": [],
       "prophets": [],
@@ -137,6 +270,7 @@
     "yearNum": -60,
     "year": "60 B.C.",
     "columns": {
+      "books": [],
       "kings-judah": [],
       "kings-israel": [],
       "prophets": [],
@@ -148,6 +282,9 @@
     "year": "1 A.D.",
     "id": "year-1ad",
     "columns": {
+      "books": [
+        { "title": "Matthew, Mark, Luke, John", "subtitle": "Life & Ministry of Jesus", "type": "prophet" }
+      ],
       "kings-judah": [],
       "kings-israel": [],
       "prophets": [{ "title": "Birth of Jesus", "subtitle": "Gospels (Matthew / Luke)", "type": "prophet" }],
@@ -158,6 +295,9 @@
     "yearNum": 30,
     "year": "30 A.D.",
     "columns": {
+      "books": [
+        { "title": "Acts 1–12", "subtitle": "Pentecost & Early Church in Jerusalem", "type": "prophet" }
+      ],
       "kings-judah": [],
       "kings-israel": [],
       "prophets": [{ "title": "Crucifixion & Resurrection", "subtitle": "Pentecost / Early Church", "type": "prophet" }],
@@ -168,6 +308,10 @@
     "yearNum": 50,
     "year": "50 A.D.",
     "columns": {
+      "books": [
+        { "title": "Acts 13–28", "subtitle": "Paul's Journeys & Expansion to Rome", "type": "prophet" },
+        { "title": "Pauline Epistles", "subtitle": "Romans, Corinthians, Galatians, etc.", "type": "prophet" }
+      ],
       "kings-judah": [],
       "kings-israel": [],
       "prophets": [{ "title": "Paul's Journeys", "subtitle": "Epistles Written", "type": "prophet" }],
@@ -178,6 +322,9 @@
     "yearNum": 70,
     "year": "70 A.D.",
     "columns": {
+      "books": [
+        { "title": "General Epistles", "subtitle": "Hebrews, James, Peter, Jude", "type": "prophet" }
+      ],
       "kings-judah": [],
       "kings-israel": [],
       "prophets": [],
@@ -189,6 +336,9 @@
     "year": "100 A.D.",
     "id": "year-100ad",
     "columns": {
+      "books": [
+        { "title": "1, 2, 3 John & Revelation", "subtitle": "Johannine Writings / New Testament Closes", "type": "prophet" }
+      ],
       "kings-judah": [],
       "kings-israel": [],
       "prophets": [{ "title": "Revelation / John's Writings", "subtitle": "Apostolic Era Closes", "type": "prophet" }],
