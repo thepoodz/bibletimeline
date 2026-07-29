@@ -1128,7 +1128,7 @@
 
     function renderTimeline() {
       activeColumns.forEach((catKey, slotIndex) => {
-        const targetTrack = document.getElementById(`track-${index}`);
+        const targetTrack = document.getElementById(`track-${slotIndex}`);
         if (!targetTrack) return;
 
         targetTrack.innerHTML = '';
