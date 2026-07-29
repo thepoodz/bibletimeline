@@ -194,6 +194,7 @@
       pointer-events: none;
     }
 
+    .year-marker.annual { font-size: 0.58rem; font-weight: 400; color: #475569; }
     .year-marker.decade { font-size: 0.65rem; font-weight: 500; color: var(--text-muted); }
     .year-marker.century { font-size: 0.78rem; font-weight: 700; color: #ffffff; }
     .year-marker.millennium { font-size: 0.92rem; font-weight: 900; color: var(--accent-gold); }
@@ -207,7 +208,7 @@
       z-index: 5;
     }
 
-    .grid-line.annual { border-top: 1px dotted rgba(100, 116, 139, 0.15); z-index: 4; }
+    .grid-line.annual { border-top: 1px dotted rgba(100, 116, 139, 0.18); z-index: 4; }
     .grid-line.decade { border-top: 1px dashed rgba(100, 116, 139, 0.2); }
     .grid-line.century { border-top: 1px solid rgba(255, 255, 255, 0.35); }
     .grid-line.millennium { border-top: 2px solid var(--accent-gold); z-index: 6; }
@@ -233,7 +234,6 @@
       position: absolute;
       background: var(--card-bg);
       border-left: 4px solid var(--accent-gold);
-      /* Crisp subtle border around every block for touch separation */
       border-top: 1px solid rgba(255, 255, 255, 0.15);
       border-right: 1px solid rgba(255, 255, 255, 0.15);
       border-bottom: 1px solid rgba(255, 255, 255, 0.15);
@@ -243,12 +243,11 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.3);
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       transition: transform 0.15s ease, z-index 0.15s ease, width 0.15s ease;
       z-index: 15;
     }
 
-    /* Hover State: Pops overlapping card forward */
     .event-block:hover { 
       z-index: 30 !important; 
       transform: scale(1.03); 
@@ -256,21 +255,21 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     }
 
+    /* Multi-Line Text Wrapping Rules */
     .event-block .title {
       font-weight: 700;
       font-size: 0.72rem;
-      line-height: 1.1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.15;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .event-block .subtitle {
       font-size: 0.62rem;
       color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.15;
+      white-space: normal;
+      word-break: break-word;
       margin-top: 2px;
     }
 
@@ -303,19 +302,18 @@
     .event-point .title {
       font-weight: 800;
       font-size: 0.70rem;
-      line-height: 1.1;
+      line-height: 1.15;
       color: #ffffff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .event-point .subtitle {
       font-size: 0.60rem;
       color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.15;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .event-point.good::before { background: #22c55e; }
@@ -486,8 +484,8 @@
     
     const BASE_PIXELS_PER_YEAR = 2.5; 
     let pixelsPerYear = BASE_PIXELS_PER_YEAR;
-    const MIN_PIXELS_PER_YEAR = 0.5;  // Max Zoom Out (0.2x)
-    const MAX_PIXELS_PER_YEAR = 37.5; // Max Zoom In (15.0x)
+    const MIN_PIXELS_PER_YEAR = 0.5;  
+    const MAX_PIXELS_PER_YEAR = 37.5; 
 
     const CANVAS_PADDING_TOP = 30;
 
@@ -629,7 +627,7 @@
       canvas.querySelectorAll('.grid-line').forEach(l => l.remove());
 
       const showDecades = pixelsPerYear >= 1.5;
-      const showAnnuals = pixelsPerYear > 6.0;
+      const showAnnuals = pixelsPerYear > 6.0; // Level-of-detail threshold for 1-year lines/labels
 
       for (let y = START_YEAR; y <= END_YEAR; y++) {
         if (y === 0) continue;
@@ -646,10 +644,8 @@
             addMarkerAndLine(topPos, absYear, 'decade');
           }
         } else if (showAnnuals) {
-          const gridLine = document.createElement('div');
-          gridLine.className = 'grid-line annual';
-          gridLine.style.top = `${topPos}px`;
-          canvas.appendChild(gridLine);
+          // 1-Year Micro Grid Line AND Text Label when zoomed in close!
+          addMarkerAndLine(topPos, absYear, 'annual');
         }
       }
     }
