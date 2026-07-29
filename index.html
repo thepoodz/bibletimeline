@@ -97,7 +97,7 @@
       font-size: 0.70rem;
       font-weight: 700;
       color: var(--text-muted);
-      min-width: 42px;
+      min-width: 48px;
       text-align: center;
       font-variant-numeric: tabular-nums;
     }
@@ -233,6 +233,10 @@
       position: absolute;
       background: var(--card-bg);
       border-left: 4px solid var(--accent-gold);
+      /* Crisp subtle border around every block for touch separation */
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 4px;
       padding: 4px 6px;
       overflow: hidden;
@@ -244,10 +248,11 @@
       z-index: 15;
     }
 
-    /* Hover State: Pops overlapping card forward so it's fully readable! */
+    /* Hover State: Pops overlapping card forward */
     .event-block:hover { 
       z-index: 30 !important; 
       transform: scale(1.03); 
+      border-color: rgba(255, 255, 255, 0.4);
       box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     }
 
@@ -481,8 +486,8 @@
     
     const BASE_PIXELS_PER_YEAR = 2.5; 
     let pixelsPerYear = BASE_PIXELS_PER_YEAR;
-    const MIN_PIXELS_PER_YEAR = 0.5;  
-    const MAX_PIXELS_PER_YEAR = 15.0; 
+    const MIN_PIXELS_PER_YEAR = 0.5;  // Max Zoom Out (0.2x)
+    const MAX_PIXELS_PER_YEAR = 37.5; // Max Zoom In (15.0x)
 
     const CANVAS_PADDING_TOP = 30;
 
@@ -690,25 +695,19 @@
       });
     }
 
-    /* --- Smart Overlap Detection & Sub-Lane Layout Engine --- */
     function calculateSubLanes(events) {
       if (!events || events.length === 0) return [];
 
-      // 1. Sort chronologically by start year
       const sorted = [...events].sort((a, b) => a.startYear - b.startYear);
-      
-      // Track active lanes
       const laneEndYears = [];
 
       const processed = sorted.map(event => {
         let assignedLane = 0;
 
-        // Find the first lane that is free at this event's start year
         while (laneEndYears[assignedLane] !== undefined && laneEndYears[assignedLane] > event.startYear) {
           assignedLane++;
         }
 
-        // Lock in the end year for this lane
         laneEndYears[assignedLane] = event.endYear;
 
         return {
@@ -717,9 +716,7 @@
         };
       });
 
-      // Find maximum overlapping lanes in any cluster
       return processed.map(event => {
-        // Count how many events temporally overlap with this specific event
         const overlappingCluster = processed.filter(other => 
           Math.max(event.startYear, other.startYear) < Math.min(event.endYear, other.endYear)
         );
@@ -742,7 +739,6 @@
 
         if (!catKey || !dataCache[catKey]) return;
 
-        // Run smart overlap lane calculation on events
         const eventsWithLanes = calculateSubLanes(dataCache[catKey]);
 
         eventsWithLanes.forEach(event => {
@@ -755,7 +751,6 @@
           const topPos = getYearOffset(event.startYear);
           const duration = event.endYear - event.startYear;
 
-          // Sub-lane Width and Offset Math
           const totalLanes = event.totalLanes || 1;
           const currentLane = event.lane || 0;
           
