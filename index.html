@@ -20,6 +20,7 @@
       --scrubber-width: 38px;
       --canvas-top-padding: 30px;
       --active-cols: 1;
+      --toolbar-height: 45px;
       --header-height: 42px;
     }
 
@@ -46,9 +47,10 @@
       position: sticky;
       top: 0;
       z-index: 100;
+      height: var(--toolbar-height);
       background-color: #090d16;
       border-bottom: 1px solid var(--border-color);
-      padding: 10px 16px;
+      padding: 0 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -144,15 +146,14 @@
     .timeline-container {
       display: grid;
       grid-template-columns: var(--col-year-width) repeat(var(--active-cols), 1fr);
-      min-width: 100%;
+      width: 100%;
       position: relative;
-      padding-right: var(--scrubber-width);
     }
 
     /* --- Column Selector Headers --- */
     .col-header {
       position: sticky;
-      top: 45px;
+      top: var(--toolbar-height);
       z-index: 95;
       height: var(--header-height);
       background-color: var(--card-bg);
@@ -239,6 +240,7 @@
       display: grid;
       grid-template-columns: inherit;
       width: 100%;
+      padding-right: var(--scrubber-width);
     }
 
     /* --- Left Sticky Year Track --- */
@@ -295,7 +297,7 @@
       border-radius: 4px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.3);
       z-index: 15;
-      transition: transform 0.15s ease, z-index 0.15s ease;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, z-index 0.15s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -343,7 +345,6 @@
 
     .event-block:hover { 
       z-index: 40 !important; 
-      transform: scale(1.02); 
       border-color: rgba(255, 255, 255, 0.4);
       box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     }
@@ -375,13 +376,12 @@
       border-radius: 0 0 4px 4px;
       backdrop-filter: blur(4px);
       box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      transition: transform 0.15s ease, z-index 0.15s ease;
+      transition: background 0.15s ease, z-index 0.15s ease;
       cursor: pointer;
     }
 
     .event-point:hover {
       z-index: 40 !important;
-      transform: scale(1.02);
       background: rgba(30, 41, 59, 0.95);
     }
 
@@ -432,11 +432,11 @@
     .event-block.empire { border-left-color: #f97316; background: #2e1e14; }
     .event-block.book { border-left-color: #3b82f6; background: #172438; }
 
-    /* Scrubber Rail Starts Under Header Row */
+    /* Scrubber Rail Starts Under Both Header Rows */
     .scrubber-rail {
       position: fixed;
       right: 0;
-      top: calc(45px + var(--header-height));
+      top: calc(var(--toolbar-height) + var(--header-height));
       bottom: 0;
       width: var(--scrubber-width);
       z-index: 200;
@@ -1128,7 +1128,7 @@
 
     function renderTimeline() {
       activeColumns.forEach((catKey, slotIndex) => {
-        const targetTrack = document.getElementById(`track-${slotIndex}`);
+        const targetTrack = document.getElementById(`track-${index}`);
         if (!targetTrack) return;
 
         targetTrack.innerHTML = '';
