@@ -20,6 +20,7 @@
       --scrubber-width: 28px;
       --canvas-top-padding: 30px;
       --active-cols: 1;
+      --header-height: 42px;
     }
 
     * {
@@ -120,7 +121,6 @@
     /* --- Dynamic Grid Layout --- */
     .timeline-container {
       display: grid;
-      /* Grid spans Year Track + Active Data Columns with scrubber padding on right */
       grid-template-columns: var(--col-year-width) repeat(var(--active-cols), 1fr);
       min-width: 100%;
       position: relative;
@@ -132,10 +132,11 @@
       position: sticky;
       top: 45px;
       z-index: 95;
+      height: var(--header-height);
       background-color: var(--card-bg);
       border-bottom: 2px solid var(--border-color);
       border-right: 1px solid var(--border-color);
-      padding: 8px 6px;
+      padding: 4px 6px;
       display: flex;
       align-items: center;
       gap: 4px;
@@ -152,6 +153,11 @@
       justify-content: center;
     }
 
+    /* Give room on right side of last header if plus button is visible */
+    .col-header.has-add-pad {
+      padding-right: 44px;
+    }
+
     .column-select {
       background: var(--bg-color);
       color: var(--text-main);
@@ -164,6 +170,7 @@
       outline: none;
       cursor: pointer;
       text-overflow: ellipsis;
+      height: 30px;
     }
 
     .remove-col-btn {
@@ -182,34 +189,33 @@
       background: rgba(239, 68, 68, 0.1);
     }
 
-    /* Floating Plus Button (Overlaps header & scrubber boundary) */
-    .floating-add-btn {
+    /* Flush Square Plus Button in Header Bar */
+    .square-add-btn {
       position: fixed;
-      top: 50px;
-      right: 14px; /* Positions half in last column, half in scrubber column */
+      top: 45px;
+      right: 0;
       z-index: 210;
-      background: var(--bg-color);
-      border: 1.5px solid var(--accent-gold);
+      background: var(--card-bg);
+      border: none;
+      border-left: 1px solid var(--border-color);
+      border-bottom: 2px solid var(--border-color);
       color: var(--accent-gold);
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      font-size: 1.2rem;
+      width: 38px;
+      height: var(--header-height);
+      font-size: 1.25rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      line-height: 1;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-      transition: all 0.15s ease;
+      line-height: 0;
+      transition: background 0.15s ease, color 0.15s ease;
       user-select: none;
     }
 
-    .floating-add-btn:hover {
+    .square-add-btn:hover {
       background: var(--accent-gold);
       color: #000;
-      transform: scale(1.1);
     }
 
     /* --- Continuous Map Canvas --- */
@@ -416,7 +422,7 @@
     .scrubber-rail {
       position: fixed;
       right: 0;
-      top: 94px;
+      top: calc(45px + var(--header-height));
       bottom: 0;
       width: var(--scrubber-width);
       z-index: 200;
@@ -616,8 +622,8 @@
     <!-- Dynamic Headers Container -->
     <div id="headers-container" style="display: contents;"></div>
 
-    <!-- Floating Plus Button -->
-    <button class="floating-add-btn" id="btn-add-col" title="Add Column">+</button>
+    <!-- Flush Square Plus Button in Header Bar -->
+    <button class="square-add-btn" id="btn-add-col" title="Add Column">+</button>
 
     <!-- Continuous Canvas Container -->
     <div class="timeline-canvas" id="timeline-canvas">
@@ -711,11 +717,8 @@
       
       container.style.setProperty('--active-cols', activeColumns.length);
       
-      if (activeColumns.length >= maxCols) {
-        btnAddCol.style.display = 'none';
-      } else {
-        btnAddCol.style.display = 'flex';
-      }
+      const showAddBtn = activeColumns.length < maxCols;
+      btnAddCol.style.display = showAddBtn ? 'flex' : 'none';
 
       headersContainer.innerHTML = '';
       tracksContainer.innerHTML = '';
@@ -724,6 +727,11 @@
         // Build Header
         const headerDiv = document.createElement('div');
         headerDiv.className = 'col-header';
+        
+        // Add right padding to last header so select text doesn't overlap + button
+        if (showAddBtn && index === activeColumns.length - 1) {
+          headerDiv.classList.add('has-add-pad');
+        }
 
         const select = document.createElement('select');
         select.className = 'column-select';
