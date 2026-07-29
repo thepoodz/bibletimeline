@@ -17,7 +17,7 @@
       --text-main: #f8fafc;
       --text-muted: #64748b;
       --col-year-width: 68px;
-      --scrubber-width: 28px;
+      --scrubber-width: 38px;
       --canvas-top-padding: 30px;
       --active-cols: 1;
       --header-height: 42px;
@@ -62,21 +62,43 @@
       color: var(--accent-gold);
     }
 
-    /* Toolbar Zoom Slider Controls */
+    /* Hybrid Zoom Controls (Buttons + Slider) */
     .zoom-controls {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 20px;
-      padding: 4px 12px;
+      padding: 3px 10px;
+    }
+
+    .zoom-btn {
+      background: transparent;
+      border: none;
+      color: var(--accent-gold);
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      border-radius: 50%;
+      user-select: none;
+      transition: background 0.15s ease;
+    }
+
+    .zoom-btn:hover {
+      background: rgba(245, 158, 11, 0.15);
     }
 
     .zoom-slider {
       -webkit-appearance: none;
       appearance: none;
-      width: 110px;
+      width: 90px;
       height: 4px;
       background: var(--border-color);
       border-radius: 2px;
@@ -112,7 +134,7 @@
       font-size: 0.75rem;
       font-weight: 700;
       color: var(--text-main);
-      min-width: 44px;
+      min-width: 42px;
       text-align: right;
       font-variant-numeric: tabular-nums;
       user-select: none;
@@ -153,7 +175,6 @@
       justify-content: center;
     }
 
-    /* Give room on right side of last header if plus button is visible */
     .col-header.has-add-pad {
       padding-right: 44px;
     }
@@ -200,7 +221,7 @@
       border-left: 1px solid var(--border-color);
       border-bottom: 2px solid var(--border-color);
       color: var(--accent-gold);
-      width: 38px;
+      width: var(--scrubber-width);
       height: var(--header-height);
       font-size: 1.25rem;
       font-weight: 700;
@@ -466,8 +487,8 @@
 
     .scrub-indicator {
       position: absolute;
-      right: 2px;
-      width: 24px;
+      right: 3px;
+      width: 30px;
       height: 16px;
       background: rgba(245, 158, 11, 0.3);
       border: 1px solid var(--accent-gold);
@@ -607,7 +628,9 @@
     <span class="toolbar-title">Bible Timeline</span>
 
     <div class="zoom-controls">
+      <button class="zoom-btn" id="btn-zoom-out" title="Zoom Out">−</button>
       <input type="range" id="zoom-slider" class="zoom-slider" min="0" max="11" step="1" value="3">
+      <button class="zoom-btn" id="btn-zoom-in" title="Zoom In">+</button>
       <span class="zoom-level-text" id="zoom-level-text">1.0×</span>
     </div>
   </header>
@@ -694,6 +717,8 @@
 
     const zoomSlider = document.getElementById('zoom-slider');
     const zoomLevelText = document.getElementById('zoom-level-text');
+    const btnZoomOut = document.getElementById('btn-zoom-out');
+    const btnZoomIn = document.getElementById('btn-zoom-in');
 
     // Event Modal
     const modal = document.getElementById('event-modal');
@@ -728,7 +753,7 @@
         const headerDiv = document.createElement('div');
         headerDiv.className = 'col-header';
         
-        // Add right padding to last header so select text doesn't overlap + button
+        // Add right padding to last header so dropdown text doesn't hit + button
         if (showAddBtn && index === activeColumns.length - 1) {
           headerDiv.classList.add('has-add-pad');
         }
@@ -892,6 +917,14 @@
     function setupZoomListeners() {
       zoomSlider.addEventListener('input', (e) => {
         setZoomStep(parseInt(e.target.value, 10));
+      });
+
+      btnZoomOut.addEventListener('click', () => {
+        setZoomStep(currentStepIndex - 1);
+      });
+
+      btnZoomIn.addEventListener('click', () => {
+        setZoomStep(currentStepIndex + 1);
       });
 
       zoomLevelText.addEventListener('dblclick', () => setZoomStep(3));
