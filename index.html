@@ -860,14 +860,15 @@
       window.addEventListener('scroll', updateCardContinuationArrows, { passive: true });
     }
 
-    function rebuildCanvasLayout() {
-      setupCanvasHeight();
-      renderYearAxisAndGridLines();
-      renderTimeline();
-      buildScrubberRail();
-      setupTouchScrubber();
-      updateCardContinuationArrows();
-    }
+   function rebuildCanvasLayout() {
+  setupCanvasHeight();
+  renderYearAxisAndGridLines();
+  renderTimeline();
+  buildScrubberRail();
+  setupTouchScrubber();
+  updateScrubberPosition();
+  updateCardContinuationArrows();
+}
 
     function setZoomLevel(targetZoom, keepYearCentered = true) {
       const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, targetZoom));
