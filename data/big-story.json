@@ -99,6 +99,33 @@
     "description": "Joshua leads Israel into the Promised Land, and the walls of Jericho collapse by God's power."
   },
   {
+    "title": "Deborah & Barak Defeat Sisera",
+    "subtitle": "Judges 4–5",
+    "startYear": -1209,
+    "endYear": -1209,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "Deborah and Barak lead Israel to victory against the Canaanite army when God bogs down Sisera's iron chariots in the Kishon River."
+  },
+  {
+    "title": "Gideon’s 300 Victory",
+    "subtitle": "Judges 6–8",
+    "startYear": -1162,
+    "endYear": -1162,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "God reduces Gideon's army to 300 men, defeating the vast Midianite host with trumpets, torches, and clay jars."
+  },
+  {
+    "title": "Story of Ruth & Boaz",
+    "subtitle": "Ruth 1–4",
+    "startYear": -1100,
+    "endYear": -1100,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "Ruth's loyalty to Naomi leads her to Boaz, her kinsman-redeemer, establishing the family line for King David and the Messiah."
+  },
+  {
     "title": "Samson & Delilah",
     "subtitle": "Judges 16",
     "startYear": -1075,
