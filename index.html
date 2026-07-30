@@ -693,7 +693,7 @@
 
     const dataCache = {};
     
-    // Default Columns: 'The Big Story' loaded first; Desktop gets an extra empty slot
+    // Default Columns
     let activeColumns = window.innerWidth >= 768 ? ['big-story', ''] : ['big-story'];
 
     // DOM References
@@ -724,7 +724,7 @@
     const categoryOptionsList = document.getElementById('category-options-list');
 
     function calculateBaseScale() {
-      const headerTotalHeight = 87; // toolbar (45px) + header (42px)
+      const headerTotalHeight = 87;
       const availableHeight = Math.max(300, window.innerHeight - headerTotalHeight - (CANVAS_PADDING_TOP * 2));
       basePixelsPerYear = availableHeight / TOTAL_YEARS;
       pixelsPerYear = basePixelsPerYear * currentZoomLevel;
@@ -859,15 +859,15 @@
       window.addEventListener('scroll', updateCardContinuationArrows, { passive: true });
     }
 
-   function rebuildCanvasLayout() {
-  setupCanvasHeight();
-  renderYearAxisAndGridLines();
-  renderTimeline();
-  buildScrubberRail();
-  setupTouchScrubber();
-  updateScrubberPosition();
-  updateCardContinuationArrows();
-}
+    function rebuildCanvasLayout() {
+      setupCanvasHeight();
+      renderYearAxisAndGridLines();
+      renderTimeline();
+      buildScrubberRail();
+      setupTouchScrubber();
+      updateScrubberPosition();
+      updateCardContinuationArrows();
+    }
 
     function setZoomLevel(targetZoom, keepYearCentered = true) {
       const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, targetZoom));
@@ -1204,59 +1204,42 @@
     }
 
     function updateScrubberPosition() {
-  const rect = scrubberRail.getBoundingClientRect();
-  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-  
-  if (maxScroll <= 0) {
-    // Timeline fits entirely on screen (zoomed all the way out)
-    scrubIndicator.style.height = `${rect.height}px`;
-    scrubIndicator.style.top = `0px`;
-    return;
-  }
+      const rect = scrubberRail.getBoundingClientRect();
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      
+      if (maxScroll <= 0) {
+        scrubIndicator.style.height = `${rect.height}px`;
+        scrubIndicator.style.top = `0px`;
+        return;
+      }
 
-  // Calculate the percentage of the full timeline visible in the viewport
-  const viewportRatio = window.innerHeight / document.documentElement.scrollHeight;
-  const indicatorHeight = Math.max(16, rect.height * viewportRatio); // Minimum 16px for usability
-  
-  // Calculate scroll percentage
-  const scrollPercentage = Math.max(0, Math.min(1, window.scrollY / maxScroll));
-  const availableTravel = rect.height - indicatorHeight;
-  const indicatorTop = scrollPercentage * availableTravel;
+      const viewportRatio = window.innerHeight / document.documentElement.scrollHeight;
+      const indicatorHeight = Math.max(16, rect.height * viewportRatio);
+      
+      const scrollPercentage = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+      const availableTravel = rect.height - indicatorHeight;
+      const indicatorTop = scrollPercentage * availableTravel;
 
-  scrubIndicator.style.height = `${indicatorHeight}px`;
-  scrubIndicator.style.top = `${indicatorTop}px`;
-}
+      scrubIndicator.style.height = `${indicatorHeight}px`;
+      scrubIndicator.style.top = `${indicatorTop}px`;
+    }
 
-function setupTouchScrubber() {
-  function scrubToY(clientY) {
-    const rect = scrubberRail.getBoundingClientRect();
-    const viewportRatio = window.innerHeight / document.documentElement.scrollHeight;
-    const indicatorHeight = Math.max(16, rect.height * viewportRatio);
-    const availableTravel = rect.height - indicatorHeight;
+    function setupTouchScrubber() {
+      function scrubToY(clientY) {
+        const rect = scrubberRail.getBoundingClientRect();
+        const viewportRatio = window.innerHeight / document.documentElement.scrollHeight;
+        const indicatorHeight = Math.max(16, rect.height * viewportRatio);
+        const availableTravel = rect.height - indicatorHeight;
 
-    if (availableTravel <= 0) return;
+        if (availableTravel <= 0) return;
 
-    // Center the indicator thumb on click/drag
-    const targetTop = clientY - rect.top - (indicatorHeight / 2);
-    const percentage = Math.max(0, Math.min(1, targetTop / availableTravel));
-    
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    window.scrollTo({ top: percentage * maxScroll, behavior: 'instant' });
-    updateScrubberPosition();
-  }
-
-  let isScrubbing = false;
-
-  scrubberRail.addEventListener('mousedown', (e) => { isScrubbing = true; scrubToY(e.clientY); });
-  window.addEventListener('mousemove', (e) => { if (isScrubbing) scrubToY(e.clientY); });
-  window.addEventListener('mouseup', () => isScrubbing = false);
-
-  scrubberRail.addEventListener('touchstart', (e) => { isScrubbing = true; scrubToY(e.touches[0].clientY); }, { passive: true });
-  scrubberRail.addEventListener('touchmove', (e) => { if (isScrubbing) scrubToY(e.touches[0].clientY); }, { passive: true });
-  scrubberRail.addEventListener('touchend', () => isScrubbing = false);
-
-  window.addEventListener('scroll', updateScrubberPosition, { passive: true });
-}
+        const targetTop = clientY - rect.top - (indicatorHeight / 2);
+        const percentage = Math.max(0, Math.min(1, targetTop / availableTravel));
+        
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        window.scrollTo({ top: percentage * maxScroll, behavior: 'instant' });
+        updateScrubberPosition();
+      }
 
       let isScrubbing = false;
 
@@ -1268,14 +1251,7 @@ function setupTouchScrubber() {
       scrubberRail.addEventListener('touchmove', (e) => { if (isScrubbing) scrubToY(e.touches[0].clientY); }, { passive: true });
       scrubberRail.addEventListener('touchend', () => isScrubbing = false);
 
-      window.addEventListener('scroll', () => {
-        if (isScrubbing) return;
-        const rect = scrubberRail.getBoundingClientRect();
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        if (maxScroll <= 0) return;
-        const percentage = Math.max(0, Math.min(1, window.scrollY / maxScroll));
-        scrubIndicator.style.top = `${percentage * (rect.height - 16)}px`;
-      });
+      window.addEventListener('scroll', updateScrubberPosition, { passive: true });
     }
 
     loadTimeline();
