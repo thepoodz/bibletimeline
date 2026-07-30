@@ -1056,9 +1056,17 @@
         const rawDuration = event.endYear - event.startYear;
         const projectedHeight = rawDuration * pixelsPerYear;
         
-        const effectiveIsPoint = event.isPointEvent || rawDuration === 0 || (projectedHeight < 16 && rawDuration <= 2);
-        const effectiveEndYear = effectiveIsPoint ? event.startYear + Math.max(1, 3 / pixelsPerYear) : Math.max(event.startYear + 1, event.endYear);
+        const MIN_POINT_CARD_HEIGHT = 28; // Ensures a 28px clear margin for text under point markers
 
+const effectiveIsPoint = event.isPointEvent || rawDuration === 0 || (projectedHeight < 16 && rawDuration <= 2);
+
+// Calculate how many years are required at the current zoom scale to give 28px of clear vertical room
+const requiredYearsForMargin = MIN_POINT_CARD_HEIGHT / pixelsPerYear;
+
+const effectiveEndYear = effectiveIsPoint 
+  ? event.startYear + Math.max(1, requiredYearsForMargin) 
+  : Math.max(event.startYear + 1, event.endYear);
+        
         let assignedLane = 0;
         while (laneEndYears[assignedLane] !== undefined && laneEndYears[assignedLane] > event.startYear) {
           assignedLane++;
