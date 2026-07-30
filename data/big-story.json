@@ -1,4 +1,8 @@
-[
+{
+  "metadata": {
+    "color": "#f59e0b"
+  },
+  "events":[
   {
     "title": "Creation",
     "subtitle": "Genesis 1–2",
@@ -243,3 +247,4 @@
     "description": "The Holy Spirit descends upon believers, marking the birth of the Church."
   }
 ]
+}  
