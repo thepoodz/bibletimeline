@@ -992,8 +992,8 @@
       yearTrack.innerHTML = '';
       canvas.querySelectorAll('.grid-line').forEach(l => l.remove());
 
-      const showDecades = pixelsPerYear >= 0.8;
-      const showAnnuals = pixelsPerYear >= 3.0;
+      const showDecades = pixelsPerYear >= 1.0;
+      const showAnnuals = pixelsPerYear >= 12.0;
 
       for (let y = START_YEAR; y <= END_YEAR; y++) {
         if (y === 0) continue;
