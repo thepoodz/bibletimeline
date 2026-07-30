@@ -18,10 +18,11 @@
       --text-muted: #64748b;
       --col-year-width: 68px;
       --scrubber-width: 38px;
-      --canvas-top-padding: 30px;
-      --active-cols: 1;
       --toolbar-height: 45px;
       --header-height: 42px;
+      --header-total-height: calc(var(--toolbar-height) + var(--header-height));
+      --canvas-top-padding: 20px;
+      --active-cols: 1;
     }
 
     * {
@@ -42,7 +43,7 @@
       touch-action: pan-y;
     }
 
-    /* --- Top Controls Toolbar --- */
+    /* --- Sticky Top Controls Toolbar --- */
     .toolbar {
       position: sticky;
       top: 0;
@@ -64,7 +65,7 @@
       color: var(--accent-gold);
     }
 
-    /* Hybrid Zoom Controls */
+    /* Zoom Controls */
     .zoom-controls {
       display: flex;
       align-items: center;
@@ -142,7 +143,7 @@
       cursor: pointer;
     }
 
-    /* --- Dynamic Grid Layout --- */
+    /* --- Timeline Container Layout --- */
     .timeline-container {
       display: grid;
       grid-template-columns: var(--col-year-width) repeat(var(--active-cols), 1fr) var(--scrubber-width);
@@ -207,7 +208,6 @@
       background: rgba(239, 68, 68, 0.1);
     }
 
-    /* Header Plus Button Slot in Scrubber Column */
     .add-header-slot {
       position: sticky;
       top: var(--toolbar-height);
@@ -245,7 +245,7 @@
       border-style: solid;
     }
 
-    /* --- Continuous Map Canvas --- */
+    /* --- Continuous Timeline Canvas --- */
     .timeline-canvas {
       position: relative;
       grid-column: 1 / -1;
@@ -277,7 +277,7 @@
     .year-marker.century { font-size: 0.78rem; font-weight: 700; color: #ffffff; }
     .year-marker.millennium { font-size: 0.92rem; font-weight: 900; color: var(--accent-gold); }
 
-    /* --- Horizontal Grid Lines --- */
+    /* Grid Lines */
     .grid-line {
       position: absolute;
       left: 0;
@@ -297,13 +297,12 @@
       z-index: 10;
     }
 
-    /* Empty spacer column under the scrubber header slot */
     .scrubber-spacer-track {
       position: relative;
       z-index: 5;
     }
 
-    /* --- Continuous Span Event Blocks --- */
+    /* --- Event Cards & Points --- */
     .event-block {
       position: absolute;
       background: var(--card-bg);
@@ -323,11 +322,11 @@
 
     .event-block .card-content {
       position: sticky;
-      top: 105px;
+      top: calc(var(--header-total-height) + 15px);
       padding: 4px 18px 4px 6px;
       display: flex;
       flex-direction: column;
-      max-height: calc(100vh - 120px);
+      max-height: calc(100vh - var(--header-total-height) - 30px);
       overflow: hidden;
     }
 
@@ -366,7 +365,7 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     }
 
-    .event-block .title {
+    .event-block .title, .event-point .title {
       font-weight: 700;
       font-size: 0.72rem;
       line-height: 1.15;
@@ -374,7 +373,7 @@
       word-break: break-word;
     }
 
-    .event-block .subtitle {
+    .event-block .subtitle, .event-point .subtitle {
       font-size: 0.62rem;
       color: var(--text-muted);
       line-height: 1.15;
@@ -383,7 +382,6 @@
       margin-top: 2px;
     }
 
-    /* --- Single Point Event Markers --- */
     .event-point {
       position: absolute;
       border-top: 2px solid var(--accent-gold);
@@ -414,23 +412,7 @@
       box-shadow: 0 0 4px rgba(245, 158, 11, 0.8);
     }
 
-    .event-point .title {
-      font-weight: 800;
-      font-size: 0.70rem;
-      line-height: 1.15;
-      color: #ffffff;
-      white-space: normal;
-      word-break: break-word;
-    }
-
-    .event-point .subtitle {
-      font-size: 0.60rem;
-      color: var(--text-muted);
-      line-height: 1.15;
-      white-space: normal;
-      word-break: break-word;
-    }
-
+    /* Category Classifications */
     .event-point.good::before { background: #22c55e; }
     .event-point.good { border-top-color: #22c55e; }
     .event-point.evil::before, .event-point.bad::before { background: #ef4444; }
@@ -449,11 +431,11 @@
     .event-block.empire { border-left-color: #f97316; background: #2e1e14; }
     .event-block.book { border-left-color: #3b82f6; background: #172438; }
 
-    /* Scrubber Rail Starts Under Both Header Rows */
+    /* --- Scrubber Rail --- */
     .scrubber-rail {
       position: fixed;
       right: 0;
-      top: calc(var(--toolbar-height) + var(--header-height));
+      top: var(--header-total-height);
       bottom: 0;
       width: var(--scrubber-width);
       z-index: 200;
@@ -507,13 +489,10 @@
       transition: top 0.05s linear;
     }
 
-    /* --- Modals Styling --- */
+    /* --- Modals --- */
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
       background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(4px);
       z-index: 300;
@@ -594,7 +573,6 @@
       color: #cbd5e1;
     }
 
-    /* Category Selector List inside Add Modal */
     .category-options-list {
       display: flex;
       flex-direction: column;
@@ -640,7 +618,7 @@
     <div class="zoom-controls">
       <span class="zoom-level-text" id="zoom-level-text">1.0×</span>
       <button class="zoom-btn" id="btn-zoom-out" title="Zoom Out">−</button>
-      <input type="range" id="zoom-slider" class="zoom-slider" min="0" max="11" step="1" value="3">
+      <input type="range" id="zoom-slider" class="zoom-slider" min="0" max="9" step="1" value="0">
       <button class="zoom-btn" id="btn-zoom-in" title="Zoom In">+</button>
     </div>
   </header>
@@ -655,7 +633,7 @@
     <!-- Dynamic Headers Container -->
     <div id="headers-container" style="display: contents;"></div>
 
-    <!-- Plus Button Slot (Lives in Scrubber Column space) -->
+    <!-- Plus Button Slot -->
     <div class="add-header-slot" id="add-header-slot">
       <button class="header-add-btn" id="btn-header-add" title="Add Column">+</button>
     </div>
@@ -675,9 +653,7 @@
       <div class="modal-type" id="modal-type">Category</div>
       <h2 class="modal-title" id="modal-title">Event Title</h2>
       <div class="modal-dates" id="modal-dates">Years</div>
-      <div class="modal-body" id="modal-body">
-        Description text goes here.
-      </div>
+      <div class="modal-body" id="modal-body">Description text goes here.</div>
     </div>
   </div>
 
@@ -692,18 +668,16 @@
   </div>
 
   <script>
-    const dataCache = {};
-
     const START_YEAR = -4000;
     const END_YEAR = 100;
-    
-    const BASE_PIXELS_PER_YEAR = 2.5; 
-    let pixelsPerYear = BASE_PIXELS_PER_YEAR;
+    const TOTAL_YEARS = END_YEAR - START_YEAR; // 4100 years
+    const CANVAS_PADDING_TOP = 20;
 
-    const ZOOM_STEPS = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 7.5, 10.0, 15.0];
-    let currentStepIndex = 3;
+    const ZOOM_STEPS = [1.0, 1.5, 2.5, 4.0, 7.0, 12.0, 20.0, 35.0, 60.0, 100.0];
+    let currentStepIndex = 0;
 
-    const CANVAS_PADDING_TOP = 30;
+    let basePixelsPerYear = 0.2;
+    let pixelsPerYear = basePixelsPerYear;
 
     const CATEGORIES = {
       'books-narrative': 'Bible: Narrative Arc',
@@ -715,9 +689,10 @@
       'empires': 'Rulers & Empires'
     };
 
-    // Active column state tracking
+    const dataCache = {};
     let activeColumns = ['books-narrative'];
 
+    // DOM References
     const container = document.getElementById('timeline-container');
     const headersContainer = document.getElementById('headers-container');
     const tracksContainer = document.getElementById('tracks-container');
@@ -733,7 +708,6 @@
     const btnZoomOut = document.getElementById('btn-zoom-out');
     const btnZoomIn = document.getElementById('btn-zoom-in');
 
-    // Event Modal
     const modal = document.getElementById('event-modal');
     const modalTitle = document.getElementById('modal-title');
     const modalType = document.getElementById('modal-type');
@@ -741,10 +715,17 @@
     const modalBody = document.getElementById('modal-body');
     const modalClose = document.getElementById('modal-close');
 
-    // Add Column Modal
     const addColumnModal = document.getElementById('add-column-modal');
     const addModalClose = document.getElementById('add-modal-close');
     const categoryOptionsList = document.getElementById('category-options-list');
+
+    // Calculate baseline scale so the entire 4,100 timeline fits exactly on screen at 1.0x
+    function calculateBaseScale() {
+      const headerTotalHeight = 87; // toolbar (45px) + header (42px)
+      const availableHeight = Math.max(300, window.innerHeight - headerTotalHeight - (CANVAS_PADDING_TOP * 2));
+      basePixelsPerYear = availableHeight / TOTAL_YEARS;
+      pixelsPerYear = basePixelsPerYear * ZOOM_STEPS[currentStepIndex];
+    }
 
     function getMaxAllowedColumns() {
       return window.innerWidth < 768 ? 3 : 5;
@@ -752,17 +733,13 @@
 
     function renderColumnStructure() {
       const maxCols = getMaxAllowedColumns();
-      
       container.style.setProperty('--active-cols', activeColumns.length);
-      
-      const showAddBtn = activeColumns.length < maxCols;
-      btnHeaderAdd.style.display = showAddBtn ? 'flex' : 'none';
+      btnHeaderAdd.style.display = activeColumns.length < maxCols ? 'flex' : 'none';
 
       headersContainer.innerHTML = '';
       tracksContainer.innerHTML = '';
 
       activeColumns.forEach((catKey, slotIndex) => {
-        // Build Header
         const headerDiv = document.createElement('div');
         headerDiv.className = 'col-header';
 
@@ -785,16 +762,13 @@
 
         select.addEventListener('change', async (e) => {
           activeColumns[slotIndex] = e.target.value;
-          if (e.target.value) {
-            await fetchCategoryData(e.target.value);
-          }
+          if (e.target.value) await fetchCategoryData(e.target.value);
           updateDropdownOptionsUI();
           renderTimeline();
         });
 
         headerDiv.appendChild(select);
 
-        // Remove Column Button (If more than 1 column exists)
         if (activeColumns.length > 1) {
           const removeBtn = document.createElement('button');
           removeBtn.className = 'remove-col-btn';
@@ -810,7 +784,6 @@
 
         headersContainer.appendChild(headerDiv);
 
-        // Build Track Canvas Slot
         const trackDiv = document.createElement('div');
         trackDiv.className = 'data-track';
         trackDiv.id = `track-${slotIndex}`;
@@ -820,10 +793,8 @@
       updateDropdownOptionsUI();
     }
 
-    // Open Add Column Popup Modal
     function openAddColumnModal() {
       categoryOptionsList.innerHTML = '';
-
       Object.entries(CATEGORIES).forEach(([key, title]) => {
         const btn = document.createElement('button');
         btn.className = 'category-option-btn';
@@ -858,18 +829,8 @@
       addColumnModal.classList.remove('active');
     }
 
-    btnHeaderAdd.addEventListener('click', () => {
-      if (activeColumns.length < getMaxAllowedColumns()) {
-        openAddColumnModal();
-      }
-    });
-
-    addModalClose.addEventListener('click', closeAddColumnModal);
-    addColumnModal.addEventListener('click', (e) => {
-      if (e.target === addColumnModal) closeAddColumnModal();
-    });
-
     async function loadTimeline() {
+      calculateBaseScale();
       renderColumnStructure();
       rebuildCanvasLayout();
       setupZoomListeners();
@@ -878,13 +839,18 @@
       await fetchCategoryData('books-narrative');
       renderTimeline();
 
+      let resizeTimeout;
       window.addEventListener('resize', () => {
-        const maxCols = getMaxAllowedColumns();
-        if (activeColumns.length > maxCols) {
-          activeColumns = activeColumns.slice(0, maxCols);
-          renderColumnStructure();
-          renderTimeline();
-        }
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          const maxCols = getMaxAllowedColumns();
+          if (activeColumns.length > maxCols) {
+            activeColumns = activeColumns.slice(0, maxCols);
+            renderColumnStructure();
+          }
+          calculateBaseScale();
+          rebuildCanvasLayout();
+        }, 150);
       });
 
       window.addEventListener('scroll', updateCardContinuationArrows, { passive: true });
@@ -907,7 +873,7 @@
       const centerViewportY = currentScrollY + (window.innerHeight / 2);
       const yearAtCenter = START_YEAR + ((centerViewportY - CANVAS_PADDING_TOP) / pixelsPerYear);
 
-      pixelsPerYear = BASE_PIXELS_PER_YEAR * targetMultiplier;
+      pixelsPerYear = basePixelsPerYear * targetMultiplier;
 
       zoomSlider.value = currentStepIndex;
       zoomLevelText.textContent = `${targetMultiplier.toFixed(1)}×`;
@@ -922,28 +888,24 @@
     }
 
     function setupZoomListeners() {
-      zoomSlider.addEventListener('input', (e) => {
-        setZoomStep(parseInt(e.target.value, 10));
+      zoomSlider.addEventListener('input', (e) => setZoomStep(parseInt(e.target.value, 10)));
+      btnZoomOut.addEventListener('click', () => setZoomStep(currentStepIndex - 1));
+      btnZoomIn.addEventListener('click', () => setZoomStep(currentStepIndex + 1));
+      zoomLevelText.addEventListener('dblclick', () => setZoomStep(0));
+
+      btnHeaderAdd.addEventListener('click', () => {
+        if (activeColumns.length < getMaxAllowedColumns()) openAddColumnModal();
       });
 
-      btnZoomOut.addEventListener('click', () => {
-        setZoomStep(currentStepIndex - 1);
+      addModalClose.addEventListener('click', closeAddColumnModal);
+      addColumnModal.addEventListener('click', (e) => {
+        if (e.target === addColumnModal) closeAddColumnModal();
       });
-
-      btnZoomIn.addEventListener('click', () => {
-        setZoomStep(currentStepIndex + 1);
-      });
-
-      zoomLevelText.addEventListener('dblclick', () => setZoomStep(3));
 
       window.addEventListener('wheel', (e) => {
         if (e.ctrlKey || e.metaKey) {
           e.preventDefault();
-          if (e.deltaY < 0) {
-            setZoomStep(currentStepIndex + 1);
-          } else {
-            setZoomStep(currentStepIndex - 1);
-          }
+          setZoomStep(e.deltaY < 0 ? currentStepIndex + 1 : currentStepIndex - 1);
         }
       }, { passive: false });
 
@@ -966,10 +928,8 @@
             e.touches[0].clientX - e.touches[1].clientX,
             e.touches[0].clientY - e.touches[1].clientY
           );
-          
           const distanceDelta = currentDistance - initialTouchDistance;
-          const stepChange = Math.round(distanceDelta / 40);
-          setZoomStep(touchStartStepIndex + stepChange);
+          setZoomStep(touchStartStepIndex + Math.round(distanceDelta / 40));
         }
       }, { passive: true });
 
@@ -983,7 +943,6 @@
       const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
       const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
       modalDates.textContent = event.startYear === event.endYear ? startStr : `${startStr} – ${endStr}`;
-      
       modalBody.textContent = event.description || "Detailed notes, key verses, or historical context for this period can be populated in your JSON files.";
 
       modal.classList.add('active');
@@ -995,9 +954,7 @@
 
     function setupModalListeners() {
       modalClose.addEventListener('click', closeModal);
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-      });
+      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           closeModal();
@@ -1008,7 +965,6 @@
 
     async function fetchCategoryData(categoryKey) {
       if (!categoryKey || dataCache[categoryKey]) return dataCache[categoryKey];
-
       try {
         const response = await fetch(`data/${categoryKey}.json?v=${Date.now()}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -1026,8 +982,7 @@
     }
 
     function setupCanvasHeight() {
-      const totalYears = END_YEAR - START_YEAR;
-      const totalHeight = (totalYears * pixelsPerYear) + (CANVAS_PADDING_TOP * 2);
+      const totalHeight = (TOTAL_YEARS * pixelsPerYear) + (CANVAS_PADDING_TOP * 2);
       canvas.style.height = `${totalHeight}px`;
     }
 
@@ -1035,12 +990,11 @@
       yearTrack.innerHTML = '';
       canvas.querySelectorAll('.grid-line').forEach(l => l.remove());
 
-      const showDecades = pixelsPerYear >= 1.5;
-      const showAnnuals = pixelsPerYear > 6.0;
+      const showDecades = pixelsPerYear >= 0.8;
+      const showAnnuals = pixelsPerYear >= 3.0;
 
       for (let y = START_YEAR; y <= END_YEAR; y++) {
         if (y === 0) continue;
-
         const absYear = Math.abs(y);
         const topPos = getYearOffset(y);
 
@@ -1048,10 +1002,8 @@
           addMarkerAndLine(topPos, absYear, 'millennium');
         } else if (absYear % 100 === 0) {
           addMarkerAndLine(topPos, absYear, 'century');
-        } else if (absYear % 10 === 0) {
-          if (showDecades) {
-            addMarkerAndLine(topPos, absYear, 'decade');
-          }
+        } else if (absYear % 10 === 0 && showDecades) {
+          addMarkerAndLine(topPos, absYear, 'decade');
         } else if (showAnnuals) {
           addMarkerAndLine(topPos, absYear, 'annual');
         }
@@ -1078,9 +1030,7 @@
 
       selects.forEach((select, idx) => {
         if (select.value) {
-          if (!activeSelections[select.value]) {
-            activeSelections[select.value] = [];
-          }
+          if (!activeSelections[select.value]) activeSelections[select.value] = [];
           activeSelections[select.value].push(idx + 1);
         }
       });
@@ -1088,22 +1038,15 @@
       selects.forEach((select) => {
         Array.from(select.options).forEach(opt => {
           if (!opt.value) return;
-
           const baseTitle = CATEGORIES[opt.value] || opt.value;
           const activeCols = activeSelections[opt.value];
-
-          if (activeCols && activeCols.length > 0) {
-            opt.textContent = `${baseTitle} (In Col ${activeCols.join(', ')})`;
-          } else {
-            opt.textContent = baseTitle;
-          }
+          opt.textContent = activeCols?.length ? `${baseTitle} (In Col ${activeCols.join(', ')})` : baseTitle;
         });
       });
     }
 
     function calculateSubLanes(events) {
       if (!events || events.length === 0) return [];
-
       const sorted = [...events].sort((a, b) => a.startYear - b.startYear);
       const laneEndYears = [];
 
@@ -1111,14 +1054,13 @@
         const rawDuration = event.endYear - event.startYear;
         const projectedHeight = rawDuration * pixelsPerYear;
         
-        const effectiveIsPoint = event.isPointEvent || rawDuration === 0 || (projectedHeight < 20 && rawDuration <= 2);
-        const effectiveEndYear = effectiveIsPoint ? event.startYear + 3 : Math.max(event.startYear + 1, event.endYear);
+        const effectiveIsPoint = event.isPointEvent || rawDuration === 0 || (projectedHeight < 16 && rawDuration <= 2);
+        const effectiveEndYear = effectiveIsPoint ? event.startYear + Math.max(1, 3 / pixelsPerYear) : Math.max(event.startYear + 1, event.endYear);
 
         let assignedLane = 0;
         while (laneEndYears[assignedLane] !== undefined && laneEndYears[assignedLane] > event.startYear) {
           assignedLane++;
         }
-
         laneEndYears[assignedLane] = effectiveEndYear;
 
         return {
@@ -1133,12 +1075,9 @@
         const overlappingCluster = processed.filter(other => 
           Math.max(event.startYear, other.startYear) < Math.min(event.effectiveEndYear, other.effectiveEndYear)
         );
-
-        const totalLanesInCluster = Math.max(1, ...overlappingCluster.map(e => e.lane + 1));
-
         return {
           ...event,
-          totalLanes: totalLanesInCluster
+          totalLanes: Math.max(1, ...overlappingCluster.map(e => e.lane + 1))
         };
       });
     }
@@ -1154,21 +1093,16 @@
         const eventsWithLanes = calculateSubLanes(dataCache[catKey]);
 
         eventsWithLanes.forEach(event => {
-          const card = document.createElement('div');
-          let styleClass = event.type || 'book';
-          if (event.classification) {
-            styleClass = event.classification;
-          }
-
+          const styleClass = event.classification || event.type || 'book';
           const topPos = getYearOffset(event.startYear);
           const duration = event.endYear - event.startYear;
 
           const totalLanes = event.totalLanes || 1;
           const currentLane = event.lane || 0;
-          
           const laneWidthPct = 100 / totalLanes;
           const leftPosPct = laneWidthPct * currentLane;
 
+          const card = document.createElement('div');
           card.addEventListener('click', () => openEventModal(event));
 
           if (event.isPointEffective) {
@@ -1177,19 +1111,13 @@
             card.style.left = `calc(${leftPosPct}% + 2px)`;
             card.style.width = `calc(${laneWidthPct}% - 4px)`;
 
-            const title = document.createElement('div');
-            title.className = 'title';
-            title.textContent = event.title;
-
-            const subtitle = document.createElement('div');
-            subtitle.className = 'subtitle';
-            subtitle.textContent = event.subtitle;
-
-            card.appendChild(title);
-            card.appendChild(subtitle);
+            card.innerHTML = `
+              <div class="title">${event.title}</div>
+              <div class="subtitle">${event.subtitle || ''}</div>
+            `;
           } else {
             card.className = `event-block ${styleClass}`;
-            const blockHeight = Math.max(20, duration * pixelsPerYear);
+            const blockHeight = Math.max(16, duration * pixelsPerYear);
             card.style.top = `${topPos}px`;
             card.style.height = `${blockHeight}px`;
             card.style.left = `calc(${leftPosPct}% + 2px)`;
@@ -1198,30 +1126,14 @@
             card.dataset.top = topPos;
             card.dataset.bottom = topPos + blockHeight;
 
-            const content = document.createElement('div');
-            content.className = 'card-content';
-
-            const arrowTop = document.createElement('div');
-            arrowTop.className = 'card-arrow top';
-            arrowTop.textContent = '▲';
-
-            const title = document.createElement('div');
-            title.className = 'title';
-            title.textContent = event.title;
-
-            const subtitle = document.createElement('div');
-            subtitle.className = 'subtitle';
-            subtitle.textContent = event.subtitle;
-
-            content.appendChild(arrowTop);
-            content.appendChild(title);
-            content.appendChild(subtitle);
-            card.appendChild(content);
-
-            const arrowBottom = document.createElement('div');
-            arrowBottom.className = 'card-arrow bottom';
-            arrowBottom.textContent = '▼';
-            card.appendChild(arrowBottom);
+            card.innerHTML = `
+              <div class="card-content">
+                <div class="card-arrow top">▲</div>
+                <div class="title">${event.title}</div>
+                <div class="subtitle">${event.subtitle || ''}</div>
+              </div>
+              <div class="card-arrow bottom">▼</div>
+            `;
           }
 
           targetTrack.appendChild(card);
@@ -1233,7 +1145,7 @@
 
     function updateCardContinuationArrows() {
       const scrollY = window.scrollY;
-      const viewportTop = scrollY + 105;
+      const viewportTop = scrollY + 87 + 15;
       const viewportBottom = scrollY + window.innerHeight;
 
       document.querySelectorAll('.event-block').forEach(card => {
@@ -1248,27 +1160,17 @@
         }
 
         if (arrowBottom) {
-          const isBottomOffscreen = bottom > viewportBottom - 12;
-          const isTopAboveScreen = top < viewportBottom;
-
-          arrowBottom.style.display = (isBottomOffscreen && isTopAboveScreen) ? 'block' : 'none';
+          arrowBottom.style.display = (bottom > viewportBottom - 12 && top < viewportBottom) ? 'block' : 'none';
         }
       });
     }
 
     function buildScrubberRail() {
       scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
-
-      const majorMilestones = new Map([
-        [-4000, "4k"],
-        [-3000, "3k"],
-        [-2000, "2k"],
-        [-1000, "1k"],
-        [0, "0"]
-      ]);
+      const majorMilestones = new Map([[-4000, "4k"], [-3000, "3k"], [-2000, "2k"], [-1000, "1k"], [0, "0"]]);
 
       for (let y = START_YEAR; y <= END_YEAR; y += 100) {
-        const tickKey = (y === 0) ? 0 : y;
+        const tickKey = y === 0 ? 0 : y;
         const tick = document.createElement('div');
         tick.className = 'scrub-tick';
 
@@ -1289,36 +1191,19 @@
       function scrubToY(clientY) {
         const rect = scrubberRail.getBoundingClientRect();
         const percentage = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
-
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        const targetScroll = percentage * maxScroll;
-
-        window.scrollTo({ top: targetScroll, behavior: 'instant' });
+        window.scrollTo({ top: percentage * maxScroll, behavior: 'instant' });
         scrubIndicator.style.top = `${percentage * (rect.height - 16)}px`;
       }
 
       let isScrubbing = false;
 
-      scrubberRail.addEventListener('mousedown', (e) => {
-        isScrubbing = true;
-        scrubToY(e.clientY);
-      });
-
-      window.addEventListener('mousemove', (e) => {
-        if (isScrubbing) scrubToY(e.clientY);
-      });
-
+      scrubberRail.addEventListener('mousedown', (e) => { isScrubbing = true; scrubToY(e.clientY); });
+      window.addEventListener('mousemove', (e) => { if (isScrubbing) scrubToY(e.clientY); });
       window.addEventListener('mouseup', () => isScrubbing = false);
 
-      scrubberRail.addEventListener('touchstart', (e) => {
-        isScrubbing = true;
-        scrubToY(e.touches[0].clientY);
-      }, { passive: true });
-
-      scrubberRail.addEventListener('touchmove', (e) => {
-        if (isScrubbing) scrubToY(e.touches[0].clientY);
-      }, { passive: true });
-
+      scrubberRail.addEventListener('touchstart', (e) => { isScrubbing = true; scrubToY(e.touches[0].clientY); }, { passive: true });
+      scrubberRail.addEventListener('touchmove', (e) => { if (isScrubbing) scrubToY(e.touches[0].clientY); }, { passive: true });
       scrubberRail.addEventListener('touchend', () => isScrubbing = false);
 
       window.addEventListener('scroll', () => {
