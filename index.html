@@ -690,7 +690,9 @@
     };
 
     const dataCache = {};
-    let activeColumns = ['books-narrative'];
+    
+    // Set initial columns: Desktop gets 1 loaded + 1 empty slot; Mobile gets 1 loaded column
+    let activeColumns = window.innerWidth >= 768 ? ['books-narrative', ''] : ['books-narrative'];
 
     // DOM References
     const container = document.getElementById('timeline-container');
