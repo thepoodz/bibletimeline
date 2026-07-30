@@ -931,7 +931,7 @@
             e.touches[0].clientY - e.touches[1].clientY
           );
           const distanceDelta = currentDistance - initialTouchDistance;
-          setZoomStep(touchStartStepIndex + Math.round(distanceDelta / 40));
+          setZoomStep(touchStartStepIndex + Math.round(distanceDelta / 160));
         }
       }, { passive: true });
 
