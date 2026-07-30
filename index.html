@@ -80,7 +80,7 @@
       font-size: 0.65rem;
       font-weight: 600;
       color: var(--text-muted);
-      min-width: 36px;
+      min-width: 38px;
       text-align: left;
       font-variant-numeric: tabular-nums;
       user-select: none;
@@ -618,7 +618,7 @@
     <div class="zoom-controls">
       <span class="zoom-level-text" id="zoom-level-text">1.0×</span>
       <button class="zoom-btn" id="btn-zoom-out" title="Zoom Out">−</button>
-      <input type="range" id="zoom-slider" class="zoom-slider" min="0" max="9" step="1" value="0">
+      <input type="range" id="zoom-slider" class="zoom-slider" min="1" max="100" step="0.1" value="1">
       <button class="zoom-btn" id="btn-zoom-in" title="Zoom In">+</button>
     </div>
   </header>
@@ -673,11 +673,13 @@
     const TOTAL_YEARS = END_YEAR - START_YEAR; // 4100 years
     const CANVAS_PADDING_TOP = 20;
 
-    const ZOOM_STEPS = [1.0, 1.5, 2.5, 4.0, 7.0, 12.0, 20.0, 35.0, 60.0, 100.0];
-    let currentStepIndex = 0;
+    const MIN_ZOOM = 1.0;
+    const MAX_ZOOM = 100.0;
+    let currentZoomLevel = 1.0;
 
     let basePixelsPerYear = 0.2;
     let pixelsPerYear = basePixelsPerYear;
+    let renderPending = false;
 
     const CATEGORIES = {
       'big-story': 'The Big Story',
@@ -726,7 +728,7 @@
       const headerTotalHeight = 87; // toolbar (45px) + header (42px)
       const availableHeight = Math.max(300, window.innerHeight - headerTotalHeight - (CANVAS_PADDING_TOP * 2));
       basePixelsPerYear = availableHeight / TOTAL_YEARS;
-      pixelsPerYear = basePixelsPerYear * ZOOM_STEPS[currentStepIndex];
+      pixelsPerYear = basePixelsPerYear * currentZoomLevel;
     }
 
     function getMaxAllowedColumns() {
@@ -867,33 +869,39 @@
       updateCardContinuationArrows();
     }
 
-    function setZoomStep(stepIndex, keepYearCentered = true) {
-      currentStepIndex = Math.max(0, Math.min(ZOOM_STEPS.length - 1, stepIndex));
-      const targetMultiplier = ZOOM_STEPS[currentStepIndex];
-      
+    function setZoomLevel(targetZoom, keepYearCentered = true) {
+      const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, targetZoom));
+      if (Math.abs(newZoom - currentZoomLevel) < 0.001) return;
+
       const currentScrollY = window.scrollY;
       const centerViewportY = currentScrollY + (window.innerHeight / 2);
       const yearAtCenter = START_YEAR + ((centerViewportY - CANVAS_PADDING_TOP) / pixelsPerYear);
 
-      pixelsPerYear = basePixelsPerYear * targetMultiplier;
+      currentZoomLevel = newZoom;
+      pixelsPerYear = basePixelsPerYear * currentZoomLevel;
 
-      zoomSlider.value = currentStepIndex;
-      zoomLevelText.textContent = `${targetMultiplier.toFixed(1)}×`;
+      zoomSlider.value = currentZoomLevel;
+      zoomLevelText.textContent = `${currentZoomLevel.toFixed(1)}×`;
 
-      rebuildCanvasLayout();
-
-      if (keepYearCentered) {
-        const newCenterViewportY = CANVAS_PADDING_TOP + ((yearAtCenter - START_YEAR) * pixelsPerYear);
-        const newScrollY = newCenterViewportY - (window.innerHeight / 2);
-        window.scrollTo({ top: newScrollY, behavior: 'instant' });
+      if (!renderPending) {
+        renderPending = true;
+        requestAnimationFrame(() => {
+          rebuildCanvasLayout();
+          if (keepYearCentered) {
+            const newCenterViewportY = CANVAS_PADDING_TOP + ((yearAtCenter - START_YEAR) * pixelsPerYear);
+            const newScrollY = newCenterViewportY - (window.innerHeight / 2);
+            window.scrollTo({ top: newScrollY, behavior: 'instant' });
+          }
+          renderPending = false;
+        });
       }
     }
 
     function setupZoomListeners() {
-      zoomSlider.addEventListener('input', (e) => setZoomStep(parseInt(e.target.value, 10)));
-      btnZoomOut.addEventListener('click', () => setZoomStep(currentStepIndex - 1));
-      btnZoomIn.addEventListener('click', () => setZoomStep(currentStepIndex + 1));
-      zoomLevelText.addEventListener('dblclick', () => setZoomStep(0));
+      zoomSlider.addEventListener('input', (e) => setZoomLevel(parseFloat(e.target.value)));
+      btnZoomOut.addEventListener('click', () => setZoomLevel(currentZoomLevel / 1.4));
+      btnZoomIn.addEventListener('click', () => setZoomLevel(currentZoomLevel * 1.4));
+      zoomLevelText.addEventListener('dblclick', () => setZoomLevel(1.0));
 
       btnHeaderAdd.addEventListener('click', () => {
         if (activeColumns.length < getMaxAllowedColumns()) openAddColumnModal();
@@ -907,12 +915,13 @@
       window.addEventListener('wheel', (e) => {
         if (e.ctrlKey || e.metaKey) {
           e.preventDefault();
-          setZoomStep(e.deltaY < 0 ? currentStepIndex + 1 : currentStepIndex - 1);
+          const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+          setZoomLevel(currentZoomLevel * zoomFactor);
         }
       }, { passive: false });
 
       let initialTouchDistance = null;
-      let touchStartStepIndex = currentStepIndex;
+      let touchStartZoom = currentZoomLevel;
 
       window.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
@@ -920,18 +929,18 @@
             e.touches[0].clientX - e.touches[1].clientX,
             e.touches[0].clientY - e.touches[1].clientY
           );
-          touchStartStepIndex = currentStepIndex;
+          touchStartZoom = currentZoomLevel;
         }
       }, { passive: true });
 
       window.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2 && initialTouchDistance) {
+        if (e.touches.length === 2 && initialTouchDistance && initialTouchDistance > 0) {
           const currentDistance = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,
             e.touches[0].clientY - e.touches[1].clientY
           );
-          const distanceDelta = currentDistance - initialTouchDistance;
-          setZoomStep(touchStartStepIndex + Math.round(distanceDelta / 160));
+          const scaleRatio = currentDistance / initialTouchDistance;
+          setZoomLevel(touchStartZoom * scaleRatio);
         }
       }, { passive: true });
 
@@ -1051,22 +1060,19 @@
       if (!events || events.length === 0) return [];
       const sorted = [...events].sort((a, b) => a.startYear - b.startYear);
       const laneEndYears = [];
+      const MIN_POINT_CARD_HEIGHT = 28;
 
       const processed = sorted.map(event => {
         const rawDuration = event.endYear - event.startYear;
         const projectedHeight = rawDuration * pixelsPerYear;
         
-        const MIN_POINT_CARD_HEIGHT = 28; // Ensures a 28px clear margin for text under point markers
+        const effectiveIsPoint = event.isPointEvent || rawDuration === 0 || (projectedHeight < 16 && rawDuration <= 2);
+        const requiredYearsForMargin = MIN_POINT_CARD_HEIGHT / pixelsPerYear;
 
-const effectiveIsPoint = event.isPointEvent || rawDuration === 0 || (projectedHeight < 16 && rawDuration <= 2);
+        const effectiveEndYear = effectiveIsPoint 
+          ? event.startYear + Math.max(1, requiredYearsForMargin) 
+          : Math.max(event.startYear + 1, event.endYear);
 
-// Calculate how many years are required at the current zoom scale to give 28px of clear vertical room
-const requiredYearsForMargin = MIN_POINT_CARD_HEIGHT / pixelsPerYear;
-
-const effectiveEndYear = effectiveIsPoint 
-  ? event.startYear + Math.max(1, requiredYearsForMargin) 
-  : Math.max(event.startYear + 1, event.endYear);
-        
         let assignedLane = 0;
         while (laneEndYears[assignedLane] !== undefined && laneEndYears[assignedLane] > event.startYear) {
           assignedLane++;
