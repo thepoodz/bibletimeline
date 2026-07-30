@@ -1013,14 +1013,17 @@
         const absYear = Math.abs(y);
         const topPos = getYearOffset(y);
 
-        if (absYear % 1000 === 0) {
-          addMarkerAndLine(topPos, absYear, 'millennium');
-        } else if (absYear % 100 === 0) {
-          addMarkerAndLine(topPos, absYear, 'century');
-        } else if (absYear % 10 === 0 && showDecades) {
-          addMarkerAndLine(topPos, absYear, 'decade');
-        } else if (showAnnuals) {
-          addMarkerAndLine(topPos, absYear, 'annual');
+       if (absYear % 1000 === 0) {
+      addMarkerAndLine(topPos, absYear, 'millennium');
+    } else if (absYear % 100 === 0) {
+      // Demote centuries to small muted 'decade' style when zoomed out.
+      // Upgrade them to bold white 'century' style once decades become visible!
+      const centuryStyle = showDecades ? 'century' : 'decade';
+      addMarkerAndLine(topPos, absYear, centuryStyle);
+    } else if (absYear % 10 === 0 && showDecades) {
+      addMarkerAndLine(topPos, absYear, 'decade');
+    } else if (showAnnuals) {
+      addMarkerAndLine(topPos, absYear, 'annual');
         }
       }
     }
