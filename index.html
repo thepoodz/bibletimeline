@@ -386,36 +386,55 @@
       margin-top: 2px;
     }
 
-    .event-point {
-      position: absolute;
-      border-top: 2px solid var(--accent-gold);
-      padding: 3px 6px 4px 8px;
-      z-index: 25;
-      background: rgba(15, 23, 42, 0.85);
-      border-radius: 0 0 4px 4px;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      transition: background 0.15s ease, z-index 0.15s ease;
-      cursor: pointer;
-      touch-action: none;
-    }
+/* --- Central Spine Marker --- */
+.event-point {
+  position: absolute;
+  padding: 4px 8px;
+  z-index: 25;
+  background: rgba(15, 23, 42, 0.90);
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  transition: background 0.15s ease, z-index 0.15s ease;
+  cursor: pointer;
+  touch-action: none;
+  border-top: 2px solid #38bdf8;
+}
 
-    .event-point:hover {
-      z-index: 40 !important;
-      background: rgba(30, 41, 59, 0.95);
-    }
+.event-point * {
+  pointer-events: none;
+}
 
-    .event-point::before {
-      content: "";
-      position: absolute;
-      top: -4px;
-      left: 0;
-      width: 6px;
-      height: 6px;
-      background: var(--accent-gold);
-      border-radius: 50%;
-      box-shadow: 0 0 4px rgba(245, 158, 11, 0.8);
-    }
+/* Center dot along the central spine */
+.event-point::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  z-index: 30;
+}
+
+/* Branching Left Side */
+.event-point.branch-left::before {
+  right: -12px;
+}
+
+.event-point.branch-left {
+  text-align: right;
+  border-right: 2px solid #38bdf8;
+}
+
+/* Branching Right Side */
+.event-point.branch-right::before {
+  left: -12px;
+}
+
+.event-point.branch-right {
+  text-align: left;
+  border-left: 2px solid #38bdf8;
+}
 
     /* --- Scrubber Rail --- */
     .scrubber-rail {
