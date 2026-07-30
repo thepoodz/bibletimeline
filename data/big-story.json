@@ -1,0 +1,146 @@
+[
+  {
+    "title": "Creation",
+    "subtitle": "Genesis 1–2",
+    "startYear": -4000,
+    "endYear": -4000,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "God creates the heavens and the earth, culminating in humanity made in His image."
+  },
+  {
+    "title": "The Fall",
+    "subtitle": "Genesis 3",
+    "startYear": -3950,
+    "endYear": -3950,
+    "isPointEvent": true,
+    "classification": "evil",
+    "description": "Humanity's rebellion introduces sin, separation from God, and the initial promise of redemption (Gen 3:15)."
+  },
+  {
+    "title": "The Great Flood",
+    "subtitle": "Genesis 6–9",
+    "startYear": -2400,
+    "endYear": -2400,
+    "isPointEvent": true,
+    "classification": "bad",
+    "description": "God judges human evil through the flood and re-establishes a covenant with Noah."
+  },
+  {
+    "title": "Tower of Babel",
+    "subtitle": "Genesis 11",
+    "startYear": -2100,
+    "endYear": -2100,
+    "isPointEvent": true,
+    "classification": "bad",
+    "description": "Human ambition leads to the scattering of nations and confusion of languages."
+  },
+  {
+    "title": "Call of Abraham",
+    "subtitle": "Genesis 12",
+    "startYear": -2000,
+    "endYear": -2000,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "God covenants with Abraham, promising a land, a great nation, and blessing to all families of the earth."
+  },
+  {
+    "title": "The Exodus from Egypt",
+    "subtitle": "Exodus 12–14",
+    "startYear": -1446,
+    "endYear": -1446,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "God rescues Israel from Egyptian slavery through Moses, parting the Red Sea."
+  },
+  {
+    "title": "Covenant at Mount Sinai",
+    "subtitle": "Exodus 19–20",
+    "startYear": -1446,
+    "endYear": -1446,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "Israel receives the Law, the Ten Commandments, and instructions for the Tabernacle."
+  },
+  {
+    "title": "David Anointed King",
+    "subtitle": "1 Samuel 16",
+    "startYear": -1010,
+    "endYear": -1010,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "Samuel anoints David, establishing the royal lineage for the Messiah."
+  },
+  {
+    "title": "Dedication of Solomon's Temple",
+    "subtitle": "1 Kings 8",
+    "startYear": -957,
+    "endYear": -957,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "The glory of the Lord fills the newly built Temple in Jerusalem."
+  },
+  {
+    "title": "Division of the Kingdom",
+    "subtitle": "1 Kings 12",
+    "startYear": -931,
+    "endYear": -931,
+    "isPointEvent": true,
+    "classification": "bad",
+    "description": "Israel splits into two nations: Israel in the North and Judah in the South."
+  },
+  {
+    "title": "Fall of Samaria (Northern Kingdom)",
+    "subtitle": "2 Kings 17",
+    "startYear": -722,
+    "endYear": -722,
+    "isPointEvent": true,
+    "classification": "evil",
+    "description": "Assyria conquers Israel and deports the northern ten tribes."
+  },
+  {
+    "title": "Babylonian Exile & Destruction of Temple",
+    "subtitle": "2 Kings 25",
+    "startYear": -586,
+    "endYear": -586,
+    "isPointEvent": true,
+    "classification": "evil",
+    "description": "Nebuchadnezzar destroys Jerusalem and the First Temple, taking Judah into captivity."
+  },
+  {
+    "title": "Return from Exile & Rebuilding",
+    "subtitle": "Ezra 1–3",
+    "startYear": -538,
+    "endYear": -538,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "Cyrus allows the Jewish people to return to Jerusalem and lay the foundation for the Second Temple."
+  },
+  {
+    "title": "Birth of Jesus Christ",
+    "subtitle": "Luke 2 / Matthew 1",
+    "startYear": -5,
+    "endYear": -5,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "The incarnation of the Messiah in Bethlehem."
+  },
+  {
+    "title": "Crucifixion & Resurrection",
+    "subtitle": "Matthew 27–28",
+    "startYear": 30,
+    "endYear": 30,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "The death, burial, and resurrection of Jesus Christ, accomplishing eternal salvation."
+  },
+  {
+    "title": "Day of Pentecost",
+    "subtitle": "Acts 2",
+    "startYear": 30,
+    "endYear": 30,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "The Holy Spirit descends upon believers, marking the birth of the Church."
+  }
+]
