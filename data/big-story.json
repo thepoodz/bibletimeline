@@ -207,6 +207,15 @@
     "description": "Cyrus allows the Jewish people to return to Jerusalem and lay the foundation for the Second Temple."
   },
   {
+    "title": "Nehemiah Rebuilds the Walls",
+    "subtitle": "Nehemiah 1–6",
+    "startYear": -445,
+    "endYear": -445,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "Nehemiah secures permission from Artaxerxes and leads the miraculous 52-day rebuild of Jerusalem's ruined city walls despite fierce opposition."
+  },
+  {
     "title": "Birth of Jesus Christ",
     "subtitle": "Luke 2 / Matthew 1",
     "startYear": -5,
