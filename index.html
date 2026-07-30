@@ -1203,14 +1203,60 @@
       }
     }
 
-    function setupTouchScrubber() {
-      function scrubToY(clientY) {
-        const rect = scrubberRail.getBoundingClientRect();
-        const percentage = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        window.scrollTo({ top: percentage * maxScroll, behavior: 'instant' });
-        scrubIndicator.style.top = `${percentage * (rect.height - 16)}px`;
-      }
+    function updateScrubberPosition() {
+  const rect = scrubberRail.getBoundingClientRect();
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  
+  if (maxScroll <= 0) {
+    // Timeline fits entirely on screen (zoomed all the way out)
+    scrubIndicator.style.height = `${rect.height}px`;
+    scrubIndicator.style.top = `0px`;
+    return;
+  }
+
+  // Calculate the percentage of the full timeline visible in the viewport
+  const viewportRatio = window.innerHeight / document.documentElement.scrollHeight;
+  const indicatorHeight = Math.max(16, rect.height * viewportRatio); // Minimum 16px for usability
+  
+  // Calculate scroll percentage
+  const scrollPercentage = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+  const availableTravel = rect.height - indicatorHeight;
+  const indicatorTop = scrollPercentage * availableTravel;
+
+  scrubIndicator.style.height = `${indicatorHeight}px`;
+  scrubIndicator.style.top = `${indicatorTop}px`;
+}
+
+function setupTouchScrubber() {
+  function scrubToY(clientY) {
+    const rect = scrubberRail.getBoundingClientRect();
+    const viewportRatio = window.innerHeight / document.documentElement.scrollHeight;
+    const indicatorHeight = Math.max(16, rect.height * viewportRatio);
+    const availableTravel = rect.height - indicatorHeight;
+
+    if (availableTravel <= 0) return;
+
+    // Center the indicator thumb on click/drag
+    const targetTop = clientY - rect.top - (indicatorHeight / 2);
+    const percentage = Math.max(0, Math.min(1, targetTop / availableTravel));
+    
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    window.scrollTo({ top: percentage * maxScroll, behavior: 'instant' });
+    updateScrubberPosition();
+  }
+
+  let isScrubbing = false;
+
+  scrubberRail.addEventListener('mousedown', (e) => { isScrubbing = true; scrubToY(e.clientY); });
+  window.addEventListener('mousemove', (e) => { if (isScrubbing) scrubToY(e.clientY); });
+  window.addEventListener('mouseup', () => isScrubbing = false);
+
+  scrubberRail.addEventListener('touchstart', (e) => { isScrubbing = true; scrubToY(e.touches[0].clientY); }, { passive: true });
+  scrubberRail.addEventListener('touchmove', (e) => { if (isScrubbing) scrubToY(e.touches[0].clientY); }, { passive: true });
+  scrubberRail.addEventListener('touchend', () => isScrubbing = false);
+
+  window.addEventListener('scroll', updateScrubberPosition, { passive: true });
+}
 
       let isScrubbing = false;
 
