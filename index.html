@@ -1115,85 +1115,80 @@
         };
       });
     }
+// Inside renderTimeline() inside index.html:
 
-    function renderTimeline() {
-      activeColumns.forEach((catKey, slotIndex) => {
-        const targetTrack = document.getElementById(`track-${slotIndex}`);
-        if (!targetTrack) return;
+eventsWithLanes.forEach((event, eventIdx) => {
+  const topPos = getYearOffset(event.startYear);
+  const duration = event.endYear - event.startYear;
 
-        targetTrack.innerHTML = '';
-        if (!catKey || !dataCache[catKey]) return;
+  // Determine alternating side: even index -> left, odd index -> right
+  const side = (eventIdx % 2 === 0) ? 'left' : 'right';
 
-        const { metadata, events } = dataCache[catKey];
-        const eventsWithLanes = calculateSubLanes(events);
+  const itemColor = 
+    event.color || 
+    metadata.colorMap?.[event.classification] || 
+    metadata.color || 
+    '#38bdf8';
 
-        eventsWithLanes.forEach(event => {
-          const topPos = getYearOffset(event.startYear);
-          const duration = event.endYear - event.startYear;
+  const card = document.createElement('div');
+  card.addEventListener('click', () => openEventModal(event));
 
-          const totalLanes = event.totalLanes || 1;
-          const currentLane = event.lane || 0;
-          const laneWidthPct = 100 / totalLanes;
-          const leftPosPct = laneWidthPct * currentLane;
-
-          const itemColor = 
-            event.color || 
-            metadata.colorMap?.[event.classification] || 
-            metadata.color || 
-            '#38bdf8';
-
-          const card = document.createElement('div');
-          card.addEventListener('click', () => openEventModal(event));
-
-          if (event.isPointEffective) {
-            card.className = 'event-point';
-            card.style.top = `${topPos}px`;
-            card.style.left = `calc(${leftPosPct}% + 2px)`;
-            card.style.width = `calc(${laneWidthPct}% - 4px)`;
-            card.style.borderTopColor = itemColor;
-
-            card.innerHTML = `
-              <style>
-                #track-${slotIndex} .event-point[data-id="${event.title.replace(/\s+/g, '-')}"]::before {
-                  background: ${itemColor};
-                  box-shadow: 0 0 4px ${itemColor}cc;
-                }
-              </style>
-              <div class="title">${event.title}</div>
-              <div class="subtitle">${event.subtitle || ''}</div>
-            `;
-            card.dataset.id = event.title.replace(/\s+/g, '-');
-          } else {
-            card.className = 'event-block';
-            const blockHeight = Math.max(16, duration * pixelsPerYear);
-            card.style.top = `${topPos}px`;
-            card.style.height = `${blockHeight}px`;
-            card.style.left = `calc(${leftPosPct}% + 2px)`;
-            card.style.width = `calc(${laneWidthPct}% - 4px)`;
-            card.style.borderLeftColor = itemColor;
-            
-            card.style.backgroundColor = `${itemColor}22`;
-
-            card.dataset.top = topPos;
-            card.dataset.bottom = topPos + blockHeight;
-
-            card.innerHTML = `
-              <div class="card-content">
-                <div class="card-arrow top">▲</div>
-                <div class="title">${event.title}</div>
-                <div class="subtitle">${event.subtitle || ''}</div>
-              </div>
-              <div class="card-arrow bottom">▼</div>
-            `;
-          }
-
-          targetTrack.appendChild(card);
-        });
-      });
-
-      updateCardContinuationArrows();
+  if (event.isPointEffective) {
+    card.className = `event-point branch-${side}`;
+    card.style.top = `${topPos}px`;
+    
+    // Position on left or right half of the column
+    if (side === 'left') {
+      card.style.right = '52%';
+      card.style.left = '4%';
+      card.style.borderRightColor = itemColor;
+      card.style.borderTopColor = 'transparent';
+    } else {
+      card.style.left = '52%';
+      card.style.right = '4%';
+      card.style.borderLeftColor = itemColor;
+      card.style.borderTopColor = 'transparent';
     }
 
+    card.innerHTML = `
+      <style>
+        #track-${slotIndex} .event-point[data-id="${event.title.replace(/\s+/g, '-')}"]::before {
+          background: ${itemColor};
+          box-shadow: 0 0 6px ${itemColor};
+        }
+      </style>
+      <div class="title">${event.title}</div>
+      <div class="subtitle">${event.subtitle || ''}</div>
+    `;
+    card.dataset.id = event.title.replace(/\s+/g, '-');
+  } else {
+    // Range blocks remain spanning across the track
+    card.className = 'event-block';
+    const blockHeight = Math.max(16, duration * pixelsPerYear);
+    card.style.top = `${topPos}px`;
+    card.style.height = `${blockHeight}px`;
+    card.style.left = '4%';
+    card.style.width = '92%';
+    card.style.borderLeftColor = itemColor;
+    card.style.backgroundColor = `${itemColor}22`;
+
+    card.dataset.top = topPos;
+    card.dataset.bottom = topPos + blockHeight;
+
+    card.innerHTML = `
+      <div class="card-content">
+        <div class="card-arrow top">▲</div>
+        <div class="title">${event.title}</div>
+        <div class="subtitle">${event.subtitle || ''}</div>
+      </div>
+      <div class="card-arrow bottom">▼</div>
+    `;
+  }
+
+  targetTrack.appendChild(card);
+});
+
+    
     function updateCardContinuationArrows() {
       const scrollY = window.scrollY;
       const viewportTop = scrollY + 87 + 15;
