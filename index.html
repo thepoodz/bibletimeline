@@ -680,8 +680,9 @@
     let pixelsPerYear = basePixelsPerYear;
 
     const CATEGORIES = {
-      'books-narrative': 'Bible: Narrative Arc',
-      'books-writings': 'Bible: Poetry, Wisdom & Epistles',
+      'big-story': 'The Big Story',
+      'books-narrative': 'Books of the Bible - Narrative',
+      'books-writings': 'Books of the Bible - Other',
       'genealogy': 'Genealogy (Adam to Jesus)',
       'kings-judah': 'Kings of Judah',
       'kings-israel': 'Kings of Israel',
@@ -691,8 +692,8 @@
 
     const dataCache = {};
     
-    // Set initial columns: Desktop gets 1 loaded + 1 empty slot; Mobile gets 1 loaded column
-    let activeColumns = window.innerWidth >= 768 ? ['books-narrative', ''] : ['books-narrative'];
+    // Default Columns: 'The Big Story' loaded first; Desktop gets an extra empty slot
+    let activeColumns = window.innerWidth >= 768 ? ['big-story', ''] : ['big-story'];
 
     // DOM References
     const container = document.getElementById('timeline-container');
@@ -721,7 +722,6 @@
     const addModalClose = document.getElementById('add-modal-close');
     const categoryOptionsList = document.getElementById('category-options-list');
 
-    // Calculate baseline scale so the entire 4,100 timeline fits exactly on screen at 1.0x
     function calculateBaseScale() {
       const headerTotalHeight = 87; // toolbar (45px) + header (42px)
       const availableHeight = Math.max(300, window.innerHeight - headerTotalHeight - (CANVAS_PADDING_TOP * 2));
@@ -838,7 +838,7 @@
       setupZoomListeners();
       setupModalListeners();
 
-      await fetchCategoryData('books-narrative');
+      await fetchCategoryData('big-story');
       renderTimeline();
 
       let resizeTimeout;
