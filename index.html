@@ -297,16 +297,30 @@
       z-index: 10;
     }
 
+    /* Optional visual spine down the center of each data track */
+    .data-track::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: rgba(51, 65, 85, 0.4);
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
     .scrubber-spacer-track {
       position: relative;
       z-index: 5;
     }
 
-    /* --- Dynamic Event Cards & Points --- */
+    /* --- Dynamic Event Range Blocks --- */
     .event-block {
       position: absolute;
       background: var(--card-bg);
-      border-left: 4px solid var(--accent-gold);
+      border-left: 4px solid #38bdf8;
       border-top: 1px solid rgba(255, 255, 255, 0.15);
       border-right: 1px solid rgba(255, 255, 255, 0.15);
       border-bottom: 1px solid rgba(255, 255, 255, 0.15);
@@ -321,7 +335,7 @@
       touch-action: none;
     }
 
-    /* Prevent inner card elements from trapping touch pointers */
+    /* Prevent inner card text from stealing touch/pointer focus */
     .event-block *, .event-point * {
       pointer-events: none;
     }
@@ -386,55 +400,56 @@
       margin-top: 2px;
     }
 
-/* --- Central Spine Marker --- */
-.event-point {
-  position: absolute;
-  padding: 4px 8px;
-  z-index: 25;
-  background: rgba(15, 23, 42, 0.90);
-  border-radius: 4px;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-  transition: background 0.15s ease, z-index 0.15s ease;
-  cursor: pointer;
-  touch-action: none;
-  border-top: 2px solid #38bdf8;
-}
+    /* --- Central Spine Alternating Point Markers --- */
+    .event-point {
+      position: absolute;
+      padding: 4px 8px;
+      z-index: 25;
+      background: rgba(15, 23, 42, 0.90);
+      border-radius: 4px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      transition: background 0.15s ease, z-index 0.15s ease;
+      cursor: pointer;
+      touch-action: none;
+    }
 
-.event-point * {
-  pointer-events: none;
-}
+    .event-point:hover {
+      z-index: 40 !important;
+      background: rgba(30, 41, 59, 0.95);
+    }
 
-/* Center dot along the central spine */
-.event-point::before {
-  content: "";
-  position: absolute;
-  top: -4px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  z-index: 30;
-}
+    /* Center dot anchored to central spine line */
+    .event-point::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      z-index: 30;
+    }
 
-/* Branching Left Side */
-.event-point.branch-left::before {
-  right: -12px;
-}
+    /* Left-branching card styling */
+    .event-point.branch-left {
+      text-align: right;
+      border-right: 3px solid #38bdf8;
+    }
 
-.event-point.branch-left {
-  text-align: right;
-  border-right: 2px solid #38bdf8;
-}
+    .event-point.branch-left::before {
+      right: -13px;
+    }
 
-/* Branching Right Side */
-.event-point.branch-right::before {
-  left: -12px;
-}
+    /* Right-branching card styling */
+    .event-point.branch-right {
+      text-align: left;
+      border-left: 3px solid #38bdf8;
+    }
 
-.event-point.branch-right {
-  text-align: left;
-  border-left: 2px solid #38bdf8;
-}
+    .event-point.branch-right::before {
+      left: -13px;
+    }
 
     /* --- Scrubber Rail --- */
     .scrubber-rail {
@@ -1115,80 +1130,91 @@
         };
       });
     }
-// Inside renderTimeline() inside index.html:
 
-eventsWithLanes.forEach((event, eventIdx) => {
-  const topPos = getYearOffset(event.startYear);
-  const duration = event.endYear - event.startYear;
+    function renderTimeline() {
+      activeColumns.forEach((catKey, slotIndex) => {
+        const targetTrack = document.getElementById(`track-${slotIndex}`);
+        if (!targetTrack) return;
 
-  // Determine alternating side: even index -> left, odd index -> right
-  const side = (eventIdx % 2 === 0) ? 'left' : 'right';
+        targetTrack.innerHTML = '';
+        if (!catKey || !dataCache[catKey]) return;
 
-  const itemColor = 
-    event.color || 
-    metadata.colorMap?.[event.classification] || 
-    metadata.color || 
-    '#38bdf8';
+        const { metadata, events } = dataCache[catKey];
+        const eventsWithLanes = calculateSubLanes(events);
 
-  const card = document.createElement('div');
-  card.addEventListener('click', () => openEventModal(event));
+        eventsWithLanes.forEach((event, eventIdx) => {
+          const topPos = getYearOffset(event.startYear);
+          const duration = event.endYear - event.startYear;
 
-  if (event.isPointEffective) {
-    card.className = `event-point branch-${side}`;
-    card.style.top = `${topPos}px`;
-    
-    // Position on left or right half of the column
-    if (side === 'left') {
-      card.style.right = '52%';
-      card.style.left = '4%';
-      card.style.borderRightColor = itemColor;
-      card.style.borderTopColor = 'transparent';
-    } else {
-      card.style.left = '52%';
-      card.style.right = '4%';
-      card.style.borderLeftColor = itemColor;
-      card.style.borderTopColor = 'transparent';
+          // Alternate sides: Even index -> Left, Odd index -> Right
+          const side = (eventIdx % 2 === 0) ? 'left' : 'right';
+
+          const itemColor = 
+            event.color || 
+            metadata.colorMap?.[event.classification] || 
+            metadata.color || 
+            '#38bdf8';
+
+          const card = document.createElement('div');
+          card.addEventListener('click', () => openEventModal(event));
+
+          if (event.isPointEffective) {
+            card.className = `event-point branch-${side}`;
+            card.style.top = `${topPos}px`;
+            
+            // Position on left or right half of central spine
+            if (side === 'left') {
+              card.style.right = '52%';
+              card.style.left = '4%';
+              card.style.borderRightColor = itemColor;
+            } else {
+              card.style.left = '52%';
+              card.style.right = '4%';
+              card.style.borderLeftColor = itemColor;
+            }
+
+            card.innerHTML = `
+              <style>
+                #track-${slotIndex} .event-point[data-id="${event.title.replace(/\s+/g, '-')}"]::before {
+                  background: ${itemColor};
+                  box-shadow: 0 0 6px ${itemColor};
+                }
+              </style>
+              <div class="title">${event.title}</div>
+              <div class="subtitle">${event.subtitle || ''}</div>
+            `;
+            card.dataset.id = event.title.replace(/\s+/g, '-');
+          } else {
+            // Range blocks span across the track
+            card.className = 'event-block';
+            const blockHeight = Math.max(16, duration * pixelsPerYear);
+            card.style.top = `${topPos}px`;
+            card.style.height = `${blockHeight}px`;
+            card.style.left = '4%';
+            card.style.width = '92%';
+            card.style.borderLeftColor = itemColor;
+            card.style.backgroundColor = `${itemColor}22`;
+
+            card.dataset.top = topPos;
+            card.dataset.bottom = topPos + blockHeight;
+
+            card.innerHTML = `
+              <div class="card-content">
+                <div class="card-arrow top">▲</div>
+                <div class="title">${event.title}</div>
+                <div class="subtitle">${event.subtitle || ''}</div>
+              </div>
+              <div class="card-arrow bottom">▼</div>
+            `;
+          }
+
+          targetTrack.appendChild(card);
+        });
+      });
+
+      updateCardContinuationArrows();
     }
 
-    card.innerHTML = `
-      <style>
-        #track-${slotIndex} .event-point[data-id="${event.title.replace(/\s+/g, '-')}"]::before {
-          background: ${itemColor};
-          box-shadow: 0 0 6px ${itemColor};
-        }
-      </style>
-      <div class="title">${event.title}</div>
-      <div class="subtitle">${event.subtitle || ''}</div>
-    `;
-    card.dataset.id = event.title.replace(/\s+/g, '-');
-  } else {
-    // Range blocks remain spanning across the track
-    card.className = 'event-block';
-    const blockHeight = Math.max(16, duration * pixelsPerYear);
-    card.style.top = `${topPos}px`;
-    card.style.height = `${blockHeight}px`;
-    card.style.left = '4%';
-    card.style.width = '92%';
-    card.style.borderLeftColor = itemColor;
-    card.style.backgroundColor = `${itemColor}22`;
-
-    card.dataset.top = topPos;
-    card.dataset.bottom = topPos + blockHeight;
-
-    card.innerHTML = `
-      <div class="card-content">
-        <div class="card-arrow top">▲</div>
-        <div class="title">${event.title}</div>
-        <div class="subtitle">${event.subtitle || ''}</div>
-      </div>
-      <div class="card-arrow bottom">▼</div>
-    `;
-  }
-
-  targetTrack.appendChild(card);
-});
-
-    
     function updateCardContinuationArrows() {
       const scrollY = window.scrollY;
       const viewportTop = scrollY + 87 + 15;
