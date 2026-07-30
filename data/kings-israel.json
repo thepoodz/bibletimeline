@@ -1,4 +1,13 @@
-[
+{
+  "metadata": {
+    "color": "#64748b",
+    "colorMap": {
+      "good": "#22c55e",
+      "bad": "#eab308",
+      "evil": "#ef4444"
+    }
+  },
+  "events": [
   {
     "title": "King Saul",
     "subtitle": "1st King of United Israel",
@@ -203,3 +212,4 @@
     "description": "Last king of Israel; stopped paying tribute to Assyria and sought Egyptian aid, leading to Samaria's fall and Northern Exile in 722 BC."
   }
 ]
+}
