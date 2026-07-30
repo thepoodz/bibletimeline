@@ -1118,12 +1118,12 @@
           // 1. Explicit item event.color
           // 2. Classification match in metadata.colorMap
           // 3. Dataset default metadata.color
-          // 4. Global Fallback (#f59e0b)
+          // 4. Global Fallback (#27DAF5)
           const itemColor = 
             event.color || 
             metadata.colorMap?.[event.classification] || 
             metadata.color || 
-            '#f59e0b';
+            '#27DAF5';
 
           const card = document.createElement('div');
           card.addEventListener('click', () => openEventModal(event));
