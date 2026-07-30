@@ -423,7 +423,7 @@
     /* --- Branching Point Cards --- */
     .event-point {
       position: absolute;
-      padding: 4px 8px;
+      padding: 4px 6px;
       z-index: 25;
       background: rgba(15, 23, 42, 0.92);
       border-radius: 4px;
@@ -432,7 +432,6 @@
       transition: background 0.15s ease, z-index 0.15s ease;
       cursor: pointer;
       touch-action: none;
-      width: 38%; /* Narrower card width */
     }
 
     .event-point:hover {
@@ -1169,8 +1168,11 @@
             if (side === 'left') lastLeftYear = event.startYear;
             else lastRightYear = event.startYear;
 
-            // Offset levels: Level 0 (8px from center), Level 1 Staggered (18px from center)
-            const offsetPx = isClustered ? 18 : 8;
+            // Horizontal Lane Math:
+            // Single Card: 20% width, starts 8% from center
+            // Staggered/Clustered Card: 15% width, sits in Lane 2 (starts 25% from center)
+            const cardWidthPct = isClustered ? 15 : 20;
+            const innerGapPct = isClustered ? 25 : 8;
 
             // 1. Render Centered Spine Dot
             const dot = document.createElement('div');
@@ -1186,22 +1188,23 @@
             line.style.top = `${topPos}px`;
             line.style.borderTopColor = itemColor;
 
-            // 3. Position Event Card & Line
+            // 3. Position Event Card & Connector Line
             card.className = `event-point branch-${side}`;
             card.style.top = `${topPos}px`;
+            card.style.width = `${cardWidthPct}%`;
 
             if (side === 'left') {
-              card.style.right = `calc(50% + ${offsetPx}px)`;
+              card.style.right = `calc(50% + ${innerGapPct}%)`;
               card.style.borderRightColor = itemColor;
 
               line.style.right = '50%';
-              line.style.width = `${offsetPx}px`;
+              line.style.width = `${innerGapPct}%`;
             } else {
-              card.style.left = `calc(50% + ${offsetPx}px)`;
+              card.style.left = `calc(50% + ${innerGapPct}%)`;
               card.style.borderLeftColor = itemColor;
 
               line.style.left = '50%';
-              line.style.width = `${offsetPx}px`;
+              line.style.width = `${innerGapPct}%`;
             }
 
             targetTrack.appendChild(line);
