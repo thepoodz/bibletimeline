@@ -1,4 +1,13 @@
-[
+{
+  "metadata": {
+    "color": "#64748b",
+    "colorMap": {
+      "good": "#22c55e",
+      "bad": "#eab308",
+      "evil": "#ef4444"
+    }
+  },
+  "events": [
   {
     "title": "King Saul",
     "subtitle": "1st King of United Israel",
@@ -212,3 +221,4 @@
     "description": "Judah's final king; rebelled against Babylon resulting in the destruction of Jerusalem and Solomonic Temple in 586 BC."
   }
 ]
+}
