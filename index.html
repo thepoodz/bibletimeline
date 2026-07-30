@@ -318,6 +318,7 @@
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
+      touch-action: none;
     }
 
     .event-block .card-content {
@@ -393,6 +394,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.4);
       transition: background 0.15s ease, z-index 0.15s ease;
       cursor: pointer;
+      touch-action: none;
     }
 
     .event-point:hover {
@@ -923,7 +925,7 @@
       let initialTouchDistance = null;
       let touchStartZoom = currentZoomLevel;
 
-      window.addEventListener('touchstart', (e) => {
+      document.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
           initialTouchDistance = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,
@@ -931,9 +933,9 @@
           );
           touchStartZoom = currentZoomLevel;
         }
-      }, { passive: true });
+      }, { passive: true, capture: true });
 
-      window.addEventListener('touchmove', (e) => {
+      document.addEventListener('touchmove', (e) => {
         if (e.touches.length === 2 && initialTouchDistance && initialTouchDistance > 0) {
           const currentDistance = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,
@@ -942,9 +944,11 @@
           const scaleRatio = currentDistance / initialTouchDistance;
           setZoomLevel(touchStartZoom * scaleRatio);
         }
-      }, { passive: true });
+      }, { passive: true, capture: true });
 
-      window.addEventListener('touchend', () => initialTouchDistance = null);
+      document.addEventListener('touchend', () => {
+        initialTouchDistance = null;
+      }, { capture: true });
     }
 
     function openEventModal(event) {
