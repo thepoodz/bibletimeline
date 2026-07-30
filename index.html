@@ -321,6 +321,11 @@
       touch-action: none;
     }
 
+    /* Prevent inner card elements from trapping touch pointers */
+    .event-block *, .event-point * {
+      pointer-events: none;
+    }
+
     .event-block .card-content {
       position: sticky;
       top: calc(var(--header-total-height) + 15px);
@@ -339,7 +344,6 @@
       color: var(--accent-gold);
       line-height: 1;
       user-select: none;
-      pointer-events: none;
       display: none;
       z-index: 20;
     }
@@ -355,7 +359,6 @@
       color: var(--accent-gold);
       line-height: 1;
       user-select: none;
-      pointer-events: none;
       display: none;
       z-index: 20;
     }
@@ -918,6 +921,7 @@
 
       document.addEventListener('touchmove', (e) => {
         if (e.touches.length === 2 && initialTouchDistance && initialTouchDistance > 0) {
+          if (e.cancelable) e.preventDefault();
           const currentDistance = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,
             e.touches[0].clientY - e.touches[1].clientY
@@ -925,7 +929,7 @@
           const scaleRatio = currentDistance / initialTouchDistance;
           setZoomLevel(touchStartZoom * scaleRatio);
         }
-      }, { passive: true, capture: true });
+      }, { passive: false, capture: true });
 
       document.addEventListener('touchend', () => {
         initialTouchDistance = null;
@@ -966,7 +970,6 @@
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const rawData = await response.json();
         
-        // Standardize output to always be an object containing { metadata, events }
         if (Array.isArray(rawData)) {
           dataCache[categoryKey] = { metadata: {}, events: rawData };
         } else {
@@ -1114,16 +1117,11 @@
           const laneWidthPct = 100 / totalLanes;
           const leftPosPct = laneWidthPct * currentLane;
 
-          // Color Resolution Order:
-          // 1. Explicit item event.color
-          // 2. Classification match in metadata.colorMap
-          // 3. Dataset default metadata.color
-          // 4. Global Fallback (#27DAF5)
           const itemColor = 
             event.color || 
             metadata.colorMap?.[event.classification] || 
             metadata.color || 
-            '#27DAF5';
+            '#f59e0b';
 
           const card = document.createElement('div');
           card.addEventListener('click', () => openEventModal(event));
@@ -1135,7 +1133,6 @@
             card.style.width = `calc(${laneWidthPct}% - 4px)`;
             card.style.borderTopColor = itemColor;
 
-            // Dynamically inject color style for the ::before dot element
             card.innerHTML = `
               <style>
                 #track-${slotIndex} .event-point[data-id="${event.title.replace(/\s+/g, '-')}"]::before {
@@ -1156,7 +1153,6 @@
             card.style.width = `calc(${laneWidthPct}% - 4px)`;
             card.style.borderLeftColor = itemColor;
             
-            // Add subtle semi-transparent card background matching the border color
             card.style.backgroundColor = `${itemColor}22`;
 
             card.dataset.top = topPos;
