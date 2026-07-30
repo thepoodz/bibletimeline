@@ -45,6 +45,33 @@
     "description": "God covenants with Abraham, promising a land, a great nation, and blessing to all families of the earth."
   },
   {
+    "title": "Birth of Isaac",
+    "subtitle": "Genesis 21",
+    "startYear": -1896,
+    "endYear": -1896,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "God fulfills His promise to Abraham and Sarah with the birth of Isaac, the child of the covenant."
+  },
+  {
+    "title": "Joseph Rises in Egypt",
+    "subtitle": "Genesis 41",
+    "startYear": -1885,
+    "endYear": -1885,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "Pharaoh elevates Joseph to second-in-command over Egypt, positioning him to save his family from famine."
+  },
+  {
+    "title": "Slavery in Egypt",
+    "subtitle": "Exodus 1",
+    "startYear": -1800,
+    "endYear": -1446,
+    "isPointEvent": false,
+    "classification": "bad",
+    "description": "A new Pharaoh who did not know Joseph enslaves the Israelites, leading to centuries of hard labor and oppression."
+  },
+  {
     "title": "The Exodus from Egypt",
     "subtitle": "Exodus 12–14",
     "startYear": -1446,
@@ -61,6 +88,42 @@
     "isPointEvent": true,
     "classification": "good",
     "description": "Israel receives the Law, the Ten Commandments, and instructions for the Tabernacle."
+  },
+  {
+    "title": "Fall of Jericho",
+    "subtitle": "Joshua 6",
+    "startYear": -1406,
+    "endYear": -1406,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "Joshua leads Israel into the Promised Land, and the walls of Jericho collapse by God's power."
+  },
+  {
+    "title": "Samson & Delilah",
+    "subtitle": "Judges 16",
+    "startYear": -1075,
+    "endYear": -1075,
+    "isPointEvent": true,
+    "classification": "bad",
+    "description": "Samson's betrayal by Delilah leads to his capture, but his final act destroys the Philistine temple."
+  },
+  {
+    "title": "Birth of Samuel",
+    "subtitle": "1 Samuel 1",
+    "startYear": -1105,
+    "endYear": -1105,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "Hannah's prayer is answered with the birth of Samuel, who grows up to be Israel's last judge and prophet."
+  },
+  {
+    "title": "Saul Becomes King",
+    "subtitle": "1 Samuel 10",
+    "startYear": -1050,
+    "endYear": -1050,
+    "isPointEvent": true,
+    "classification": "bad",
+    "description": "Samuel anoints Saul as Israel's first king after the people demand a king like the surrounding nations."
   },
   {
     "title": "David Anointed King",
@@ -88,6 +151,15 @@
     "isPointEvent": true,
     "classification": "bad",
     "description": "Israel splits into two nations: Israel in the North and Judah in the South."
+  },
+  {
+    "title": "Elijah on Mt. Carmel",
+    "subtitle": "1 Kings 18",
+    "startYear": -860,
+    "endYear": -860,
+    "isPointEvent": true,
+    "classification": "good",
+    "description": "Elijah confronts the 450 prophets of Baal, and God answers with fire from heaven."
   },
   {
     "title": "Fall of Samaria (Northern Kingdom)",
