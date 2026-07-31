@@ -296,7 +296,7 @@
     }
 
     /* --- Universal Spotlight Transition --- */
-    .spine-dot, .spine-pill, .connector-line, .event-point, .sticky-wrapper {
+    .spine-dot, .spine-pill, .connector-line, .event-point, .sticky-wrapper, .sticky-card-box {
       transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
@@ -310,6 +310,7 @@
       border-radius: 50%;
       z-index: 50;
       cursor: pointer;
+      pointer-events: auto;
     }
 
     /* Concentric Range Pills */
@@ -319,6 +320,7 @@
       transform: translateX(-50%);
       box-sizing: border-box;
       cursor: pointer;
+      pointer-events: auto;
     }
 
     .spine-dot.muted {
@@ -331,15 +333,15 @@
       border-color: #475569 !important;
     }
 
-    /* Outer Event Boundary Container (Spans 50% spine to card edge) */
+    /* Outer Event Boundary Container (Passes clicks through empty space) */
     .event-point {
       position: absolute;
       z-index: 40;
-      cursor: pointer;
       touch-action: none;
-      width: 42%;
       box-sizing: border-box;
       background: transparent;
+      pointer-events: none; /* Ignore hover/clicks on empty background */
+      max-width: 42%;
     }
 
     .event-point.branch-left {
@@ -350,33 +352,42 @@
       left: 50%;
     }
 
-    /* Sticky Flex Wrapper (Holds line and card together as you scroll) */
+    /* Sticky Flex Wrapper (Holds Line + Card together) */
     .sticky-wrapper {
       position: sticky;
       top: calc(var(--header-total-height) + 12px);
       display: flex;
       align-items: center;
-      width: 100%;
+      width: fit-content;
+      max-width: 100%;
       z-index: 45;
+      pointer-events: none;
+    }
+
+    .event-point.branch-left .sticky-wrapper {
+      margin-left: auto; /* Hug card to right edge near line */
     }
 
     /* Connector Line bridging spine to card */
     .connector-line {
       height: 0px;
-      width: 10%; /* Spans the gap from spine (50%) to card margin (54%) */
+      width: 16px; /* Clean gap line */
       z-index: 40;
       pointer-events: none;
       flex-shrink: 0;
     }
 
-    /* Inner Visual Card Box */
+    /* Inner Visual Card Box (Only active interactive target) */
     .sticky-card-box {
-      flex: 1;
-      padding: 5px 8px;
+      width: fit-content;
+      max-width: calc(100% - 16px);
+      padding: 5px 10px;
       background: rgba(15, 23, 42, 0.92);
       border-radius: 4px;
       backdrop-filter: blur(4px);
       box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      cursor: pointer;
+      pointer-events: auto; /* Re-enable pointer events solely for the card box */
     }
 
     .event-point.branch-left .sticky-card-box { text-align: right; }
@@ -1013,8 +1024,6 @@
             cardContainer.style.height = `${boundaryHeight}px`;
           }
 
-          cardContainer.addEventListener('click', () => openEventModal(event));
-
           // Unified Sticky Wrapper (Holds Line + Card together)
           const stickyWrapper = document.createElement('div');
           stickyWrapper.className = 'sticky-wrapper';
@@ -1038,6 +1047,8 @@
             <div class="subtitle">${event.subtitle || ''}</div>
           `;
 
+          cardBox.addEventListener('click', () => openEventModal(event));
+
           // Order children according to left vs right branch
           if (side === 'left') {
             stickyWrapper.appendChild(cardBox);
@@ -1049,7 +1060,7 @@
 
           cardContainer.appendChild(stickyWrapper);
 
-          attachHoverSpotlight(groupId, cardContainer, spineMarker);
+          attachHoverSpotlight(groupId, cardBox, spineMarker);
 
           targetTrack.appendChild(cardContainer);
         } else if (spineMarker) {
