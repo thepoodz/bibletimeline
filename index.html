@@ -209,9 +209,17 @@
       width: 100%;
     }
 
+    /* Pinned Viewport Wrapper for Fixed Scrubber Bounds */
+    .timeline-viewport-wrapper {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
     /* Main Timeline Scroll Window */
     .timeline-scroll-view {
-      flex: 1;
+      width: 100%;
       height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
@@ -424,7 +432,7 @@
       box-shadow: 0 4px 14px rgba(0,0,0,0.7);
     }
 
-    /* --- Scrubber Rail --- */
+    /* --- Scrubber Rail (Always 100% Height of Viewport Wrapper) --- */
     .scrubber-rail {
       position: absolute;
       right: 0;
@@ -581,7 +589,7 @@
       }
 
       .panel-handle {
-        display: none; /* Hide drag bar on desktop sidebar */
+        display: none; /* Hide drag handle on desktop sidebar */
       }
 
       .detail-panel {
@@ -621,18 +629,21 @@
     <!-- Main Dynamic Workspace -->
     <div class="workspace-body" id="workspace-body">
       
-      <div class="timeline-scroll-view" id="timeline-scroll-view">
+      <!-- Pinned Viewport Wrapper -->
+      <div class="timeline-viewport-wrapper">
         <div class="scrubber-rail" id="scrubber-rail">
           <div class="scrub-indicator" id="scrub-indicator"></div>
         </div>
 
-        <main class="timeline-container">
-          <div class="timeline-canvas" id="timeline-canvas">
-            <div class="year-track" id="year-track"></div>
-            <div class="data-track" id="single-data-track"></div>
-            <div class="scrubber-spacer-track"></div>
-          </div>
-        </main>
+        <div class="timeline-scroll-view" id="timeline-scroll-view">
+          <main class="timeline-container">
+            <div class="timeline-canvas" id="timeline-canvas">
+              <div class="year-track" id="year-track"></div>
+              <div class="data-track" id="single-data-track"></div>
+              <div class="scrubber-spacer-track"></div>
+            </div>
+          </main>
+        </div>
       </div>
 
       <!-- Docked Detail Panel (Bottom on Portrait, Sidebar on Landscape) -->
@@ -664,6 +675,7 @@
 
     // Track state of current selection across re-renders
     let currentlySelectedGroupId = null;
+    let sheetTransitionTimeout = null;
 
     // Available Datasets
     const CATEGORIES = {
@@ -880,10 +892,14 @@
       panelDates.textContent = event.startYear === event.endYear ? startStr : `${startStr} – ${endStr}`;
       panelBody.textContent = event.description || "Detailed notes, key verses, or historical context for this period can be populated in your JSON files.";
 
+      const isAlreadyActive = detailPanel.classList.contains('active');
       detailPanel.classList.add('active');
 
-      // 3. Recalculate layout & auto-scroll into view within newly resized viewport
-      setTimeout(() => {
+      // Wait 320ms for CSS panel expansion transition (300ms) to finish so scrollView.clientHeight is exact
+      const delayMs = isAlreadyActive ? 10 : 320;
+
+      clearTimeout(sheetTransitionTimeout);
+      sheetTransitionTimeout = setTimeout(() => {
         calculateBaseScale();
         
         const isRange = !event.isPointEvent && (event.endYear > event.startYear);
@@ -911,7 +927,7 @@
         } else {
           performCenterScroll();
         }
-      }, 50);
+      }, delayMs);
     }
 
     function closeSheet() {
@@ -920,7 +936,7 @@
       setTimeout(() => {
         calculateBaseScale();
         rebuildCanvasLayout();
-      }, 300);
+      }, 320);
     }
 
     function setupSheetListeners() {
