@@ -602,6 +602,9 @@
     let pixelsPerYear = basePixelsPerYear;
     let renderPending = false;
 
+    // Track state of current selection across re-renders
+    let currentlySelectedGroupId = null;
+
     // Available Datasets
     const CATEGORIES = {
       'big-story': 'The Big Story',
@@ -787,12 +790,23 @@
       }, { capture: true });
     }
 
-    /* --- Click-to-Select Spotlight & Auto-Fit Sheet Handler --- */
-    function openEventSheet(event, groupId) {
-      // 1. Activate Selection Spotlight across all matched elements
+    function applySelectionHighlight(groupId) {
+      currentlySelectedGroupId = groupId;
+      if (!groupId) {
+        targetTrack.classList.remove('has-selection');
+        document.querySelectorAll('.selected-active').forEach(el => el.classList.remove('selected-active'));
+        return;
+      }
+
       targetTrack.classList.add('has-selection');
       document.querySelectorAll('.selected-active').forEach(el => el.classList.remove('selected-active'));
       document.querySelectorAll(`[data-group-id="${groupId}"]`).forEach(el => el.classList.add('selected-active'));
+    }
+
+    /* --- Click-to-Select Spotlight & Auto-Fit Sheet Handler --- */
+    function openEventSheet(event, groupId) {
+      // 1. Activate Selection Spotlight
+      applySelectionHighlight(groupId);
 
       // 2. Populate Bottom Sheet Text
       panelTitle.textContent = event.title;
@@ -834,8 +848,7 @@
 
     function closeSheet() {
       sheetOverlay.classList.remove('active');
-      targetTrack.classList.remove('has-selection');
-      document.querySelectorAll('.selected-active').forEach(el => el.classList.remove('selected-active'));
+      applySelectionHighlight(null);
     }
 
     function setupSheetListeners() {
@@ -1096,6 +1109,11 @@
           targetTrack.appendChild(cardContainer);
         }
       });
+
+      // Restore active selection highlight if an item was selected prior to re-render
+      if (currentlySelectedGroupId) {
+        applySelectionHighlight(currentlySelectedGroupId);
+      }
     }
 
     function buildScrubberRail() {
