@@ -297,7 +297,7 @@
       z-index: 10;
     }
 
-    /* Central Spine Down the Exact Middle of Each Data Track */
+    /* Central Spine Line */
     .data-track::before {
       content: "";
       position: absolute;
@@ -337,8 +337,7 @@
       margin-top: 2px;
     }
 
-    /* --- Spine Elements --- */
-    /* 1. Point Dot (8px diameter) */
+    /* --- Spine Markers --- */
     .spine-dot {
       position: absolute;
       left: 50%;
@@ -347,10 +346,10 @@
       height: 8px;
       border-radius: 50%;
       z-index: 30;
-      pointer-events: none;
+      cursor: pointer;
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    /* 2. Range Pill (Hot dog shape: 16px wide, double radius caps, sits behind dots) */
     .spine-pill {
       position: absolute;
       left: 50%;
@@ -358,11 +357,22 @@
       width: 16px;
       border-radius: 8px;
       z-index: 10;
-      pointer-events: none;
-      opacity: 0.85;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
     }
 
-    /* Horizontal Connector Lines extending from spine to card */
+    /* Muted Grey State for Collided/Hidden Items */
+    .spine-dot.muted {
+      background-color: #475569 !important;
+      box-shadow: none !important;
+    }
+
+    .spine-pill.muted {
+      background-color: rgba(71, 85, 105, 0.3) !important;
+      border-color: #475569 !important;
+    }
+
+    /* Horizontal Connector Lines */
     .connector-line {
       position: absolute;
       height: 1px;
@@ -371,10 +381,10 @@
       border-top: 1px solid #38bdf8;
     }
 
-    /* --- Branching Point & Range Cards --- */
+    /* --- Branching Event Cards (Restored Wider Width: 38%) --- */
     .event-point {
       position: absolute;
-      padding: 4px 6px;
+      padding: 4px 8px;
       z-index: 25;
       background: rgba(15, 23, 42, 0.92);
       border-radius: 4px;
@@ -383,6 +393,7 @@
       transition: background 0.15s ease, z-index 0.15s ease;
       cursor: pointer;
       touch-action: none;
+      width: 38%;
     }
 
     .event-point:hover {
@@ -1038,48 +1049,6 @@
       });
     }
 
-    function calculateSubLanes(events) {
-      if (!events || events.length === 0) return [];
-      const sorted = [...events].sort((a, b) => a.startYear - b.startYear);
-      const laneEndYears = [];
-      const MIN_POINT_CARD_HEIGHT = 28;
-
-      const processed = sorted.map(event => {
-        const rawDuration = event.endYear - event.startYear;
-        const projectedHeight = rawDuration * pixelsPerYear;
-        
-        const effectiveIsPoint = event.isPointEvent || rawDuration === 0 || (projectedHeight < 16 && rawDuration <= 2);
-        const requiredYearsForMargin = MIN_POINT_CARD_HEIGHT / pixelsPerYear;
-
-        const effectiveEndYear = effectiveIsPoint 
-          ? event.startYear + Math.max(1, requiredYearsForMargin) 
-          : Math.max(event.startYear + 1, event.endYear);
-
-        let assignedLane = 0;
-        while (laneEndYears[assignedLane] !== undefined && laneEndYears[assignedLane] > event.startYear) {
-          assignedLane++;
-        }
-        laneEndYears[assignedLane] = effectiveEndYear;
-
-        return {
-          ...event,
-          isPointEffective: effectiveIsPoint,
-          lane: assignedLane,
-          effectiveEndYear: effectiveEndYear
-        };
-      });
-
-      return processed.map(event => {
-        const overlappingCluster = processed.filter(other => 
-          Math.max(event.startYear, other.startYear) < Math.min(event.effectiveEndYear, other.effectiveEndYear)
-        );
-        return {
-          ...event,
-          totalLanes: Math.max(1, ...overlappingCluster.map(e => e.lane + 1))
-        };
-      });
-    }
-
     function renderTimeline() {
       activeColumns.forEach((catKey, slotIndex) => {
         const targetTrack = document.getElementById(`track-${slotIndex}`);
@@ -1089,15 +1058,23 @@
         if (!catKey || !dataCache[catKey]) return;
 
         const { metadata, events } = dataCache[catKey];
-        const eventsWithLanes = calculateSubLanes(events);
+        if (!events || events.length === 0) return;
 
-        let lastLeftYear = -9999;
-        let lastRightYear = -9999;
+        // Sort chronologically
+        const sortedEvents = [...events].sort((a, b) => a.startYear - b.startYear);
 
-        eventsWithLanes.forEach((event, eventIdx) => {
+        // Minimum required vertical pixel gap between cards on the SAME side to prevent overlap
+        const MIN_VERTICAL_GAP_PX = 30;
+
+        let lastLeftTopPx = -9999;
+        let lastRightTopPx = -9999;
+
+        sortedEvents.forEach((event, eventIdx) => {
           const topPos = getYearOffset(event.startYear);
-          const duration = event.endYear - event.startYear;
+          const rawDuration = event.endYear - event.startYear;
+          const isPoint = event.isPointEvent || rawDuration === 0;
 
+          // Alternating side assignment (Even -> Left, Odd -> Right)
           const side = (eventIdx % 2 === 0) ? 'left' : 'right';
 
           const itemColor = 
@@ -1106,73 +1083,78 @@
             metadata.color || 
             '#38bdf8';
 
-          const card = document.createElement('div');
-          card.addEventListener('click', () => openEventModal(event));
+          // Collision Check against the last VISIBLE card on this side
+          const lastTopPx = (side === 'left') ? lastLeftTopPx : lastRightTopPx;
+          const gapPx = topPos - lastTopPx;
+          const isCollided = gapPx < MIN_VERTICAL_GAP_PX;
 
-          // Calculate proximity clustering for card positioning
-          const lastYear = (side === 'left') ? lastLeftYear : lastRightYear;
-          const yearDiff = event.startYear - lastYear;
-          const isClustered = (yearDiff * pixelsPerYear) < 32;
-
-          if (side === 'left') lastLeftYear = event.startYear;
-          else lastRightYear = event.startYear;
-
-          const cardWidthPct = isClustered ? 15 : 20;
-          const innerGapPct = isClustered ? 25 : 8;
-
-          if (event.isPointEffective) {
-            // 1. Centered Spine Dot (8px diameter)
+          // 1. Render Central Spine Marker
+          if (isPoint) {
             const dot = document.createElement('div');
-            dot.className = 'spine-dot';
+            dot.className = `spine-dot ${isCollided ? 'muted' : ''}`;
             dot.style.top = `${topPos}px`;
-            dot.style.backgroundColor = itemColor;
-            dot.style.boxShadow = `0 0 6px ${itemColor}`;
+            if (!isCollided) {
+              dot.style.backgroundColor = itemColor;
+              dot.style.boxShadow = `0 0 6px ${itemColor}`;
+            }
+            dot.title = `${event.title} (${event.startYear < 0 ? Math.abs(event.startYear) + ' BC' : event.startYear + ' AD'})`;
+            dot.addEventListener('click', () => openEventModal(event));
             targetTrack.appendChild(dot);
           } else {
-            // 2. Spine Pill (Hot dog shape: 16px wide, double radius caps)
-            const pillHeight = Math.max(16, duration * pixelsPerYear);
+            const pillHeight = Math.max(16, rawDuration * pixelsPerYear);
             const pill = document.createElement('div');
-            pill.className = 'spine-pill';
+            pill.className = `spine-pill ${isCollided ? 'muted' : ''}`;
             pill.style.top = `${topPos}px`;
             pill.style.height = `${pillHeight}px`;
-            pill.style.backgroundColor = `${itemColor}44`;
-            pill.style.border = `2px solid ${itemColor}`;
+            if (!isCollided) {
+              pill.style.backgroundColor = `${itemColor}44`;
+              pill.style.border = `2px solid ${itemColor}`;
+            }
+            pill.title = `${event.title} (${event.startYear < 0 ? Math.abs(event.startYear) + ' BC' : event.startYear + ' AD'})`;
+            pill.addEventListener('click', () => openEventModal(event));
             targetTrack.appendChild(pill);
           }
 
-          // 3. Horizontal Connector Line
-          const line = document.createElement('div');
-          line.className = 'connector-line';
-          line.style.top = `${topPos}px`;
-          line.style.borderTopColor = itemColor;
+          // 2. If NO collision, render the card & connecting line
+          if (!isCollided) {
+            // Update last visible position on this side
+            if (side === 'left') lastLeftTopPx = topPos;
+            else lastRightTopPx = topPos;
 
-          // 4. Branching Event Card
-          card.className = `event-point branch-${side}`;
-          card.style.top = `${topPos}px`;
-          card.style.width = `${cardWidthPct}%`;
+            // Connector Line extending from spine to card
+            const line = document.createElement('div');
+            line.className = 'connector-line';
+            line.style.top = `${topPos}px`;
+            line.style.borderTopColor = itemColor;
 
-          if (side === 'left') {
-            card.style.right = `calc(50% + ${innerGapPct}%)`;
-            card.style.borderRightColor = itemColor;
+            // Branching Card (Wider 38% layout)
+            const card = document.createElement('div');
+            card.className = `event-point branch-${side}`;
+            card.style.top = `${topPos}px`;
+            card.addEventListener('click', () => openEventModal(event));
 
-            line.style.right = '50%';
-            line.style.width = `${innerGapPct}%`;
-          } else {
-            card.style.left = `calc(50% + ${innerGapPct}%)`;
-            card.style.borderLeftColor = itemColor;
+            if (side === 'left') {
+              card.style.right = '54%';
+              card.style.borderRightColor = itemColor;
 
-            line.style.left = '50%';
-            line.style.width = `${innerGapPct}%`;
+              line.style.right = '50%';
+              line.style.width = '4%';
+            } else {
+              card.style.left = '54%';
+              card.style.borderLeftColor = itemColor;
+
+              line.style.left = '50%';
+              line.style.width = '4%';
+            }
+
+            card.innerHTML = `
+              <div class="title">${event.title}</div>
+              <div class="subtitle">${event.subtitle || ''}</div>
+            `;
+
+            targetTrack.appendChild(line);
+            targetTrack.appendChild(card);
           }
-
-          targetTrack.appendChild(line);
-
-          card.innerHTML = `
-            <div class="title">${event.title}</div>
-            <div class="subtitle">${event.subtitle || ''}</div>
-          `;
-
-          targetTrack.appendChild(card);
         });
       });
 
@@ -1180,7 +1162,7 @@
     }
 
     function updateCardContinuationArrows() {
-      // Continuation arrows logic preserved if needed for sticky headers/scrolling
+      // Reserved for sticky arrow updates if needed
     }
 
     function buildScrubberRail() {
