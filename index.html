@@ -297,7 +297,12 @@
 
     /* --- Concentric Gobstopper Spine Markers --- */
 
-    /* 1. Smaller Center Dot (6px diameter) */
+    /* Universal Transition for Hover Spotlight */
+    .spine-dot, .spine-pill, .connector-line, .event-point {
+      transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    /* 1. Sharp Center Dot (6px diameter) */
     .spine-dot {
       position: absolute;
       left: 50%;
@@ -307,17 +312,15 @@
       border-radius: 50%;
       z-index: 50;
       cursor: pointer;
-      transition: background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    /* 2. Concentric Range Pills (Dynamic Widths + Rounded Caps) */
+    /* 2. Snug Concentric Range Pills */
     .spine-pill {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
       box-sizing: border-box;
       cursor: pointer;
-      transition: border-color 0.15s ease, background-color 0.15s ease;
     }
 
     .spine-dot.muted {
@@ -347,19 +350,36 @@
       border-radius: 4px;
       backdrop-filter: blur(4px);
       box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      transition: background 0.15s ease, z-index 0.15s ease;
       cursor: pointer;
       touch-action: none;
       width: 38%;
     }
 
-    .event-point:hover {
-      z-index: 60 !important;
-      background: rgba(30, 41, 59, 0.98);
-    }
-
     .event-point.branch-left { text-align: right; }
     .event-point.branch-right { text-align: left; }
+
+    /* --- HOVER SPOTLIGHT DIMMING ENGINE --- */
+    /* When ANY element or group is hovered, dim all others */
+    .data-track.has-hover .spine-dot,
+    .data-track.has-hover .spine-pill,
+    .data-track.has-hover .connector-line,
+    .data-track.has-hover .event-point {
+      opacity: 0.15;
+    }
+
+    /* Highlight the active item group */
+    .data-track.has-hover .spine-dot.hover-active,
+    .data-track.has-hover .spine-pill.hover-active,
+    .data-track.has-hover .connector-line.hover-active,
+    .data-track.has-hover .event-point.hover-active {
+      opacity: 1 !important;
+      z-index: 70 !important;
+    }
+
+    .data-track.has-hover .event-point.hover-active {
+      background: rgba(30, 41, 59, 0.98);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.7);
+    }
 
     /* --- Scrubber Rail --- */
     .scrubber-rail {
@@ -516,7 +536,7 @@
     </div>
   </header>
 
-  <!-- Google Maps Style Layer Toggles (All 8 Active) -->
+  <!-- Google Maps Style Layer Toggles -->
   <div class="layers-bar" id="layers-bar"></div>
 
   <div class="scrubber-rail" id="scrubber-rail">
@@ -835,6 +855,28 @@
       canvas.appendChild(gridLine);
     }
 
+    // Bind Hover Spotlight Event Listeners
+    function attachHoverSpotlight(groupId, ...elements) {
+      elements.forEach(el => {
+        if (!el) return;
+        el.dataset.groupId = groupId;
+
+        el.addEventListener('mouseenter', () => {
+          targetTrack.classList.add('has-hover');
+          document.querySelectorAll(`[data-group-id="${groupId}"]`).forEach(matched => {
+            matched.classList.add('hover-active');
+          });
+        });
+
+        el.addEventListener('mouseleave', () => {
+          targetTrack.classList.remove('has-hover');
+          document.querySelectorAll(`[data-group-id="${groupId}"]`).forEach(matched => {
+            matched.classList.remove('hover-active');
+          });
+        });
+      });
+    }
+
     function renderTimeline() {
       targetTrack.innerHTML = '';
       const allCombinedEvents = [];
@@ -858,34 +900,34 @@
 
       if (allCombinedEvents.length === 0) return;
 
-      // Sort all combined active layer events chronologically
       allCombinedEvents.sort((a, b) => a.startYear - b.startYear);
 
-      // Separate into range events (pills) and point events (dots)
       const rangeEvents = allCombinedEvents.filter(e => !e.isPointEvent && (e.endYear - e.startYear) > 0);
 
-      // --- CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
-      rangeEvents.forEach((event) => {
+      // --- SNUG CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
+      rangeEvents.forEach((event, idx) => {
         const topPos = getYearOffset(event.startYear);
         const rawDuration = event.endYear - event.startYear;
         const pillHeight = Math.max(14, rawDuration * pixelsPerYear);
 
-        // Find overlapping active range events to assign concentric ring levels
+        // Find overlapping range events
         const activeOverlaps = rangeEvents.filter(other => 
           event !== other && 
           Math.max(event.startYear, other.startYear) < Math.min(event.endYear, other.endYear)
         );
 
-        // Calculate overlap rank (wider pills sit under narrower pills)
         const overlapIndex = activeOverlaps.filter(other => 
           (other.endYear - other.startYear) > rawDuration || 
           ((other.endYear - other.startYear) === rawDuration && other.title < event.title)
         ).length;
 
-        // Concentric pill sizing: Level 0 = 10px, Level 1 = 16px, Level 2 = 22px, Level 3 = 28px...
-        const pillWidthPx = 10 + (overlapIndex * 6);
+        // Snug Sizing: Step by 4px so rings touch tightly without gaps
+        // Level 0 = 10px, Level 1 = 14px, Level 2 = 18px, Level 3 = 22px...
+        const pillWidthPx = 10 + (overlapIndex * 4);
         const pillRadiusPx = pillWidthPx / 2;
         const zIndexVal = 30 - overlapIndex;
+
+        const groupId = `range-${idx}-${event.title.replace(/\s+/g, '-')}`;
 
         const pill = document.createElement('div');
         pill.className = 'spine-pill';
@@ -902,6 +944,8 @@
         pill.title = `${event.title} (${startStr} – ${endStr})`;
 
         pill.addEventListener('click', () => openEventModal(event));
+        attachHoverSpotlight(groupId, pill);
+
         targetTrack.appendChild(pill);
       });
 
@@ -922,22 +966,25 @@
         const gapPx = topPos - lastTopPx;
         const isCollided = gapPx < MIN_VERTICAL_GAP_PX;
 
-        // Render Center Spine Dot (6px sharp dot)
+        const groupId = `event-${eventIdx}-${event.title.replace(/\s+/g, '-')}`;
+
+        // Sharp Center Spine Dot (6px diameter)
+        let dotEl = null;
         if (isPoint) {
-          const dot = document.createElement('div');
-          dot.className = `spine-dot ${isCollided ? 'muted' : ''}`;
-          dot.style.top = `${topPos}px`;
+          dotEl = document.createElement('div');
+          dotEl.className = `spine-dot ${isCollided ? 'muted' : ''}`;
+          dotEl.style.top = `${topPos}px`;
           if (!isCollided) {
-            dot.style.backgroundColor = itemColor;
-            dot.style.boxShadow = `0 0 6px ${itemColor}`;
+            dotEl.style.backgroundColor = itemColor;
+            dotEl.style.boxShadow = `0 0 6px ${itemColor}`;
           }
           const yearStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
-          dot.title = `${event.title} (${yearStr})`;
-          dot.addEventListener('click', () => openEventModal(event));
-          targetTrack.appendChild(dot);
+          dotEl.title = `${event.title} (${yearStr})`;
+          dotEl.addEventListener('click', () => openEventModal(event));
+          targetTrack.appendChild(dotEl);
         }
 
-        // Render Connector Stick & Text Card (if not collided)
+        // Connector Stick & Text Card (if not collided)
         if (!isCollided) {
           if (side === 'left') lastLeftTopPx = topPos;
           else lastRightTopPx = topPos;
@@ -969,8 +1016,12 @@
             <div class="subtitle">${event.subtitle || ''}</div>
           `;
 
+          attachHoverSpotlight(groupId, card, line, dotEl);
+
           targetTrack.appendChild(line);
           targetTrack.appendChild(card);
+        } else if (dotEl) {
+          attachHoverSpotlight(groupId, dotEl);
         }
       });
     }
