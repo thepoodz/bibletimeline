@@ -295,14 +295,12 @@
       margin-top: 2px;
     }
 
-    /* --- Concentric Gobstopper Spine Markers --- */
-
-    /* Universal Transition for Hover Spotlight */
+    /* --- Universal Spotlight Transition --- */
     .spine-dot, .spine-pill, .connector-line, .event-point {
       transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    /* 1. Sharp Center Dot (6px diameter) */
+    /* Center Spine Dot */
     .spine-dot {
       position: absolute;
       left: 50%;
@@ -314,7 +312,7 @@
       cursor: pointer;
     }
 
-    /* 2. Snug Concentric Range Pills */
+    /* Concentric Range Pills */
     .spine-pill {
       position: absolute;
       left: 50%;
@@ -333,7 +331,7 @@
       border-color: #475569 !important;
     }
 
-    /* Connector Lines */
+    /* Connector Line */
     .connector-line {
       position: absolute;
       height: 1px;
@@ -341,7 +339,7 @@
       pointer-events: none;
     }
 
-    /* Cards */
+    /* Branching Event Card Container */
     .event-point {
       position: absolute;
       padding: 4px 8px;
@@ -355,11 +353,18 @@
       width: 38%;
     }
 
+    /* Sticky Floating Title Header inside long cards */
+    .sticky-card-header {
+      position: sticky;
+      top: calc(var(--header-total-height) + 12px);
+      z-index: 2;
+    }
+
     .event-point.branch-left { text-align: right; }
     .event-point.branch-right { text-align: left; }
 
-    /* --- HOVER SPOTLIGHT DIMMING ENGINE --- */
-    /* When ANY element or group is hovered, dim all others */
+    /* --- HOVER SPOTLIGHT ENGINE --- */
+    /* Dim everything when hovering over any card or spine marker */
     .data-track.has-hover .spine-dot,
     .data-track.has-hover .spine-pill,
     .data-track.has-hover .connector-line,
@@ -367,7 +372,7 @@
       opacity: 0.15;
     }
 
-    /* Highlight the active item group */
+    /* Highlight matching card, connector line, AND spine marker simultaneously */
     .data-track.has-hover .spine-dot.hover-active,
     .data-track.has-hover .spine-pill.hover-active,
     .data-track.has-hover .connector-line.hover-active,
@@ -855,7 +860,7 @@
       canvas.appendChild(gridLine);
     }
 
-    // Bind Hover Spotlight Event Listeners
+    // Bind Hover Spotlight Event Listeners across linked items
     function attachHoverSpotlight(groupId, ...elements) {
       elements.forEach(el => {
         if (!el) return;
@@ -902,10 +907,13 @@
 
       allCombinedEvents.sort((a, b) => a.startYear - b.startYear);
 
+      // Create a map to link event cards with their exact spine pills
+      const eventToSpinePillMap = new Map();
+
+      // --- 1. SNUG CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
       const rangeEvents = allCombinedEvents.filter(e => !e.isPointEvent && (e.endYear - e.startYear) > 0);
 
-      // --- SNUG CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
-      rangeEvents.forEach((event, idx) => {
+      rangeEvents.forEach((event) => {
         const topPos = getYearOffset(event.startYear);
         const rawDuration = event.endYear - event.startYear;
         const pillHeight = Math.max(14, rawDuration * pixelsPerYear);
@@ -921,13 +929,10 @@
           ((other.endYear - other.startYear) === rawDuration && other.title < event.title)
         ).length;
 
-        // Snug Sizing: Step by 4px so rings touch tightly without gaps
-        // Level 0 = 10px, Level 1 = 14px, Level 2 = 18px, Level 3 = 22px...
+        // Snug Sizing: Step by 4px
         const pillWidthPx = 10 + (overlapIndex * 4);
         const pillRadiusPx = pillWidthPx / 2;
         const zIndexVal = 30 - overlapIndex;
-
-        const groupId = `range-${idx}-${event.title.replace(/\s+/g, '-')}`;
 
         const pill = document.createElement('div');
         pill.className = 'spine-pill';
@@ -944,12 +949,12 @@
         pill.title = `${event.title} (${startStr} – ${endStr})`;
 
         pill.addEventListener('click', () => openEventModal(event));
-        attachHoverSpotlight(groupId, pill);
-
+        
+        eventToSpinePillMap.set(event, pill);
         targetTrack.appendChild(pill);
       });
 
-      // --- POINT DOTS AND ALTERNATING CARDS ---
+      // --- 2. POINT DOTS AND ALTERNATING CARDS ---
       const MIN_VERTICAL_GAP_PX = 30;
       let lastLeftTopPx = -9999;
       let lastRightTopPx = -9999;
@@ -966,9 +971,9 @@
         const gapPx = topPos - lastTopPx;
         const isCollided = gapPx < MIN_VERTICAL_GAP_PX;
 
-        const groupId = `event-${eventIdx}-${event.title.replace(/\s+/g, '-')}`;
+        const groupId = `group-${eventIdx}-${event.title.replace(/\s+/g, '-')}`;
 
-        // Sharp Center Spine Dot (6px diameter)
+        // Sharp Center Spine Dot (6px diameter for point events)
         let dotEl = null;
         if (isPoint) {
           dotEl = document.createElement('div');
@@ -984,7 +989,10 @@
           targetTrack.appendChild(dotEl);
         }
 
-        // Connector Stick & Text Card (if not collided)
+        // Spine Marker to pair with Card (Dot if point, Pill if range)
+        const spineMarker = isPoint ? dotEl : eventToSpinePillMap.get(event);
+
+        // Render Connector Stick & Text Card (if not collided)
         if (!isCollided) {
           if (side === 'left') lastLeftTopPx = topPos;
           else lastRightTopPx = topPos;
@@ -997,6 +1005,12 @@
           const card = document.createElement('div');
           card.className = `event-point branch-${side}`;
           card.style.top = `${topPos}px`;
+          
+          if (!isPoint) {
+            const blockHeight = Math.max(28, rawDuration * pixelsPerYear);
+            card.style.height = `${blockHeight}px`;
+          }
+
           card.addEventListener('click', () => openEventModal(event));
 
           if (side === 'left') {
@@ -1011,17 +1025,21 @@
             line.style.width = '4%';
           }
 
+          // Card content with Sticky Header for smooth scrolling on range events
           card.innerHTML = `
-            <div class="title">${event.title}</div>
-            <div class="subtitle">${event.subtitle || ''}</div>
+            <div class="${!isPoint ? 'sticky-card-header' : ''}">
+              <div class="title">${event.title}</div>
+              <div class="subtitle">${event.subtitle || ''}</div>
+            </div>
           `;
 
-          attachHoverSpotlight(groupId, card, line, dotEl);
+          // Link Card + Connector Line + Spine Marker into the exact same Spotlight Group
+          attachHoverSpotlight(groupId, card, line, spineMarker);
 
           targetTrack.appendChild(line);
           targetTrack.appendChild(card);
-        } else if (dotEl) {
-          attachHoverSpotlight(groupId, dotEl);
+        } else if (spineMarker) {
+          attachHoverSpotlight(groupId, spineMarker);
         }
       });
     }
