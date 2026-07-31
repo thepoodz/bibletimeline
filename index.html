@@ -356,7 +356,7 @@
       position: sticky;
       top: calc(var(--header-total-height) + 12px);
       display: flex;
-      align-items: flex-start; /* Aligns connector line to top of card */
+      align-items: flex-start;
       width: fit-content;
       max-width: 100%;
       z-index: 45;
@@ -468,49 +468,59 @@
       transition: top 0.05s linear;
     }
 
-    /* --- Modals --- */
-    .modal-overlay {
+    /* --- Bottom Slide-Up Sheet Panel --- */
+    .bottom-sheet-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
       z-index: 300;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease;
+      transition: opacity 0.25s ease;
     }
 
-    .modal-overlay.active {
+    .bottom-sheet-overlay.active {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .modal-card {
+    .bottom-panel {
+      position: fixed;
+      left: 0;
+      right: var(--scrubber-width);
+      bottom: 0;
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-left: 5px solid var(--accent-gold);
-      border-radius: 8px;
-      width: 100%;
-      max-width: 480px;
-      padding: 20px;
-      position: relative;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-      transform: translateY(10px);
-      transition: transform 0.2s ease;
+      border-top: 1px solid var(--border-color);
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+      padding: 12px 20px 24px 20px;
+      z-index: 310;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7);
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 45vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    .modal-overlay.active .modal-card {
+    .bottom-sheet-overlay.active .bottom-panel {
       transform: translateY(0);
     }
 
-    .modal-close {
+    .panel-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--border-color);
+      border-radius: 2px;
+      margin: 0 auto 12px auto;
+      flex-shrink: 0;
+    }
+
+    .panel-close {
       position: absolute;
       top: 12px;
-      right: 14px;
+      right: 16px;
       background: transparent;
       border: none;
       color: var(--text-muted);
@@ -519,37 +529,38 @@
       line-height: 1;
     }
 
-    .modal-close:hover { color: var(--text-main); }
+    .panel-close:hover { color: var(--text-main); }
 
-    .modal-type {
+    .panel-type {
       font-size: 0.65rem;
       font-weight: 700;
       text-transform: uppercase;
       color: var(--accent-gold);
       letter-spacing: 0.05em;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
-    .modal-title {
-      font-size: 1.1rem;
+    .panel-title {
+      font-size: 1.15rem;
       font-weight: 800;
       color: var(--text-main);
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
-    .modal-dates {
+    .panel-dates {
       font-size: 0.75rem;
       color: var(--text-muted);
       font-weight: 600;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 8px;
     }
 
-    .modal-body {
+    .panel-body {
       font-size: 0.85rem;
       line-height: 1.5;
       color: #cbd5e1;
+      overflow-y: auto;
     }
   </style>
 </head>
@@ -581,14 +592,15 @@
     </div>
   </main>
 
-  <!-- Event Detail Modal Overlay -->
-  <div class="modal-overlay" id="event-modal">
-    <div class="modal-card">
-      <button class="modal-close" id="modal-close">&times;</button>
-      <div class="modal-type" id="modal-type">Category</div>
-      <h2 class="modal-title" id="modal-title">Event Title</h2>
-      <div class="modal-dates" id="modal-dates">Years</div>
-      <div class="modal-body" id="modal-body">Description text goes here.</div>
+  <!-- Bottom Slide-Up Sheet Overlay & Panel -->
+  <div class="bottom-sheet-overlay" id="sheet-overlay">
+    <div class="bottom-panel" id="bottom-panel">
+      <div class="panel-handle"></div>
+      <button class="panel-close" id="panel-close">&times;</button>
+      <div class="panel-type" id="panel-type">Category</div>
+      <h2 class="panel-title" id="panel-title">Event Title</h2>
+      <div class="panel-dates" id="panel-dates">Years</div>
+      <div class="panel-body" id="panel-body">Description text goes here.</div>
     </div>
   </div>
 
@@ -638,12 +650,13 @@
     const btnZoomOut = document.getElementById('btn-zoom-out');
     const btnZoomIn = document.getElementById('btn-zoom-in');
 
-    const modal = document.getElementById('event-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalType = document.getElementById('modal-type');
-    const modalDates = document.getElementById('modal-dates');
-    const modalBody = document.getElementById('modal-body');
-    const modalClose = document.getElementById('modal-close');
+    const sheetOverlay = document.getElementById('sheet-overlay');
+    const bottomPanel = document.getElementById('bottom-panel');
+    const panelTitle = document.getElementById('panel-title');
+    const panelType = document.getElementById('panel-type');
+    const panelDates = document.getElementById('panel-dates');
+    const panelBody = document.getElementById('panel-body');
+    const panelClose = document.getElementById('panel-close');
 
     function calculateBaseScale() {
       const headerTotalHeight = 93;
@@ -694,7 +707,7 @@
       renderLayersBarUI();
       rebuildCanvasLayout();
       setupZoomListeners();
-      setupModalListeners();
+      setupSheetListeners();
 
       await Promise.all(Object.keys(CATEGORIES).map(k => fetchCategoryData(k)));
       renderTimeline();
@@ -790,26 +803,59 @@
       }, { capture: true });
     }
 
-    function openEventModal(event) {
-      modalTitle.textContent = event.title;
-      modalType.textContent = event.subtitle || CATEGORIES[event.layerKey] || 'Event Details';
+    /* --- Auto-Fit Zoom & Bottom Sheet Handler --- */
+    function openEventSheet(event) {
+      panelTitle.textContent = event.title;
+      panelType.textContent = event.subtitle || CATEGORIES[event.layerKey] || 'Event Details';
       
       const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
       const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
-      modalDates.textContent = event.startYear === event.endYear ? startStr : `${startStr} – ${endStr}`;
-      modalBody.textContent = event.description || "Detailed notes, key verses, or historical context for this period can be populated in your JSON files.";
+      panelDates.textContent = event.startYear === event.endYear ? startStr : `${startStr} – ${endStr}`;
+      panelBody.textContent = event.description || "Detailed notes, key verses, or historical context for this period can be populated in your JSON files.";
 
-      modal.classList.add('active');
+      sheetOverlay.classList.add('active');
+
+      // Auto-Fit Zoom Calculation considering the Bottom Panel offset
+      requestAnimationFrame(() => {
+        const headerTotalHeight = 93;
+        const panelHeight = bottomPanel.offsetHeight || (window.innerHeight * 0.35);
+        const visibleViewportHeight = window.innerHeight - headerTotalHeight - panelHeight;
+
+        const isRange = !event.isPointEvent && (event.endYear > event.startYear);
+
+        if (isRange) {
+          const durationYears = event.endYear - event.startYear;
+          // Target padding gives top/bottom breathing room
+          const targetPaddingPx = 40;
+          const availablePx = Math.max(100, visibleViewportHeight - targetPaddingPx);
+          
+          const idealPixelsPerYear = availablePx / durationYears;
+          const idealZoom = idealPixelsPerYear / basePixelsPerYear;
+
+          setZoomLevel(idealZoom, false);
+        }
+
+        // Center event vertically within visible space above bottom sheet
+        const eventCenterYear = isRange ? (event.startYear + event.endYear) / 2 : event.startYear;
+        const centerCanvasTopPx = CANVAS_PADDING_TOP + ((eventCenterYear - START_YEAR) * pixelsPerYear);
+        const targetScrollY = centerCanvasTopPx - headerTotalHeight - (visibleViewportHeight / 2);
+
+        window.scrollTo({ top: Math.max(0, targetScrollY), behavior: 'smooth' });
+      });
     }
 
-    function closeModal() {
-      modal.classList.remove('active');
+    function closeSheet() {
+      sheetOverlay.classList.remove('active');
     }
 
-    function setupModalListeners() {
-      modalClose.addEventListener('click', closeModal);
-      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-      window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    function setupSheetListeners() {
+      panelClose.addEventListener('click', closeSheet);
+      sheetOverlay.addEventListener('click', (e) => {
+        if (e.target === sheetOverlay) closeSheet();
+      });
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSheet();
+      });
     }
 
     async function fetchCategoryData(categoryKey) {
@@ -942,13 +988,11 @@
         const rawDuration = event.endYear - event.startYear;
         const barHeight = Math.max(14, rawDuration * pixelsPerYear);
 
-        // Find active overlapping range events
         const activeOverlaps = rangeEvents.filter(other => 
           event !== other && 
           Math.max(event.startYear, other.startYear) < Math.min(event.endYear, other.endYear)
         );
 
-        // Assign lane index based on duration / title tiebreaker
         const laneIndex = activeOverlaps.filter(other => 
           (other.endYear - other.startYear) > rawDuration || 
           ((other.endYear - other.startYear) === rawDuration && other.title < event.title)
@@ -971,7 +1015,7 @@
         const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
         bar.title = `${event.title} (${startStr} – ${endStr})`;
 
-        bar.addEventListener('click', () => openEventModal(event));
+        bar.addEventListener('click', () => openEventSheet(event));
         
         eventToSpineBarMap.set(event, bar);
         targetTrack.appendChild(bar);
@@ -1007,7 +1051,7 @@
           }
           const yearStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
           dotEl.title = `${event.title} (${yearStr})`;
-          dotEl.addEventListener('click', () => openEventModal(event));
+          dotEl.addEventListener('click', () => openEventSheet(event));
           targetTrack.appendChild(dotEl);
         }
 
@@ -1017,7 +1061,6 @@
           if (side === 'left') lastLeftTopPx = topPos;
           else lastRightTopPx = topPos;
 
-          // Event Boundary Container
           const cardContainer = document.createElement('div');
           cardContainer.className = `event-point branch-${side}`;
           cardContainer.style.top = `${topPos}px`;
@@ -1027,16 +1070,13 @@
             cardContainer.style.height = `${boundaryHeight}px`;
           }
 
-          // Unified Sticky Wrapper (Holds Line + Card together)
           const stickyWrapper = document.createElement('div');
           stickyWrapper.className = 'sticky-wrapper';
 
-          // Connector Line Element
           const line = document.createElement('div');
           line.className = 'connector-line';
           line.style.borderTop = `1px solid ${itemColor}`;
 
-          // Compact Card Box Element
           const cardBox = document.createElement('div');
           cardBox.className = 'sticky-card-box';
           if (side === 'left') {
@@ -1050,9 +1090,8 @@
             <div class="subtitle">${event.subtitle || ''}</div>
           `;
 
-          cardBox.addEventListener('click', () => openEventModal(event));
+          cardBox.addEventListener('click', () => openEventSheet(event));
 
-          // Order children according to left vs right branch
           if (side === 'left') {
             stickyWrapper.appendChild(cardBox);
             stickyWrapper.appendChild(line);
@@ -1063,7 +1102,6 @@
 
           cardContainer.appendChild(stickyWrapper);
 
-          // Attach spotlight to cardContainer so line + card stay 100% opaque together
           attachHoverSpotlight(groupId, cardContainer, spineMarker);
 
           targetTrack.appendChild(cardContainer);
