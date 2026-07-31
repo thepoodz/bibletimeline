@@ -296,7 +296,7 @@
     }
 
     /* --- Universal Spotlight Transition --- */
-    .spine-dot, .spine-pill, .connector-line, .event-point, .sticky-card-box {
+    .spine-dot, .spine-pill, .connector-line, .event-point, .sticky-wrapper {
       transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
@@ -331,56 +331,66 @@
       border-color: #475569 !important;
     }
 
-    /* Connector Line Spanning from Spine (50%) to Card (54%) */
-    .connector-line {
-      position: absolute;
-      height: 1px;
-      z-index: 45;
-      pointer-events: none;
-    }
-
-    .connector-line.range-connector {
-      position: sticky;
-      top: calc(var(--header-total-height) + 24px);
-    }
-
-    /* Outer Card Boundary Container */
+    /* Outer Event Boundary Container (Spans 50% spine to card edge) */
     .event-point {
       position: absolute;
       z-index: 40;
       cursor: pointer;
       touch-action: none;
-      width: 38%;
+      width: 42%;
       box-sizing: border-box;
       background: transparent;
     }
 
-    /* Inner Visual Compact Card (Sticky inside its range boundary) */
-    .sticky-card-box {
+    .event-point.branch-left {
+      right: 50%;
+    }
+
+    .event-point.branch-right {
+      left: 50%;
+    }
+
+    /* Sticky Flex Wrapper (Holds line and card together as you scroll) */
+    .sticky-wrapper {
       position: sticky;
       top: calc(var(--header-total-height) + 12px);
+      display: flex;
+      align-items: center;
+      width: 100%;
+      z-index: 45;
+    }
+
+    /* Connector Line bridging spine to card */
+    .connector-line {
+      height: 0px;
+      width: 10%; /* Spans the gap from spine (50%) to card margin (54%) */
+      z-index: 40;
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+
+    /* Inner Visual Card Box */
+    .sticky-card-box {
+      flex: 1;
       padding: 5px 8px;
       background: rgba(15, 23, 42, 0.92);
       border-radius: 4px;
       backdrop-filter: blur(4px);
       box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      width: 100%;
     }
 
-    .event-point.branch-left { text-align: right; }
-    .event-point.branch-right { text-align: left; }
+    .event-point.branch-left .sticky-card-box { text-align: right; }
+    .event-point.branch-right .sticky-card-box { text-align: left; }
 
     /* --- HOVER SPOTLIGHT ENGINE --- */
     .data-track.has-hover .spine-dot,
     .data-track.has-hover .spine-pill,
-    .data-track.has-hover .connector-line,
     .data-track.has-hover .event-point {
       opacity: 0.15;
     }
 
     .data-track.has-hover .spine-dot.hover-active,
     .data-track.has-hover .spine-pill.hover-active,
-    .data-track.has-hover .connector-line.hover-active,
     .data-track.has-hover .event-point.hover-active {
       opacity: 1 !important;
       z-index: 70 !important;
@@ -993,11 +1003,7 @@
           if (side === 'left') lastLeftTopPx = topPos;
           else lastRightTopPx = topPos;
 
-          // Connector line bridging spine (50%) to card margin (54%)
-          const line = document.createElement('div');
-          line.className = `connector-line ${!isPoint ? 'range-connector' : ''}`;
-          line.style.borderTop = `1px solid ${itemColor}`;
-
+          // Event Boundary Container
           const cardContainer = document.createElement('div');
           cardContainer.className = `event-point branch-${side}`;
           cardContainer.style.top = `${topPos}px`;
@@ -1005,25 +1011,20 @@
           if (!isPoint) {
             const boundaryHeight = Math.max(32, rawDuration * pixelsPerYear);
             cardContainer.style.height = `${boundaryHeight}px`;
-            line.style.top = `${topPos}px`;
-            line.style.height = `${boundaryHeight}px`;
-          } else {
-            line.style.top = `${topPos}px`;
           }
 
           cardContainer.addEventListener('click', () => openEventModal(event));
 
-          if (side === 'left') {
-            cardContainer.style.right = '54%';
-            line.style.right = '50%';
-            line.style.width = '4%';
-          } else {
-            cardContainer.style.left = '54%';
-            line.style.left = '50%';
-            line.style.width = '4%';
-          }
+          // Unified Sticky Wrapper (Holds Line + Card together)
+          const stickyWrapper = document.createElement('div');
+          stickyWrapper.className = 'sticky-wrapper';
 
-          // Inner Compact Card Box
+          // Connector Line Element
+          const line = document.createElement('div');
+          line.className = 'connector-line';
+          line.style.borderTop = `1px solid ${itemColor}`;
+
+          // Compact Card Box Element
           const cardBox = document.createElement('div');
           cardBox.className = 'sticky-card-box';
           if (side === 'left') {
@@ -1037,11 +1038,19 @@
             <div class="subtitle">${event.subtitle || ''}</div>
           `;
 
-          cardContainer.appendChild(cardBox);
+          // Order children according to left vs right branch
+          if (side === 'left') {
+            stickyWrapper.appendChild(cardBox);
+            stickyWrapper.appendChild(line);
+          } else {
+            stickyWrapper.appendChild(line);
+            stickyWrapper.appendChild(cardBox);
+          }
 
-          attachHoverSpotlight(groupId, cardContainer, line, spineMarker);
+          cardContainer.appendChild(stickyWrapper);
 
-          targetTrack.appendChild(line);
+          attachHoverSpotlight(groupId, cardContainer, spineMarker);
+
           targetTrack.appendChild(cardContainer);
         } else if (spineMarker) {
           attachHoverSpotlight(groupId, spineMarker);
