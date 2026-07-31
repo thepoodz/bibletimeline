@@ -459,13 +459,13 @@
       transition: top 0.05s linear;
     }
 
-    /* --- Bottom Slide-Up Sheet Panel (Clean, non-obscuring overlay) --- */
+    /* --- Bottom Slide-Up Sheet Panel --- */
     .bottom-sheet-overlay {
       position: fixed;
       inset: 0;
-      background: transparent; /* No dark tint or blur */
+      background: transparent;
       z-index: 300;
-      pointer-events: none; /* Passes clicks through to timeline */
+      pointer-events: none;
     }
 
     .bottom-panel {
@@ -485,7 +485,7 @@
       max-height: 45vh;
       display: flex;
       flex-direction: column;
-      pointer-events: auto; /* Keeps panel fully interactive */
+      pointer-events: auto;
     }
 
     .bottom-sheet-overlay.active .bottom-panel {
@@ -789,7 +789,7 @@
 
     /* --- Click-to-Select Spotlight & Auto-Fit Sheet Handler --- */
     function openEventSheet(event, groupId) {
-      // 1. Activate Selection Spotlight
+      // 1. Activate Selection Spotlight across all matched elements
       targetTrack.classList.add('has-selection');
       document.querySelectorAll('.selected-active').forEach(el => el.classList.remove('selected-active'));
       document.querySelectorAll(`[data-group-id="${groupId}"]`).forEach(el => el.classList.add('selected-active'));
@@ -840,6 +840,15 @@
 
     function setupSheetListeners() {
       panelClose.addEventListener('click', closeSheet);
+
+      // Dismiss bottom panel on clicking empty canvas timeline space
+      canvas.addEventListener('click', (e) => {
+        const isInteractiveClick = e.target.closest('.sticky-card-box, .spine-dot, .spine-bar, .bottom-panel, .toolbar, .layers-bar');
+        if (!isInteractiveClick) {
+          closeSheet();
+        }
+      });
+
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeSheet();
       });
@@ -942,6 +951,13 @@
       allCombinedEvents.sort((a, b) => a.startYear - b.startYear);
 
       const eventToSpineBarMap = new Map();
+      const eventToGroupIdMap = new Map();
+
+      // Pre-assign unified Group IDs to all events
+      allCombinedEvents.forEach((ev, idx) => {
+        const cleanTitle = ev.title.replace(/[^\w-]/g, '-');
+        eventToGroupIdMap.set(ev, `group-${idx}-${cleanTitle}`);
+      });
 
       // --- 1. PARALLEL SWIM LANE ENGINE FOR RANGE BARS ---
       const rangeEvents = allCombinedEvents.filter(e => !e.isPointEvent && (e.endYear - e.startYear) > 0);
@@ -953,6 +969,7 @@
         const topPos = getYearOffset(event.startYear);
         const rawDuration = event.endYear - event.startYear;
         const barHeight = Math.max(14, rawDuration * pixelsPerYear);
+        const groupId = eventToGroupIdMap.get(event);
 
         const activeOverlaps = rangeEvents.filter(other => 
           event !== other && 
@@ -970,6 +987,7 @@
 
         const bar = document.createElement('div');
         bar.className = 'spine-bar';
+        bar.dataset.groupId = groupId;
         bar.style.top = `${topPos}px`;
         bar.style.height = `${barHeight}px`;
         bar.style.width = `${LANE_WIDTH_PX}px`;
@@ -980,6 +998,11 @@
         const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
         const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
         bar.title = `${event.title} (${startStr} – ${endStr})`;
+
+        bar.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openEventSheet(event, groupId);
+        });
 
         eventToSpineBarMap.set(event, bar);
         targetTrack.appendChild(bar);
@@ -1002,7 +1025,7 @@
         const gapPx = topPos - lastTopPx;
         const isCollided = gapPx < MIN_VERTICAL_GAP_PX;
 
-        const groupId = `group-${eventIdx}-${event.title.replace(/\s+/g, '-')}`;
+        const groupId = eventToGroupIdMap.get(event);
 
         let dotEl = null;
         if (isPoint) {
@@ -1018,14 +1041,11 @@
           const yearStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
           dotEl.title = `${event.title} (${yearStr})`;
           
-          dotEl.addEventListener('click', () => openEventSheet(event, groupId));
+          dotEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openEventSheet(event, groupId);
+          });
           targetTrack.appendChild(dotEl);
-        }
-
-        const spineMarker = isPoint ? dotEl : eventToSpineBarMap.get(event);
-        if (spineMarker) {
-          spineMarker.dataset.groupId = groupId;
-          spineMarker.addEventListener('click', () => openEventSheet(event, groupId));
         }
 
         if (!isCollided) {
@@ -1059,7 +1079,10 @@
 
           cardBox.innerHTML = `<div class="title">${event.title}</div>`;
 
-          cardBox.addEventListener('click', () => openEventSheet(event, groupId));
+          cardBox.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openEventSheet(event, groupId);
+          });
 
           if (side === 'left') {
             stickyWrapper.appendChild(cardBox);
