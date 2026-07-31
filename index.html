@@ -30,23 +30,27 @@
       padding: 0;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-main);
-      overflow-x: hidden;
-      touch-action: pan-y;
+    }
+
+    /* --- App Shell Outer Wrapper --- */
+    .app-viewport {
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
     }
 
     /* --- Sticky Top Controls Toolbar --- */
     .toolbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      flex-shrink: 0;
       height: var(--toolbar-height);
       background-color: #090d16;
       border-bottom: 1px solid var(--border-color);
@@ -54,6 +58,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      z-index: 100;
     }
 
     .toolbar-title {
@@ -144,9 +149,7 @@
 
     /* --- Layers Control Bar --- */
     .layers-bar {
-      position: sticky;
-      top: var(--toolbar-height);
-      z-index: 95;
+      flex-shrink: 0;
       height: var(--header-height);
       background-color: #111827;
       border-bottom: 2px solid var(--border-color);
@@ -156,6 +159,7 @@
       gap: 8px;
       overflow-x: auto;
       scrollbar-width: none;
+      z-index: 95;
     }
 
     .layers-bar::-webkit-scrollbar {
@@ -196,7 +200,25 @@
       box-shadow: 0 0 6px currentColor;
     }
 
-    /* --- Timeline Layout --- */
+    /* --- Workspace Layout Area --- */
+    .workspace-body {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    /* Main Timeline Scroll Window */
+    .timeline-scroll-view {
+      flex: 1;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+      scroll-behavior: smooth;
+    }
+
     .timeline-container {
       display: grid;
       grid-template-columns: var(--col-year-width) 1fr var(--scrubber-width);
@@ -345,7 +367,7 @@
     /* Sticky Flex Wrapper */
     .sticky-wrapper {
       position: sticky;
-      top: calc(var(--header-total-height) + 12px);
+      top: 12px;
       display: flex;
       align-items: flex-start;
       width: fit-content;
@@ -404,9 +426,9 @@
 
     /* --- Scrubber Rail --- */
     .scrubber-rail {
-      position: fixed;
+      position: absolute;
       right: 0;
-      top: var(--header-total-height);
+      top: 0;
       bottom: 0;
       width: var(--scrubber-width);
       z-index: 200;
@@ -459,37 +481,18 @@
       transition: top 0.05s linear;
     }
 
-    /* --- Bottom Slide-Up Sheet Panel --- */
-    .bottom-sheet-overlay {
-      position: fixed;
-      inset: 0;
-      background: transparent;
-      z-index: 300;
-      pointer-events: none;
-    }
-
-    .bottom-panel {
-      position: fixed;
-      left: 0;
-      right: var(--scrubber-width);
-      bottom: 0;
+    /* --- DYNAMIC SPLIT LAYOUT PANEL (Bottom or Side) --- */
+    .detail-panel {
       background: var(--card-bg);
-      border-top: 1px solid var(--border-color);
-      border-top-left-radius: 16px;
-      border-top-right-radius: 16px;
-      padding: 12px 20px 24px 20px;
-      z-index: 310;
-      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7);
-      transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      max-height: 45vh;
+      border-color: var(--border-color);
       display: flex;
       flex-direction: column;
-      pointer-events: auto;
-    }
-
-    .bottom-sheet-overlay.active .bottom-panel {
-      transform: translateY(0);
+      padding: 16px 20px 24px 20px;
+      z-index: 310;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
 
     .panel-handle {
@@ -503,7 +506,7 @@
 
     .panel-close {
       position: absolute;
-      top: 12px;
+      top: 14px;
       right: 16px;
       background: transparent;
       border: none;
@@ -529,6 +532,7 @@
       font-weight: 800;
       color: var(--text-main);
       margin-bottom: 2px;
+      padding-right: 24px;
     }
 
     .panel-dates {
@@ -545,46 +549,102 @@
       line-height: 1.5;
       color: #cbd5e1;
       overflow-y: auto;
+      flex: 1;
+    }
+
+    /* --- PORTRAIT / MOBILE ASPECT RATIO (height > width) --- */
+    @media (max-aspect-ratio: 1/1) {
+      .workspace-body {
+        flex-direction: column;
+      }
+
+      .detail-panel {
+        width: 100%;
+        height: 0px;
+        padding-top: 0;
+        padding-bottom: 0;
+        border-top: 0px solid var(--border-color);
+      }
+
+      .detail-panel.active {
+        height: 38vh;
+        padding-top: 12px;
+        padding-bottom: 24px;
+        border-top: 1px solid var(--border-color);
+      }
+    }
+
+    /* --- LANDSCAPE / DESKTOP ASPECT RATIO (width >= height) --- */
+    @media (min-aspect-ratio: 1/1) {
+      .workspace-body {
+        flex-direction: row;
+      }
+
+      .panel-handle {
+        display: none; /* Hide drag bar on desktop sidebar */
+      }
+
+      .detail-panel {
+        width: 0px;
+        height: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        border-left: 0px solid var(--border-color);
+      }
+
+      .detail-panel.active {
+        width: 360px;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-left: 1px solid var(--border-color);
+      }
     }
   </style>
 </head>
 <body>
 
-  <header class="toolbar">
-    <span class="toolbar-title">Bible Timeline</span>
+  <div class="app-viewport">
+    <header class="toolbar">
+      <span class="toolbar-title">Bible Timeline</span>
 
-    <div class="zoom-controls">
-      <span class="zoom-level-text" id="zoom-level-text">1.0×</span>
-      <button class="zoom-btn" id="btn-zoom-out" title="Zoom Out">−</button>
-      <input type="range" id="zoom-slider" class="zoom-slider" min="1" max="100" step="0.1" value="1">
-      <button class="zoom-btn" id="btn-zoom-in" title="Zoom In">+</button>
-    </div>
-  </header>
+      <div class="zoom-controls">
+        <span class="zoom-level-text" id="zoom-level-text">1.0×</span>
+        <button class="zoom-btn" id="btn-zoom-out" title="Zoom Out">−</button>
+        <input type="range" id="zoom-slider" class="zoom-slider" min="1" max="100" step="0.1" value="1">
+        <button class="zoom-btn" id="btn-zoom-in" title="Zoom In">+</button>
+      </div>
+    </header>
 
-  <!-- Google Maps Style Layer Toggles -->
-  <div class="layers-bar" id="layers-bar"></div>
+    <!-- Google Maps Style Layer Toggles -->
+    <div class="layers-bar" id="layers-bar"></div>
 
-  <div class="scrubber-rail" id="scrubber-rail">
-    <div class="scrub-indicator" id="scrub-indicator"></div>
-  </div>
+    <!-- Main Dynamic Workspace -->
+    <div class="workspace-body" id="workspace-body">
+      
+      <div class="timeline-scroll-view" id="timeline-scroll-view">
+        <div class="scrubber-rail" id="scrubber-rail">
+          <div class="scrub-indicator" id="scrub-indicator"></div>
+        </div>
 
-  <main class="timeline-container">
-    <div class="timeline-canvas" id="timeline-canvas">
-      <div class="year-track" id="year-track"></div>
-      <div class="data-track" id="single-data-track"></div>
-      <div class="scrubber-spacer-track"></div>
-    </div>
-  </main>
+        <main class="timeline-container">
+          <div class="timeline-canvas" id="timeline-canvas">
+            <div class="year-track" id="year-track"></div>
+            <div class="data-track" id="single-data-track"></div>
+            <div class="scrubber-spacer-track"></div>
+          </div>
+        </main>
+      </div>
 
-  <!-- Bottom Slide-Up Sheet Overlay & Panel -->
-  <div class="bottom-sheet-overlay" id="sheet-overlay">
-    <div class="bottom-panel" id="bottom-panel">
-      <div class="panel-handle"></div>
-      <button class="panel-close" id="panel-close">&times;</button>
-      <div class="panel-type" id="panel-type">Category</div>
-      <h2 class="panel-title" id="panel-title">Event Title</h2>
-      <div class="panel-dates" id="panel-dates">Years</div>
-      <div class="panel-body" id="panel-body">Description text goes here.</div>
+      <!-- Docked Detail Panel (Bottom on Portrait, Sidebar on Landscape) -->
+      <aside class="detail-panel" id="detail-panel">
+        <div class="panel-handle"></div>
+        <button class="panel-close" id="panel-close">&times;</button>
+        <div class="panel-type" id="panel-type">Category</div>
+        <h2 class="panel-title" id="panel-title">Event Title</h2>
+        <div class="panel-dates" id="panel-dates">Years</div>
+        <div class="panel-body" id="panel-body">Description text goes here.</div>
+      </aside>
+
     </div>
   </div>
 
@@ -629,6 +689,7 @@
     const targetTrack = document.getElementById('single-data-track');
     const yearTrack = document.getElementById('year-track');
     const canvas = document.getElementById('timeline-canvas');
+    const scrollView = document.getElementById('timeline-scroll-view');
     const scrubberRail = document.getElementById('scrubber-rail');
     const scrubIndicator = document.getElementById('scrub-indicator');
 
@@ -637,8 +698,7 @@
     const btnZoomOut = document.getElementById('btn-zoom-out');
     const btnZoomIn = document.getElementById('btn-zoom-in');
 
-    const sheetOverlay = document.getElementById('sheet-overlay');
-    const bottomPanel = document.getElementById('bottom-panel');
+    const detailPanel = document.getElementById('detail-panel');
     const panelTitle = document.getElementById('panel-title');
     const panelType = document.getElementById('panel-type');
     const panelDates = document.getElementById('panel-dates');
@@ -646,8 +706,7 @@
     const panelClose = document.getElementById('panel-close');
 
     function calculateBaseScale() {
-      const headerTotalHeight = 93;
-      const availableHeight = Math.max(300, window.innerHeight - headerTotalHeight - (CANVAS_PADDING_TOP * 2));
+      const availableHeight = Math.max(300, scrollView.clientHeight - (CANVAS_PADDING_TOP * 2));
       basePixelsPerYear = availableHeight / TOTAL_YEARS;
       pixelsPerYear = basePixelsPerYear * currentZoomLevel;
     }
@@ -725,8 +784,8 @@
         return;
       }
 
-      const currentScrollY = window.scrollY;
-      const centerViewportY = currentScrollY + (window.innerHeight / 2);
+      const currentScrollY = scrollView.scrollTop;
+      const centerViewportY = currentScrollY + (scrollView.clientHeight / 2);
       const yearAtCenter = START_YEAR + ((centerViewportY - CANVAS_PADDING_TOP) / pixelsPerYear);
 
       currentZoomLevel = newZoom;
@@ -741,8 +800,8 @@
           rebuildCanvasLayout();
           if (keepYearCentered) {
             const newCenterViewportY = CANVAS_PADDING_TOP + ((yearAtCenter - START_YEAR) * pixelsPerYear);
-            const newScrollY = newCenterViewportY - (window.innerHeight / 2);
-            window.scrollTo({ top: newScrollY, behavior: 'instant' });
+            const newScrollY = newCenterViewportY - (scrollView.clientHeight / 2);
+            scrollView.scrollTop = newScrollY;
           }
           renderPending = false;
           if (onComplete) onComplete();
@@ -756,7 +815,7 @@
       btnZoomIn.addEventListener('click', () => setZoomLevel(currentZoomLevel * 1.4));
       zoomLevelText.addEventListener('dblclick', () => setZoomLevel(1.0));
 
-      window.addEventListener('wheel', (e) => {
+      scrollView.addEventListener('wheel', (e) => {
         if (e.ctrlKey || e.metaKey) {
           e.preventDefault();
           const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
@@ -807,12 +866,12 @@
       document.querySelectorAll(`[data-group-id="${groupId}"]`).forEach(el => el.classList.add('selected-active'));
     }
 
-    /* --- Click-to-Select Spotlight & Auto-Fit Sheet Handler --- */
+    /* --- Click-to-Select Spotlight & Auto-Fit Panel Handler --- */
     function openEventSheet(event, groupId) {
       // 1. Activate Selection Spotlight
       applySelectionHighlight(groupId);
 
-      // 2. Populate Bottom Sheet Text
+      // 2. Populate Detail Panel Text
       panelTitle.textContent = event.title;
       panelType.textContent = event.subtitle || CATEGORIES[event.layerKey] || 'Event Details';
       
@@ -821,54 +880,55 @@
       panelDates.textContent = event.startYear === event.endYear ? startStr : `${startStr} – ${endStr}`;
       panelBody.textContent = event.description || "Detailed notes, key verses, or historical context for this period can be populated in your JSON files.";
 
-      sheetOverlay.classList.add('active');
+      detailPanel.classList.add('active');
 
-      // 3. Auto-Fit Zoom & Center in visible space above panel
-      requestAnimationFrame(() => {
-        const headerTotalHeight = 93;
-        const panelHeight = bottomPanel.offsetHeight || (window.innerHeight * 0.35);
-        const visibleViewportHeight = window.innerHeight - headerTotalHeight - panelHeight;
-
+      // 3. Recalculate layout & auto-scroll into view within newly resized viewport
+      setTimeout(() => {
+        calculateBaseScale();
+        
         const isRange = !event.isPointEvent && (event.endYear > event.startYear);
+        const visibleHeight = scrollView.clientHeight;
 
         const performCenterScroll = () => {
           const eventCenterYear = isRange ? (event.startYear + event.endYear) / 2 : event.startYear;
           const centerCanvasTopPx = CANVAS_PADDING_TOP + ((eventCenterYear - START_YEAR) * pixelsPerYear);
-          const targetScrollY = centerCanvasTopPx - headerTotalHeight - (visibleViewportHeight / 2);
+          const targetScrollTop = centerCanvasTopPx - (visibleHeight / 2);
 
-          window.scrollTo({ top: Math.max(0, targetScrollY), behavior: 'smooth' });
+          scrollView.scrollTo({ top: Math.max(0, targetScrollTop), behavior: 'smooth' });
         };
 
         if (isRange) {
           const durationYears = event.endYear - event.startYear;
-          // 120px total vertical margin (60px top + 60px bottom)
-          const targetPaddingPx = 120;
-          const availablePx = Math.max(80, visibleViewportHeight - targetPaddingPx);
+          const targetPaddingPx = 100;
+          const availablePx = Math.max(60, visibleHeight - targetPaddingPx);
           
           const idealPixelsPerYear = availablePx / durationYears;
           const idealZoom = idealPixelsPerYear / basePixelsPerYear;
 
-          // Adjust zoom first, then scroll cleanly after the canvas re-render finishes
           setZoomLevel(idealZoom, false, () => {
             requestAnimationFrame(performCenterScroll);
           });
         } else {
           performCenterScroll();
         }
-      });
+      }, 50);
     }
 
     function closeSheet() {
-      sheetOverlay.classList.remove('active');
+      detailPanel.classList.remove('active');
       applySelectionHighlight(null);
+      setTimeout(() => {
+        calculateBaseScale();
+        rebuildCanvasLayout();
+      }, 300);
     }
 
     function setupSheetListeners() {
       panelClose.addEventListener('click', closeSheet);
 
-      // Dismiss bottom panel on clicking empty canvas timeline space
+      // Dismiss panel on clicking empty canvas space
       canvas.addEventListener('click', (e) => {
-        const isInteractiveClick = e.target.closest('.sticky-card-box, .spine-dot, .spine-bar, .bottom-panel, .toolbar, .layers-bar');
+        const isInteractiveClick = e.target.closest('.sticky-card-box, .spine-dot, .spine-bar, .detail-panel, .toolbar, .layers-bar');
         if (!isInteractiveClick) {
           closeSheet();
         }
@@ -978,7 +1038,7 @@
       const eventToSpineBarMap = new Map();
       const eventToGroupIdMap = new Map();
 
-      // Pre-assign unified Group IDs to all events
+      // Pre-assign unified Group IDs
       allCombinedEvents.forEach((ev, idx) => {
         const cleanTitle = ev.title.replace(/[^\w-]/g, '-');
         eventToGroupIdMap.set(ev, `group-${idx}-${cleanTitle}`);
@@ -1122,7 +1182,6 @@
         }
       });
 
-      // Restore active selection highlight if an item was selected prior to re-render
       if (currentlySelectedGroupId) {
         applySelectionHighlight(currentlySelectedGroupId);
       }
@@ -1153,7 +1212,7 @@
 
     function updateScrubberPosition() {
       const rect = scrubberRail.getBoundingClientRect();
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const maxScroll = scrollView.scrollHeight - scrollView.clientHeight;
       
       if (maxScroll <= 0) {
         scrubIndicator.style.height = `${rect.height}px`;
@@ -1161,10 +1220,10 @@
         return;
       }
 
-      const viewportRatio = window.innerHeight / document.documentElement.scrollHeight;
+      const viewportRatio = scrollView.clientHeight / scrollView.scrollHeight;
       const indicatorHeight = Math.max(16, rect.height * viewportRatio);
       
-      const scrollPercentage = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+      const scrollPercentage = Math.max(0, Math.min(1, scrollView.scrollTop / maxScroll));
       const availableTravel = rect.height - indicatorHeight;
       const indicatorTop = scrollPercentage * availableTravel;
 
@@ -1175,7 +1234,7 @@
     function setupTouchScrubber() {
       function scrubToY(clientY) {
         const rect = scrubberRail.getBoundingClientRect();
-        const viewportRatio = window.innerHeight / document.documentElement.scrollHeight;
+        const viewportRatio = scrollView.clientHeight / scrollView.scrollHeight;
         const indicatorHeight = Math.max(16, rect.height * viewportRatio);
         const availableTravel = rect.height - indicatorHeight;
 
@@ -1184,8 +1243,8 @@
         const targetTop = clientY - rect.top - (indicatorHeight / 2);
         const percentage = Math.max(0, Math.min(1, targetTop / availableTravel));
         
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        window.scrollTo({ top: percentage * maxScroll, behavior: 'instant' });
+        const maxScroll = scrollView.scrollHeight - scrollView.clientHeight;
+        scrollView.scrollTop = percentage * maxScroll;
         updateScrubberPosition();
       }
 
@@ -1199,7 +1258,7 @@
       scrubberRail.addEventListener('touchmove', (e) => { if (isScrubbing) scrubToY(e.touches[0].clientY); }, { passive: true });
       scrubberRail.addEventListener('touchend', () => isScrubbing = false);
 
-      window.addEventListener('scroll', updateScrubberPosition, { passive: true });
+      scrollView.addEventListener('scroll', updateScrubberPosition, { passive: true });
     }
 
     loadTimeline();
