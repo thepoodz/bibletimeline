@@ -367,7 +367,7 @@
       flex-shrink: 0;
     }
 
-    /* Inner Visual Card Box (Streamlined, no subtitles) */
+    /* Inner Visual Card Box */
     .sticky-card-box {
       width: fit-content;
       max-width: calc(100% - 16px);
@@ -459,21 +459,13 @@
       transition: top 0.05s linear;
     }
 
-    /* --- Bottom Slide-Up Sheet Panel --- */
+    /* --- Bottom Slide-Up Sheet Panel (Clean, non-obscuring overlay) --- */
     .bottom-sheet-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(2px);
+      background: transparent; /* No dark tint or blur */
       z-index: 300;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-
-    .bottom-sheet-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
+      pointer-events: none; /* Passes clicks through to timeline */
     }
 
     .bottom-panel {
@@ -493,6 +485,7 @@
       max-height: 45vh;
       display: flex;
       flex-direction: column;
+      pointer-events: auto; /* Keeps panel fully interactive */
     }
 
     .bottom-sheet-overlay.active .bottom-panel {
@@ -796,7 +789,7 @@
 
     /* --- Click-to-Select Spotlight & Auto-Fit Sheet Handler --- */
     function openEventSheet(event, groupId) {
-      // 1. Activate Selection Spotlight (Dims everything else)
+      // 1. Activate Selection Spotlight
       targetTrack.classList.add('has-selection');
       document.querySelectorAll('.selected-active').forEach(el => el.classList.remove('selected-active'));
       document.querySelectorAll(`[data-group-id="${groupId}"]`).forEach(el => el.classList.add('selected-active'));
@@ -841,16 +834,12 @@
 
     function closeSheet() {
       sheetOverlay.classList.remove('active');
-      // Clear selection spotlight dimming when sheet closes
       targetTrack.classList.remove('has-selection');
       document.querySelectorAll('.selected-active').forEach(el => el.classList.remove('selected-active'));
     }
 
     function setupSheetListeners() {
       panelClose.addEventListener('click', closeSheet);
-      sheetOverlay.addEventListener('click', (e) => {
-        if (e.target === sheetOverlay) closeSheet();
-      });
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeSheet();
       });
@@ -1068,7 +1057,6 @@
             cardBox.style.borderLeft = `3px solid ${itemColor}`;
           }
 
-          // Card content simplified to title only
           cardBox.innerHTML = `<div class="title">${event.title}</div>`;
 
           cardBox.addEventListener('click', () => openEventSheet(event, groupId));
