@@ -572,7 +572,7 @@
       'empires': 'Empires'
     };
 
-    // Layer Color Sequence (Order of added active layers gets assigned these colors)
+    // Layer Color Sequence
     const PALETTE = ['#38bdf8', '#a855f7', '#10b981', '#f59e0b', '#f43f5e', '#06b6d4'];
 
     // Active Layers Array
@@ -612,17 +612,15 @@
         const isActive = activeLayers.includes(key);
         const layerIdx = activeLayers.indexOf(key);
 
-        const chip = document.createElement('div');
-        chip.className = `layer-chip ${isActive ? 'active' : ''}`;
-
-        // Determine color: Kings retain identity colors, others use dynamic palette position
         let dotColor = '#64748b';
         if (isActive) {
-          if (key === 'kings-judah') dotColor = '#f59e0b'; // Gold
-          else if (key === 'kings-israel') dotColor = '#ef4444'; // Red
+          if (key === 'kings-judah') dotColor = '#f59e0b';
+          else if (key === 'kings-israel') dotColor = '#ef4444';
           else dotColor = PALETTE[layerIdx % PALETTE.length];
         }
 
+        const chip = document.createElement('div');
+        chip.className = `layer-chip ${isActive ? 'active' : ''}`;
         chip.innerHTML = `
           <span class="layer-color-dot" style="background-color: ${dotColor}; color: ${dotColor};"></span>
           <span>${title}</span>
@@ -808,12 +806,14 @@
       const showAnnuals = pixelsPerYear >= 12.0;
 
       for (let y = START_YEAR; y <= END_YEAR; y++) {
-        if (y === 0) continue;
+        if (y === 0) continue; // Skip non-existent year 0
         const absYear = Math.abs(y);
         const topPos = getYearOffset(y);
 
-        if (absYear % 1000 === 0) {
-          addMarkerAndLine(topPos, absYear, 'millennium');
+        // Millennium line triggers on 4000 BC, 3000 BC, 2000 BC, 1000 BC, and Year 1 AD
+        if (absYear % 1000 === 0 || y === 1) {
+          const labelText = y === 1 ? '1 AD' : `${absYear}`;
+          addMarkerAndLine(topPos, labelText, 'millennium');
         } else if (absYear % 100 === 0) {
           const centuryStyle = showDecades ? 'century' : 'decade';
           addMarkerAndLine(topPos, absYear, centuryStyle);
@@ -843,14 +843,12 @@
       targetTrack.innerHTML = '';
       const allCombinedEvents = [];
 
-      // Gather events across all active layers
       activeLayers.forEach((catKey, layerIdx) => {
         if (!dataCache[catKey] || !dataCache[catKey].events) return;
 
-        // Assign layer color
         let layerColor = PALETTE[layerIdx % PALETTE.length];
-        if (catKey === 'kings-judah') layerColor = '#f59e0b'; // Gold Exception
-        if (catKey === 'kings-israel') layerColor = '#ef4444'; // Red Exception
+        if (catKey === 'kings-judah') layerColor = '#f59e0b';
+        if (catKey === 'kings-israel') layerColor = '#ef4444';
 
         dataCache[catKey].events.forEach(ev => {
           allCombinedEvents.push({
@@ -863,7 +861,6 @@
 
       if (allCombinedEvents.length === 0) return;
 
-      // Sort all combined active layer events chronologically
       allCombinedEvents.sort((a, b) => a.startYear - b.startYear);
 
       const MIN_VERTICAL_GAP_PX = 30;
@@ -909,7 +906,7 @@
           targetTrack.appendChild(pill);
         }
 
-        // 2. Connector Stick & Card (When not collided)
+        // 2. Connector Stick & Card
         if (!isCollided) {
           if (side === 'left') lastLeftTopPx = topPos;
           else lastRightTopPx = topPos;
@@ -949,10 +946,11 @@
 
     function buildScrubberRail() {
       scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
-      const majorMilestones = new Map([[-4000, "4k"], [-3000, "3k"], [-2000, "2k"], [-1000, "1k"], [0, "0"]]);
+      const majorMilestones = new Map([[-4000, "4k"], [-3000, "3k"], [-2000, "2k"], [-1000, "1k"], [1, "1 AD"]]);
 
       for (let y = START_YEAR; y <= END_YEAR; y += 100) {
-        const tickKey = y === 0 ? 0 : y;
+        if (y === 0) continue;
+        const tickKey = y;
         const tick = document.createElement('div');
         tick.className = 'scrub-tick';
 
