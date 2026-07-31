@@ -295,28 +295,29 @@
       margin-top: 2px;
     }
 
-    /* Spine Markers */
+    /* --- Concentric Gobstopper Spine Markers --- */
+
+    /* 1. Smaller Center Dot (6px diameter) */
     .spine-dot {
       position: absolute;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      z-index: 30;
+      z-index: 50;
       cursor: pointer;
       transition: background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
+    /* 2. Concentric Range Pills (Dynamic Widths + Rounded Caps) */
     .spine-pill {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      width: 16px;
-      border-radius: 8px;
-      z-index: 10;
+      box-sizing: border-box;
       cursor: pointer;
-      transition: background-color 0.15s ease, border-color 0.15s ease;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
     }
 
     .spine-dot.muted {
@@ -325,15 +326,15 @@
     }
 
     .spine-pill.muted {
-      background-color: rgba(71, 85, 105, 0.3) !important;
+      background-color: rgba(71, 85, 105, 0.2) !important;
       border-color: #475569 !important;
     }
 
-    /* Connector Line */
+    /* Connector Lines */
     .connector-line {
       position: absolute;
       height: 1px;
-      z-index: 20;
+      z-index: 45;
       pointer-events: none;
     }
 
@@ -341,7 +342,7 @@
     .event-point {
       position: absolute;
       padding: 4px 8px;
-      z-index: 25;
+      z-index: 40;
       background: rgba(15, 23, 42, 0.92);
       border-radius: 4px;
       backdrop-filter: blur(4px);
@@ -353,17 +354,12 @@
     }
 
     .event-point:hover {
-      z-index: 40 !important;
+      z-index: 60 !important;
       background: rgba(30, 41, 59, 0.98);
     }
 
-    .event-point.branch-left {
-      text-align: right;
-    }
-
-    .event-point.branch-right {
-      text-align: left;
-    }
+    .event-point.branch-left { text-align: right; }
+    .event-point.branch-right { text-align: left; }
 
     /* --- Scrubber Rail --- */
     .scrubber-rail {
@@ -520,7 +516,7 @@
     </div>
   </header>
 
-  <!-- Google Maps Style Layer Toggles -->
+  <!-- Google Maps Style Layer Toggles (All 8 Active) -->
   <div class="layers-bar" id="layers-bar"></div>
 
   <div class="scrubber-rail" id="scrubber-rail">
@@ -572,11 +568,11 @@
       'empires': 'Empires'
     };
 
-    // Layer Color Sequence
-    const PALETTE = ['#38bdf8', '#a855f7', '#10b981', '#f59e0b', '#f43f5e', '#06b6d4'];
+    // Dynamic Color Sequence for Layers
+    const PALETTE = ['#38bdf8', '#a855f7', '#10b981', '#f59e0b', '#f43f5e', '#06b6d4', '#ec4899', '#84cc16'];
 
-    // Active Layers Array
-    let activeLayers = ['big-story'];
+    // All 8 Layers Active by Default
+    let activeLayers = Object.keys(CATEGORIES);
     const dataCache = {};
 
     // DOM References
@@ -650,7 +646,8 @@
       setupZoomListeners();
       setupModalListeners();
 
-      await fetchCategoryData('big-story');
+      // Pre-fetch all 8 category files
+      await Promise.all(Object.keys(CATEGORIES).map(k => fetchCategoryData(k)));
       renderTimeline();
 
       let resizeTimeout;
@@ -746,7 +743,7 @@
 
     function openEventModal(event) {
       modalTitle.textContent = event.title;
-      modalType.textContent = event.subtitle || 'Event Details';
+      modalType.textContent = event.subtitle || CATEGORIES[event.layerKey] || 'Event Details';
       
       const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
       const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
@@ -806,11 +803,10 @@
       const showAnnuals = pixelsPerYear >= 12.0;
 
       for (let y = START_YEAR; y <= END_YEAR; y++) {
-        if (y === 0) continue; // Skip non-existent year 0
+        if (y === 0) continue;
         const absYear = Math.abs(y);
         const topPos = getYearOffset(y);
 
-        // Millennium line triggers on 4000 BC, 3000 BC, 2000 BC, 1000 BC, and Year 1 AD
         if (absYear % 1000 === 0 || y === 1) {
           const labelText = y === 1 ? '1 AD' : `${absYear}`;
           addMarkerAndLine(topPos, labelText, 'millennium');
@@ -843,6 +839,7 @@
       targetTrack.innerHTML = '';
       const allCombinedEvents = [];
 
+      // Combine events across all active layers
       activeLayers.forEach((catKey, layerIdx) => {
         if (!dataCache[catKey] || !dataCache[catKey].events) return;
 
@@ -861,8 +858,54 @@
 
       if (allCombinedEvents.length === 0) return;
 
+      // Sort all combined active layer events chronologically
       allCombinedEvents.sort((a, b) => a.startYear - b.startYear);
 
+      // Separate into range events (pills) and point events (dots)
+      const rangeEvents = allCombinedEvents.filter(e => !e.isPointEvent && (e.endYear - e.startYear) > 0);
+
+      // --- CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
+      rangeEvents.forEach((event) => {
+        const topPos = getYearOffset(event.startYear);
+        const rawDuration = event.endYear - event.startYear;
+        const pillHeight = Math.max(14, rawDuration * pixelsPerYear);
+
+        // Find overlapping active range events to assign concentric ring levels
+        const activeOverlaps = rangeEvents.filter(other => 
+          event !== other && 
+          Math.max(event.startYear, other.startYear) < Math.min(event.endYear, other.endYear)
+        );
+
+        // Calculate overlap rank (wider pills sit under narrower pills)
+        const overlapIndex = activeOverlaps.filter(other => 
+          (other.endYear - other.startYear) > rawDuration || 
+          ((other.endYear - other.startYear) === rawDuration && other.title < event.title)
+        ).length;
+
+        // Concentric pill sizing: Level 0 = 10px, Level 1 = 16px, Level 2 = 22px, Level 3 = 28px...
+        const pillWidthPx = 10 + (overlapIndex * 6);
+        const pillRadiusPx = pillWidthPx / 2;
+        const zIndexVal = 30 - overlapIndex;
+
+        const pill = document.createElement('div');
+        pill.className = 'spine-pill';
+        pill.style.top = `${topPos}px`;
+        pill.style.height = `${pillHeight}px`;
+        pill.style.width = `${pillWidthPx}px`;
+        pill.style.borderRadius = `${pillRadiusPx}px`;
+        pill.style.zIndex = zIndexVal;
+        pill.style.backgroundColor = `${event.layerColor}33`;
+        pill.style.border = `2px solid ${event.layerColor}`;
+
+        const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
+        const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
+        pill.title = `${event.title} (${startStr} – ${endStr})`;
+
+        pill.addEventListener('click', () => openEventModal(event));
+        targetTrack.appendChild(pill);
+      });
+
+      // --- POINT DOTS AND ALTERNATING CARDS ---
       const MIN_VERTICAL_GAP_PX = 30;
       let lastLeftTopPx = -9999;
       let lastRightTopPx = -9999;
@@ -879,7 +922,7 @@
         const gapPx = topPos - lastTopPx;
         const isCollided = gapPx < MIN_VERTICAL_GAP_PX;
 
-        // 1. Spine Markers
+        // Render Center Spine Dot (6px sharp dot)
         if (isPoint) {
           const dot = document.createElement('div');
           dot.className = `spine-dot ${isCollided ? 'muted' : ''}`;
@@ -888,25 +931,13 @@
             dot.style.backgroundColor = itemColor;
             dot.style.boxShadow = `0 0 6px ${itemColor}`;
           }
-          dot.title = `${event.title} (${event.startYear < 0 ? Math.abs(event.startYear) + ' BC' : event.startYear + ' AD'})`;
+          const yearStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
+          dot.title = `${event.title} (${yearStr})`;
           dot.addEventListener('click', () => openEventModal(event));
           targetTrack.appendChild(dot);
-        } else {
-          const pillHeight = Math.max(16, rawDuration * pixelsPerYear);
-          const pill = document.createElement('div');
-          pill.className = `spine-pill ${isCollided ? 'muted' : ''}`;
-          pill.style.top = `${topPos}px`;
-          pill.style.height = `${pillHeight}px`;
-          if (!isCollided) {
-            pill.style.backgroundColor = `${itemColor}44`;
-            pill.style.border = `2px solid ${itemColor}`;
-          }
-          pill.title = `${event.title} (${event.startYear < 0 ? Math.abs(event.startYear) + ' BC' : event.startYear + ' AD'})`;
-          pill.addEventListener('click', () => openEventModal(event));
-          targetTrack.appendChild(pill);
         }
 
-        // 2. Connector Stick & Card
+        // Render Connector Stick & Text Card (if not collided)
         if (!isCollided) {
           if (side === 'left') lastLeftTopPx = topPos;
           else lastRightTopPx = topPos;
