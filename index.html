@@ -19,10 +19,9 @@
       --col-year-width: 68px;
       --scrubber-width: 38px;
       --toolbar-height: 45px;
-      --header-height: 42px;
+      --header-height: 48px;
       --header-total-height: calc(var(--toolbar-height) + var(--header-height));
       --canvas-top-padding: 20px;
-      --active-cols: 1;
     }
 
     * {
@@ -143,109 +142,68 @@
       cursor: pointer;
     }
 
-    /* --- Timeline Container Layout --- */
+    /* --- Layers Control Bar --- */
+    .layers-bar {
+      position: sticky;
+      top: var(--toolbar-height);
+      z-index: 95;
+      height: var(--header-height);
+      background-color: #111827;
+      border-bottom: 2px solid var(--border-color);
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .layers-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .layer-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .layer-chip.active {
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(30, 41, 59, 0.9);
+    }
+
+    .layer-color-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+
+    .layer-chip.active .layer-color-dot {
+      box-shadow: 0 0 6px currentColor;
+    }
+
+    /* --- Timeline Layout --- */
     .timeline-container {
       display: grid;
-      grid-template-columns: var(--col-year-width) repeat(var(--active-cols), 1fr) var(--scrubber-width);
+      grid-template-columns: var(--col-year-width) 1fr var(--scrubber-width);
       width: 100%;
       position: relative;
     }
 
-    /* --- Column Selector Headers --- */
-    .col-header {
-      position: sticky;
-      top: var(--toolbar-height);
-      z-index: 95;
-      height: var(--header-height);
-      background-color: var(--card-bg);
-      border-bottom: 2px solid var(--border-color);
-      border-right: 1px solid var(--border-color);
-      padding: 4px 6px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .col-header.year-header {
-      background-color: #161e2e;
-      z-index: 98;
-      left: 0;
-      font-weight: 700;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      justify-content: center;
-    }
-
-    .column-select {
-      background: var(--bg-color);
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 6px 4px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      width: 100%;
-      outline: none;
-      cursor: pointer;
-      text-overflow: ellipsis;
-      height: 30px;
-    }
-
-    .remove-col-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.1rem;
-      cursor: pointer;
-      padding: 0 4px;
-      line-height: 1;
-      border-radius: 4px;
-    }
-
-    .remove-col-btn:hover {
-      color: #ef4444;
-      background: rgba(239, 68, 68, 0.1);
-    }
-
-    .add-header-slot {
-      position: sticky;
-      top: var(--toolbar-height);
-      z-index: 95;
-      height: var(--header-height);
-      background-color: var(--card-bg);
-      border-bottom: 2px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .header-add-btn {
-      background: var(--bg-color);
-      border: 1px dashed var(--accent-gold);
-      color: var(--accent-gold);
-      border-radius: 6px;
-      width: 30px;
-      height: 30px;
-      font-size: 1.2rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      flex-shrink: 0;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-
-    .header-add-btn:hover {
-      background: var(--accent-gold);
-      color: #000;
-      border-style: solid;
-    }
-
-    /* --- Continuous Timeline Canvas --- */
     .timeline-canvas {
       position: relative;
       grid-column: 1 / -1;
@@ -254,7 +212,7 @@
       width: 100%;
     }
 
-    /* --- Left Sticky Year Track --- */
+    /* Left Sticky Year Track */
     .year-track {
       position: relative;
       background-color: #111827;
@@ -337,7 +295,7 @@
       margin-top: 2px;
     }
 
-    /* --- Spine Markers --- */
+    /* Spine Markers */
     .spine-dot {
       position: absolute;
       left: 50%;
@@ -361,7 +319,6 @@
       transition: background-color 0.15s ease, border-color 0.15s ease;
     }
 
-    /* Muted Grey State for Collided/Hidden Items */
     .spine-dot.muted {
       background-color: #475569 !important;
       box-shadow: none !important;
@@ -372,16 +329,15 @@
       border-color: #475569 !important;
     }
 
-    /* Horizontal Connector Lines */
+    /* Connector Line */
     .connector-line {
       position: absolute;
       height: 1px;
       z-index: 20;
       pointer-events: none;
-      border-top: 1px solid #38bdf8;
     }
 
-    /* --- Branching Event Cards (Restored Wider Width: 38%) --- */
+    /* Cards */
     .event-point {
       position: absolute;
       padding: 4px 8px;
@@ -403,12 +359,10 @@
 
     .event-point.branch-left {
       text-align: right;
-      border-right: 3px solid #38bdf8;
     }
 
     .event-point.branch-right {
       text-align: left;
-      border-left: 3px solid #38bdf8;
     }
 
     /* --- Scrubber Rail --- */
@@ -551,42 +505,6 @@
       line-height: 1.5;
       color: #cbd5e1;
     }
-
-    .category-options-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .category-option-btn {
-      background: var(--bg-color);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      border-radius: 6px;
-      padding: 10px 14px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: all 0.15s ease;
-    }
-
-    .category-option-btn:hover {
-      border-color: var(--accent-gold);
-      background: #1e293b;
-      color: var(--accent-gold);
-    }
-
-    .category-option-btn .badge {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      font-weight: 700;
-    }
   </style>
 </head>
 <body>
@@ -602,25 +520,17 @@
     </div>
   </header>
 
+  <!-- Google Maps Style Layer Toggles -->
+  <div class="layers-bar" id="layers-bar"></div>
+
   <div class="scrubber-rail" id="scrubber-rail">
     <div class="scrub-indicator" id="scrub-indicator"></div>
   </div>
 
-  <main class="timeline-container" id="timeline-container">
-    <div class="col-header year-header">Year</div>
-
-    <!-- Dynamic Headers Container -->
-    <div id="headers-container" style="display: contents;"></div>
-
-    <!-- Plus Button Slot -->
-    <div class="add-header-slot" id="add-header-slot">
-      <button class="header-add-btn" id="btn-header-add" title="Add Column">+</button>
-    </div>
-
-    <!-- Continuous Canvas Container -->
+  <main class="timeline-container">
     <div class="timeline-canvas" id="timeline-canvas">
       <div class="year-track" id="year-track"></div>
-      <div id="tracks-container" style="display: contents;"></div>
+      <div class="data-track" id="single-data-track"></div>
       <div class="scrubber-spacer-track"></div>
     </div>
   </main>
@@ -636,20 +546,10 @@
     </div>
   </div>
 
-  <!-- Add Column Selection Modal Overlay -->
-  <div class="modal-overlay" id="add-column-modal">
-    <div class="modal-card">
-      <button class="modal-close" id="add-modal-close">&times;</button>
-      <div class="modal-type">New Column</div>
-      <h2 class="modal-title">Select Dataset</h2>
-      <div class="category-options-list" id="category-options-list"></div>
-    </div>
-  </div>
-
   <script>
     const START_YEAR = -4000;
     const END_YEAR = 100;
-    const TOTAL_YEARS = END_YEAR - START_YEAR; // 4100 years
+    const TOTAL_YEARS = END_YEAR - START_YEAR;
     const CANVAS_PADDING_TOP = 20;
 
     const MIN_ZOOM = 1.0;
@@ -660,28 +560,28 @@
     let pixelsPerYear = basePixelsPerYear;
     let renderPending = false;
 
+    // Available Datasets
     const CATEGORIES = {
       'big-story': 'The Big Story',
-      'books-narrative': 'Books of the Bible - Narrative',
-      'books-writings': 'Books of the Bible - Other',
-      'genealogy': 'Genealogy (Adam to Jesus)',
+      'books-narrative': 'Books Narrative',
+      'books-writings': 'Other Books',
+      'genealogy': 'Genealogy',
       'kings-judah': 'Kings of Judah',
       'kings-israel': 'Kings of Israel',
-      'prophets': 'Prophets & Writings',
-      'empires': 'Rulers & Empires'
+      'prophets': 'Prophets',
+      'empires': 'Empires'
     };
 
+    // Layer Color Sequence (Order of added active layers gets assigned these colors)
+    const PALETTE = ['#38bdf8', '#a855f7', '#10b981', '#f59e0b', '#f43f5e', '#06b6d4'];
+
+    // Active Layers Array
+    let activeLayers = ['big-story'];
     const dataCache = {};
-    
-    // Default Columns
-    let activeColumns = window.innerWidth >= 768 ? ['big-story', ''] : ['big-story'];
 
     // DOM References
-    const container = document.getElementById('timeline-container');
-    const headersContainer = document.getElementById('headers-container');
-    const tracksContainer = document.getElementById('tracks-container');
-    const btnHeaderAdd = document.getElementById('btn-header-add');
-
+    const layersBar = document.getElementById('layers-bar');
+    const targetTrack = document.getElementById('single-data-track');
     const yearTrack = document.getElementById('year-track');
     const canvas = document.getElementById('timeline-canvas');
     const scrubberRail = document.getElementById('scrubber-rail');
@@ -699,122 +599,55 @@
     const modalBody = document.getElementById('modal-body');
     const modalClose = document.getElementById('modal-close');
 
-    const addColumnModal = document.getElementById('add-column-modal');
-    const addModalClose = document.getElementById('add-modal-close');
-    const categoryOptionsList = document.getElementById('category-options-list');
-
     function calculateBaseScale() {
-      const headerTotalHeight = 87;
+      const headerTotalHeight = 93;
       const availableHeight = Math.max(300, window.innerHeight - headerTotalHeight - (CANVAS_PADDING_TOP * 2));
       basePixelsPerYear = availableHeight / TOTAL_YEARS;
       pixelsPerYear = basePixelsPerYear * currentZoomLevel;
     }
 
-    function getMaxAllowedColumns() {
-      return window.innerWidth < 768 ? 3 : 5;
-    }
-
-    function renderColumnStructure() {
-      const maxCols = getMaxAllowedColumns();
-      container.style.setProperty('--active-cols', activeColumns.length);
-      btnHeaderAdd.style.display = activeColumns.length < maxCols ? 'flex' : 'none';
-
-      headersContainer.innerHTML = '';
-      tracksContainer.innerHTML = '';
-
-      activeColumns.forEach((catKey, slotIndex) => {
-        const headerDiv = document.createElement('div');
-        headerDiv.className = 'col-header';
-
-        const select = document.createElement('select');
-        select.className = 'column-select';
-
-        const placeholder = document.createElement('option');
-        placeholder.value = '';
-        placeholder.textContent = 'Choose an option...';
-        if (!catKey) placeholder.selected = true;
-        select.appendChild(placeholder);
-
-        Object.entries(CATEGORIES).forEach(([key, title]) => {
-          const opt = document.createElement('option');
-          opt.value = key;
-          opt.textContent = title;
-          if (catKey === key) opt.selected = true;
-          select.appendChild(opt);
-        });
-
-        select.addEventListener('change', async (e) => {
-          activeColumns[slotIndex] = e.target.value;
-          if (e.target.value) await fetchCategoryData(e.target.value);
-          updateDropdownOptionsUI();
-          renderTimeline();
-        });
-
-        headerDiv.appendChild(select);
-
-        if (activeColumns.length > 1) {
-          const removeBtn = document.createElement('button');
-          removeBtn.className = 'remove-col-btn';
-          removeBtn.innerHTML = '&times;';
-          removeBtn.title = 'Remove Column';
-          removeBtn.addEventListener('click', () => {
-            activeColumns.splice(slotIndex, 1);
-            renderColumnStructure();
-            renderTimeline();
-          });
-          headerDiv.appendChild(removeBtn);
-        }
-
-        headersContainer.appendChild(headerDiv);
-
-        const trackDiv = document.createElement('div');
-        trackDiv.className = 'data-track';
-        trackDiv.id = `track-${slotIndex}`;
-        tracksContainer.appendChild(trackDiv);
-      });
-
-      updateDropdownOptionsUI();
-    }
-
-    function openAddColumnModal() {
-      categoryOptionsList.innerHTML = '';
+    function renderLayersBarUI() {
+      layersBar.innerHTML = '';
       Object.entries(CATEGORIES).forEach(([key, title]) => {
-        const btn = document.createElement('button');
-        btn.className = 'category-option-btn';
+        const isActive = activeLayers.includes(key);
+        const layerIdx = activeLayers.indexOf(key);
 
-        const titleSpan = document.createElement('span');
-        titleSpan.textContent = title;
-        btn.appendChild(titleSpan);
+        const chip = document.createElement('div');
+        chip.className = `layer-chip ${isActive ? 'active' : ''}`;
 
-        const activeIndex = activeColumns.indexOf(key);
-        if (activeIndex !== -1) {
-          const badge = document.createElement('span');
-          badge.className = 'badge';
-          badge.textContent = `In Col ${activeIndex + 1}`;
-          btn.appendChild(badge);
+        // Determine color: Kings retain identity colors, others use dynamic palette position
+        let dotColor = '#64748b';
+        if (isActive) {
+          if (key === 'kings-judah') dotColor = '#f59e0b'; // Gold
+          else if (key === 'kings-israel') dotColor = '#ef4444'; // Red
+          else dotColor = PALETTE[layerIdx % PALETTE.length];
         }
 
-        btn.addEventListener('click', async () => {
-          closeAddColumnModal();
-          activeColumns.push(key);
-          await fetchCategoryData(key);
-          renderColumnStructure();
+        chip.innerHTML = `
+          <span class="layer-color-dot" style="background-color: ${dotColor}; color: ${dotColor};"></span>
+          <span>${title}</span>
+        `;
+
+        chip.addEventListener('click', async () => {
+          if (isActive) {
+            if (activeLayers.length > 1) {
+              activeLayers = activeLayers.filter(k => k !== key);
+            }
+          } else {
+            activeLayers.push(key);
+            await fetchCategoryData(key);
+          }
+          renderLayersBarUI();
           renderTimeline();
         });
 
-        categoryOptionsList.appendChild(btn);
+        layersBar.appendChild(chip);
       });
-
-      addColumnModal.classList.add('active');
-    }
-
-    function closeAddColumnModal() {
-      addColumnModal.classList.remove('active');
     }
 
     async function loadTimeline() {
       calculateBaseScale();
-      renderColumnStructure();
+      renderLayersBarUI();
       rebuildCanvasLayout();
       setupZoomListeners();
       setupModalListeners();
@@ -826,17 +659,10 @@
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-          const maxCols = getMaxAllowedColumns();
-          if (activeColumns.length > maxCols) {
-            activeColumns = activeColumns.slice(0, maxCols);
-            renderColumnStructure();
-          }
           calculateBaseScale();
           rebuildCanvasLayout();
         }, 150);
       });
-
-      window.addEventListener('scroll', updateCardContinuationArrows, { passive: true });
     }
 
     function rebuildCanvasLayout() {
@@ -846,7 +672,6 @@
       buildScrubberRail();
       setupTouchScrubber();
       updateScrubberPosition();
-      updateCardContinuationArrows();
     }
 
     function setZoomLevel(targetZoom, keepYearCentered = true) {
@@ -882,15 +707,6 @@
       btnZoomOut.addEventListener('click', () => setZoomLevel(currentZoomLevel / 1.4));
       btnZoomIn.addEventListener('click', () => setZoomLevel(currentZoomLevel * 1.4));
       zoomLevelText.addEventListener('dblclick', () => setZoomLevel(1.0));
-
-      btnHeaderAdd.addEventListener('click', () => {
-        if (activeColumns.length < getMaxAllowedColumns()) openAddColumnModal();
-      });
-
-      addModalClose.addEventListener('click', closeAddColumnModal);
-      addColumnModal.addEventListener('click', (e) => {
-        if (e.target === addColumnModal) closeAddColumnModal();
-      });
 
       window.addEventListener('wheel', (e) => {
         if (e.ctrlKey || e.metaKey) {
@@ -949,12 +765,7 @@
     function setupModalListeners() {
       modalClose.addEventListener('click', closeModal);
       modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          closeModal();
-          closeAddColumnModal();
-        }
-      });
+      window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
     }
 
     async function fetchCategoryData(categoryKey) {
@@ -1028,141 +839,112 @@
       canvas.appendChild(gridLine);
     }
 
-    function updateDropdownOptionsUI() {
-      const activeSelections = {};
-      const selects = document.querySelectorAll('.column-select');
+    function renderTimeline() {
+      targetTrack.innerHTML = '';
+      const allCombinedEvents = [];
 
-      selects.forEach((select, idx) => {
-        if (select.value) {
-          if (!activeSelections[select.value]) activeSelections[select.value] = [];
-          activeSelections[select.value].push(idx + 1);
+      // Gather events across all active layers
+      activeLayers.forEach((catKey, layerIdx) => {
+        if (!dataCache[catKey] || !dataCache[catKey].events) return;
+
+        // Assign layer color
+        let layerColor = PALETTE[layerIdx % PALETTE.length];
+        if (catKey === 'kings-judah') layerColor = '#f59e0b'; // Gold Exception
+        if (catKey === 'kings-israel') layerColor = '#ef4444'; // Red Exception
+
+        dataCache[catKey].events.forEach(ev => {
+          allCombinedEvents.push({
+            ...ev,
+            layerKey: catKey,
+            layerColor: ev.color || layerColor
+          });
+        });
+      });
+
+      if (allCombinedEvents.length === 0) return;
+
+      // Sort all combined active layer events chronologically
+      allCombinedEvents.sort((a, b) => a.startYear - b.startYear);
+
+      const MIN_VERTICAL_GAP_PX = 30;
+      let lastLeftTopPx = -9999;
+      let lastRightTopPx = -9999;
+
+      allCombinedEvents.forEach((event, eventIdx) => {
+        const topPos = getYearOffset(event.startYear);
+        const rawDuration = event.endYear - event.startYear;
+        const isPoint = event.isPointEvent || rawDuration === 0;
+
+        const side = (eventIdx % 2 === 0) ? 'left' : 'right';
+        const itemColor = event.layerColor;
+
+        const lastTopPx = (side === 'left') ? lastLeftTopPx : lastRightTopPx;
+        const gapPx = topPos - lastTopPx;
+        const isCollided = gapPx < MIN_VERTICAL_GAP_PX;
+
+        // 1. Spine Markers
+        if (isPoint) {
+          const dot = document.createElement('div');
+          dot.className = `spine-dot ${isCollided ? 'muted' : ''}`;
+          dot.style.top = `${topPos}px`;
+          if (!isCollided) {
+            dot.style.backgroundColor = itemColor;
+            dot.style.boxShadow = `0 0 6px ${itemColor}`;
+          }
+          dot.title = `${event.title} (${event.startYear < 0 ? Math.abs(event.startYear) + ' BC' : event.startYear + ' AD'})`;
+          dot.addEventListener('click', () => openEventModal(event));
+          targetTrack.appendChild(dot);
+        } else {
+          const pillHeight = Math.max(16, rawDuration * pixelsPerYear);
+          const pill = document.createElement('div');
+          pill.className = `spine-pill ${isCollided ? 'muted' : ''}`;
+          pill.style.top = `${topPos}px`;
+          pill.style.height = `${pillHeight}px`;
+          if (!isCollided) {
+            pill.style.backgroundColor = `${itemColor}44`;
+            pill.style.border = `2px solid ${itemColor}`;
+          }
+          pill.title = `${event.title} (${event.startYear < 0 ? Math.abs(event.startYear) + ' BC' : event.startYear + ' AD'})`;
+          pill.addEventListener('click', () => openEventModal(event));
+          targetTrack.appendChild(pill);
+        }
+
+        // 2. Connector Stick & Card (When not collided)
+        if (!isCollided) {
+          if (side === 'left') lastLeftTopPx = topPos;
+          else lastRightTopPx = topPos;
+
+          const line = document.createElement('div');
+          line.className = 'connector-line';
+          line.style.top = `${topPos}px`;
+          line.style.borderTop = `1px solid ${itemColor}`;
+
+          const card = document.createElement('div');
+          card.className = `event-point branch-${side}`;
+          card.style.top = `${topPos}px`;
+          card.addEventListener('click', () => openEventModal(event));
+
+          if (side === 'left') {
+            card.style.right = '54%';
+            card.style.borderRight = `3px solid ${itemColor}`;
+            line.style.right = '50%';
+            line.style.width = '4%';
+          } else {
+            card.style.left = '54%';
+            card.style.borderLeft = `3px solid ${itemColor}`;
+            line.style.left = '50%';
+            line.style.width = '4%';
+          }
+
+          card.innerHTML = `
+            <div class="title">${event.title}</div>
+            <div class="subtitle">${event.subtitle || ''}</div>
+          `;
+
+          targetTrack.appendChild(line);
+          targetTrack.appendChild(card);
         }
       });
-
-      selects.forEach((select) => {
-        Array.from(select.options).forEach(opt => {
-          if (!opt.value) return;
-          const baseTitle = CATEGORIES[opt.value] || opt.value;
-          const activeCols = activeSelections[opt.value];
-          opt.textContent = activeCols?.length ? `${baseTitle} (In Col ${activeCols.join(', ')})` : baseTitle;
-        });
-      });
-    }
-
-    function renderTimeline() {
-      activeColumns.forEach((catKey, slotIndex) => {
-        const targetTrack = document.getElementById(`track-${slotIndex}`);
-        if (!targetTrack) return;
-
-        targetTrack.innerHTML = '';
-        if (!catKey || !dataCache[catKey]) return;
-
-        const { metadata, events } = dataCache[catKey];
-        if (!events || events.length === 0) return;
-
-        // Sort chronologically
-        const sortedEvents = [...events].sort((a, b) => a.startYear - b.startYear);
-
-        // Minimum required vertical pixel gap between cards on the SAME side to prevent overlap
-        const MIN_VERTICAL_GAP_PX = 30;
-
-        let lastLeftTopPx = -9999;
-        let lastRightTopPx = -9999;
-
-        sortedEvents.forEach((event, eventIdx) => {
-          const topPos = getYearOffset(event.startYear);
-          const rawDuration = event.endYear - event.startYear;
-          const isPoint = event.isPointEvent || rawDuration === 0;
-
-          // Alternating side assignment (Even -> Left, Odd -> Right)
-          const side = (eventIdx % 2 === 0) ? 'left' : 'right';
-
-          const itemColor = 
-            event.color || 
-            metadata.colorMap?.[event.classification] || 
-            metadata.color || 
-            '#38bdf8';
-
-          // Collision Check against the last VISIBLE card on this side
-          const lastTopPx = (side === 'left') ? lastLeftTopPx : lastRightTopPx;
-          const gapPx = topPos - lastTopPx;
-          const isCollided = gapPx < MIN_VERTICAL_GAP_PX;
-
-          // 1. Render Central Spine Marker
-          if (isPoint) {
-            const dot = document.createElement('div');
-            dot.className = `spine-dot ${isCollided ? 'muted' : ''}`;
-            dot.style.top = `${topPos}px`;
-            if (!isCollided) {
-              dot.style.backgroundColor = itemColor;
-              dot.style.boxShadow = `0 0 6px ${itemColor}`;
-            }
-            dot.title = `${event.title} (${event.startYear < 0 ? Math.abs(event.startYear) + ' BC' : event.startYear + ' AD'})`;
-            dot.addEventListener('click', () => openEventModal(event));
-            targetTrack.appendChild(dot);
-          } else {
-            const pillHeight = Math.max(16, rawDuration * pixelsPerYear);
-            const pill = document.createElement('div');
-            pill.className = `spine-pill ${isCollided ? 'muted' : ''}`;
-            pill.style.top = `${topPos}px`;
-            pill.style.height = `${pillHeight}px`;
-            if (!isCollided) {
-              pill.style.backgroundColor = `${itemColor}44`;
-              pill.style.border = `2px solid ${itemColor}`;
-            }
-            pill.title = `${event.title} (${event.startYear < 0 ? Math.abs(event.startYear) + ' BC' : event.startYear + ' AD'})`;
-            pill.addEventListener('click', () => openEventModal(event));
-            targetTrack.appendChild(pill);
-          }
-
-          // 2. If NO collision, render the card & connecting line
-          if (!isCollided) {
-            // Update last visible position on this side
-            if (side === 'left') lastLeftTopPx = topPos;
-            else lastRightTopPx = topPos;
-
-            // Connector Line extending from spine to card
-            const line = document.createElement('div');
-            line.className = 'connector-line';
-            line.style.top = `${topPos}px`;
-            line.style.borderTopColor = itemColor;
-
-            // Branching Card (Wider 38% layout)
-            const card = document.createElement('div');
-            card.className = `event-point branch-${side}`;
-            card.style.top = `${topPos}px`;
-            card.addEventListener('click', () => openEventModal(event));
-
-            if (side === 'left') {
-              card.style.right = '54%';
-              card.style.borderRightColor = itemColor;
-
-              line.style.right = '50%';
-              line.style.width = '4%';
-            } else {
-              card.style.left = '54%';
-              card.style.borderLeftColor = itemColor;
-
-              line.style.left = '50%';
-              line.style.width = '4%';
-            }
-
-            card.innerHTML = `
-              <div class="title">${event.title}</div>
-              <div class="subtitle">${event.subtitle || ''}</div>
-            `;
-
-            targetTrack.appendChild(line);
-            targetTrack.appendChild(card);
-          }
-        });
-      });
-
-      updateCardContinuationArrows();
-    }
-
-    function updateCardContinuationArrows() {
-      // Reserved for sticky arrow updates if needed
     }
 
     function buildScrubberRail() {
