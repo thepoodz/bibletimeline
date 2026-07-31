@@ -339,10 +339,10 @@
       pointer-events: none;
     }
 
-    /* Branching Event Card Container */
+    /* Branching Event Card Container - UNIFORM HEIGHT ENFORCED */
     .event-point {
       position: absolute;
-      padding: 4px 8px;
+      padding: 5px 8px;
       z-index: 40;
       background: rgba(15, 23, 42, 0.92);
       border-radius: 4px;
@@ -351,9 +351,10 @@
       cursor: pointer;
       touch-action: none;
       width: 38%;
+      box-sizing: border-box;
     }
 
-    /* Sticky Floating Title Header inside long cards */
+    /* Sticky Floating Header for scrolling range events */
     .sticky-card-header {
       position: sticky;
       top: calc(var(--header-total-height) + 12px);
@@ -364,7 +365,6 @@
     .event-point.branch-right { text-align: left; }
 
     /* --- HOVER SPOTLIGHT ENGINE --- */
-    /* Dim everything when hovering over any card or spine marker */
     .data-track.has-hover .spine-dot,
     .data-track.has-hover .spine-pill,
     .data-track.has-hover .connector-line,
@@ -372,7 +372,6 @@
       opacity: 0.15;
     }
 
-    /* Highlight matching card, connector line, AND spine marker simultaneously */
     .data-track.has-hover .spine-dot.hover-active,
     .data-track.has-hover .spine-pill.hover-active,
     .data-track.has-hover .connector-line.hover-active,
@@ -671,7 +670,6 @@
       setupZoomListeners();
       setupModalListeners();
 
-      // Pre-fetch all 8 category files
       await Promise.all(Object.keys(CATEGORIES).map(k => fetchCategoryData(k)));
       renderTimeline();
 
@@ -860,7 +858,6 @@
       canvas.appendChild(gridLine);
     }
 
-    // Bind Hover Spotlight Event Listeners across linked items
     function attachHoverSpotlight(groupId, ...elements) {
       elements.forEach(el => {
         if (!el) return;
@@ -886,7 +883,6 @@
       targetTrack.innerHTML = '';
       const allCombinedEvents = [];
 
-      // Combine events across all active layers
       activeLayers.forEach((catKey, layerIdx) => {
         if (!dataCache[catKey] || !dataCache[catKey].events) return;
 
@@ -907,10 +903,9 @@
 
       allCombinedEvents.sort((a, b) => a.startYear - b.startYear);
 
-      // Create a map to link event cards with their exact spine pills
       const eventToSpinePillMap = new Map();
 
-      // --- 1. SNUG CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
+      // --- 1. CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
       const rangeEvents = allCombinedEvents.filter(e => !e.isPointEvent && (e.endYear - e.startYear) > 0);
 
       rangeEvents.forEach((event) => {
@@ -918,7 +913,6 @@
         const rawDuration = event.endYear - event.startYear;
         const pillHeight = Math.max(14, rawDuration * pixelsPerYear);
 
-        // Find overlapping range events
         const activeOverlaps = rangeEvents.filter(other => 
           event !== other && 
           Math.max(event.startYear, other.startYear) < Math.min(event.endYear, other.endYear)
@@ -929,7 +923,6 @@
           ((other.endYear - other.startYear) === rawDuration && other.title < event.title)
         ).length;
 
-        // Snug Sizing: Step by 4px
         const pillWidthPx = 10 + (overlapIndex * 4);
         const pillRadiusPx = pillWidthPx / 2;
         const zIndexVal = 30 - overlapIndex;
@@ -973,7 +966,6 @@
 
         const groupId = `group-${eventIdx}-${event.title.replace(/\s+/g, '-')}`;
 
-        // Sharp Center Spine Dot (6px diameter for point events)
         let dotEl = null;
         if (isPoint) {
           dotEl = document.createElement('div');
@@ -989,10 +981,8 @@
           targetTrack.appendChild(dotEl);
         }
 
-        // Spine Marker to pair with Card (Dot if point, Pill if range)
         const spineMarker = isPoint ? dotEl : eventToSpinePillMap.get(event);
 
-        // Render Connector Stick & Text Card (if not collided)
         if (!isCollided) {
           if (side === 'left') lastLeftTopPx = topPos;
           else lastRightTopPx = topPos;
@@ -1005,12 +995,6 @@
           const card = document.createElement('div');
           card.className = `event-point branch-${side}`;
           card.style.top = `${topPos}px`;
-          
-          if (!isPoint) {
-            const blockHeight = Math.max(28, rawDuration * pixelsPerYear);
-            card.style.height = `${blockHeight}px`;
-          }
-
           card.addEventListener('click', () => openEventModal(event));
 
           if (side === 'left') {
@@ -1025,7 +1009,6 @@
             line.style.width = '4%';
           }
 
-          // Card content with Sticky Header for smooth scrolling on range events
           card.innerHTML = `
             <div class="${!isPoint ? 'sticky-card-header' : ''}">
               <div class="title">${event.title}</div>
@@ -1033,7 +1016,6 @@
             </div>
           `;
 
-          // Link Card + Connector Line + Spine Marker into the exact same Spotlight Group
           attachHoverSpotlight(groupId, card, line, spineMarker);
 
           targetTrack.appendChild(line);
