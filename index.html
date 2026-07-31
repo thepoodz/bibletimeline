@@ -333,14 +333,14 @@
       border-color: #475569 !important;
     }
 
-    /* Outer Event Boundary Container (Passes clicks through empty space) */
+    /* Outer Event Boundary Container */
     .event-point {
       position: absolute;
       z-index: 40;
       touch-action: none;
       box-sizing: border-box;
       background: transparent;
-      pointer-events: none; /* Ignore hover/clicks on empty background */
+      pointer-events: none;
       max-width: 42%;
     }
 
@@ -352,7 +352,7 @@
       left: 50%;
     }
 
-    /* Sticky Flex Wrapper (Holds Line + Card together) */
+    /* Sticky Flex Wrapper */
     .sticky-wrapper {
       position: sticky;
       top: calc(var(--header-total-height) + 12px);
@@ -365,19 +365,19 @@
     }
 
     .event-point.branch-left .sticky-wrapper {
-      margin-left: auto; /* Hug card to right edge near line */
+      margin-left: auto;
     }
 
-    /* Connector Line bridging spine to card */
+    /* Connector Line */
     .connector-line {
       height: 0px;
-      width: 16px; /* Clean gap line */
+      width: 16px;
       z-index: 40;
       pointer-events: none;
       flex-shrink: 0;
     }
 
-    /* Inner Visual Card Box (Only active interactive target) */
+    /* Inner Visual Card Box */
     .sticky-card-box {
       width: fit-content;
       max-width: calc(100% - 16px);
@@ -387,7 +387,7 @@
       backdrop-filter: blur(4px);
       box-shadow: 0 2px 6px rgba(0,0,0,0.4);
       cursor: pointer;
-      pointer-events: auto; /* Re-enable pointer events solely for the card box */
+      pointer-events: auto;
     }
 
     .event-point.branch-left .sticky-card-box { text-align: right; }
@@ -1060,7 +1060,8 @@
 
           cardContainer.appendChild(stickyWrapper);
 
-          attachHoverSpotlight(groupId, cardBox, spineMarker);
+          // Attach spotlight to the parent cardContainer so line + card stay 100% opaque together
+          attachHoverSpotlight(groupId, cardContainer, spineMarker);
 
           targetTrack.appendChild(cardContainer);
         } else if (spineMarker) {
