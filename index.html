@@ -296,7 +296,7 @@
     }
 
     /* --- Universal Spotlight Transition --- */
-    .spine-dot, .spine-pill, .connector-line, .event-point {
+    .spine-dot, .spine-pill, .connector-line, .event-point, .sticky-card-box {
       transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
@@ -339,26 +339,27 @@
       pointer-events: none;
     }
 
-    /* Branching Event Card Container - UNIFORM HEIGHT ENFORCED */
+    /* Outer Card Boundary Container */
     .event-point {
       position: absolute;
-      padding: 5px 8px;
       z-index: 40;
-      background: rgba(15, 23, 42, 0.92);
-      border-radius: 4px;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
       cursor: pointer;
       touch-action: none;
       width: 38%;
       box-sizing: border-box;
+      background: transparent;
     }
 
-    /* Sticky Floating Header for scrolling range events */
-    .sticky-card-header {
+    /* Inner Visual Compact Card (Sticky inside its range boundary) */
+    .sticky-card-box {
       position: sticky;
       top: calc(var(--header-total-height) + 12px);
-      z-index: 2;
+      padding: 5px 8px;
+      background: rgba(15, 23, 42, 0.92);
+      border-radius: 4px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      width: 100%;
     }
 
     .event-point.branch-left { text-align: right; }
@@ -380,7 +381,7 @@
       z-index: 70 !important;
     }
 
-    .data-track.has-hover .event-point.hover-active {
+    .data-track.has-hover .event-point.hover-active .sticky-card-box {
       background: rgba(30, 41, 59, 0.98);
       box-shadow: 0 4px 14px rgba(0,0,0,0.7);
     }
@@ -905,7 +906,7 @@
 
       const eventToSpinePillMap = new Map();
 
-      // --- 1. CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
+      // --- 1. SNUG CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
       const rangeEvents = allCombinedEvents.filter(e => !e.isPointEvent && (e.endYear - e.startYear) > 0);
 
       rangeEvents.forEach((event) => {
@@ -992,34 +993,48 @@
           line.style.top = `${topPos}px`;
           line.style.borderTop = `1px solid ${itemColor}`;
 
-          const card = document.createElement('div');
-          card.className = `event-point branch-${side}`;
-          card.style.top = `${topPos}px`;
-          card.addEventListener('click', () => openEventModal(event));
+          const cardContainer = document.createElement('div');
+          cardContainer.className = `event-point branch-${side}`;
+          cardContainer.style.top = `${topPos}px`;
+
+          // Range containers match full era duration so the card can slide inside it
+          if (!isPoint) {
+            const boundaryHeight = Math.max(32, rawDuration * pixelsPerYear);
+            cardContainer.style.height = `${boundaryHeight}px`;
+          }
+
+          cardContainer.addEventListener('click', () => openEventModal(event));
 
           if (side === 'left') {
-            card.style.right = '54%';
-            card.style.borderRight = `3px solid ${itemColor}`;
+            cardContainer.style.right = '54%';
             line.style.right = '50%';
             line.style.width = '4%';
           } else {
-            card.style.left = '54%';
-            card.style.borderLeft = `3px solid ${itemColor}`;
+            cardContainer.style.left = '54%';
             line.style.left = '50%';
             line.style.width = '4%';
           }
 
-          card.innerHTML = `
-            <div class="${!isPoint ? 'sticky-card-header' : ''}">
-              <div class="title">${event.title}</div>
-              <div class="subtitle">${event.subtitle || ''}</div>
-            </div>
+          // Inner Compact Card that stays sticky inside the range boundary
+          const cardBox = document.createElement('div');
+          cardBox.className = 'sticky-card-box';
+          if (side === 'left') {
+            cardBox.style.borderRight = `3px solid ${itemColor}`;
+          } else {
+            cardBox.style.borderLeft = `3px solid ${itemColor}`;
+          }
+
+          cardBox.innerHTML = `
+            <div class="title">${event.title}</div>
+            <div class="subtitle">${event.subtitle || ''}</div>
           `;
 
-          attachHoverSpotlight(groupId, card, line, spineMarker);
+          cardContainer.appendChild(cardBox);
+
+          attachHoverSpotlight(groupId, cardContainer, line, spineMarker);
 
           targetTrack.appendChild(line);
-          targetTrack.appendChild(card);
+          targetTrack.appendChild(cardContainer);
         } else if (spineMarker) {
           attachHoverSpotlight(groupId, spineMarker);
         }
