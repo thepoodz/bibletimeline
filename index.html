@@ -331,12 +331,18 @@
       border-color: #475569 !important;
     }
 
-    /* Connector Line */
+    /* Connector Line (Absolute for point events, Sticky for range events) */
     .connector-line {
       position: absolute;
+      top: 0;
       height: 1px;
       z-index: 45;
       pointer-events: none;
+    }
+
+    .event-point.range-event .connector-line {
+      position: sticky;
+      top: calc(var(--header-total-height) + 12px + 16px);
     }
 
     /* Outer Card Boundary Container */
@@ -906,7 +912,7 @@
 
       const eventToSpinePillMap = new Map();
 
-      // --- 1. SNUG CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
+      // --- 1. CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
       const rangeEvents = allCombinedEvents.filter(e => !e.isPointEvent && (e.endYear - e.startYear) > 0);
 
       rangeEvents.forEach((event) => {
@@ -988,22 +994,20 @@
           if (side === 'left') lastLeftTopPx = topPos;
           else lastRightTopPx = topPos;
 
-          const line = document.createElement('div');
-          line.className = 'connector-line';
-          line.style.top = `${topPos}px`;
-          line.style.borderTop = `1px solid ${itemColor}`;
-
           const cardContainer = document.createElement('div');
-          cardContainer.className = `event-point branch-${side}`;
+          cardContainer.className = `event-point branch-${side} ${isPoint ? 'point-event' : 'range-event'}`;
           cardContainer.style.top = `${topPos}px`;
 
-          // Range containers match full era duration so the card can slide inside it
           if (!isPoint) {
             const boundaryHeight = Math.max(32, rawDuration * pixelsPerYear);
             cardContainer.style.height = `${boundaryHeight}px`;
           }
 
           cardContainer.addEventListener('click', () => openEventModal(event));
+
+          const line = document.createElement('div');
+          line.className = 'connector-line';
+          line.style.borderTop = `1px solid ${itemColor}`;
 
           if (side === 'left') {
             cardContainer.style.right = '54%';
@@ -1015,7 +1019,6 @@
             line.style.width = '4%';
           }
 
-          // Inner Compact Card that stays sticky inside the range boundary
           const cardBox = document.createElement('div');
           cardBox.className = 'sticky-card-box';
           if (side === 'left') {
@@ -1029,11 +1032,11 @@
             <div class="subtitle">${event.subtitle || ''}</div>
           `;
 
+          cardContainer.appendChild(line);
           cardContainer.appendChild(cardBox);
 
-          attachHoverSpotlight(groupId, cardContainer, line, spineMarker);
+          attachHoverSpotlight(groupId, cardContainer, spineMarker);
 
-          targetTrack.appendChild(line);
           targetTrack.appendChild(cardContainer);
         } else if (spineMarker) {
           attachHoverSpotlight(groupId, spineMarker);
