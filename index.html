@@ -296,11 +296,11 @@
     }
 
     /* --- Universal Spotlight Transition --- */
-    .spine-dot, .spine-pill, .connector-line, .event-point, .sticky-wrapper, .sticky-card-box {
+    .spine-dot, .spine-bar, .connector-line, .event-point, .sticky-wrapper, .sticky-card-box {
       transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    /* Center Spine Dot */
+    /* Center Spine Dot for Point Events */
     .spine-dot {
       position: absolute;
       left: 50%;
@@ -313,14 +313,14 @@
       pointer-events: auto;
     }
 
-    /* Concentric Range Pills */
-    .spine-pill {
+    /* Parallel Swim Lane Bar for Range Events */
+    .spine-bar {
       position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
       box-sizing: border-box;
+      border-radius: 2px;
       cursor: pointer;
       pointer-events: auto;
+      z-index: 30;
     }
 
     .spine-dot.muted {
@@ -328,9 +328,8 @@
       box-shadow: none !important;
     }
 
-    .spine-pill.muted {
-      background-color: rgba(71, 85, 105, 0.2) !important;
-      border-color: #475569 !important;
+    .spine-bar.muted {
+      background-color: #475569 !important;
     }
 
     /* Outer Event Boundary Container */
@@ -395,13 +394,13 @@
 
     /* --- HOVER SPOTLIGHT ENGINE --- */
     .data-track.has-hover .spine-dot,
-    .data-track.has-hover .spine-pill,
+    .data-track.has-hover .spine-bar,
     .data-track.has-hover .event-point {
       opacity: 0.15;
     }
 
     .data-track.has-hover .spine-dot.hover-active,
-    .data-track.has-hover .spine-pill.hover-active,
+    .data-track.has-hover .spine-bar.hover-active,
     .data-track.has-hover .event-point.hover-active {
       opacity: 1 !important;
       z-index: 70 !important;
@@ -930,48 +929,52 @@
 
       allCombinedEvents.sort((a, b) => a.startYear - b.startYear);
 
-      const eventToSpinePillMap = new Map();
+      const eventToSpineBarMap = new Map();
 
-      // --- 1. CONCENTRIC GOBSTOPPER RING ENGINE FOR RANGE PILLS ---
+      // --- 1. PARALLEL SWIM LANE ENGINE FOR RANGE BARS ---
       const rangeEvents = allCombinedEvents.filter(e => !e.isPointEvent && (e.endYear - e.startYear) > 0);
+
+      const LANE_WIDTH_PX = 3;
+      const LANE_GAP_PX = 1;
 
       rangeEvents.forEach((event) => {
         const topPos = getYearOffset(event.startYear);
         const rawDuration = event.endYear - event.startYear;
-        const pillHeight = Math.max(14, rawDuration * pixelsPerYear);
+        const barHeight = Math.max(14, rawDuration * pixelsPerYear);
 
+        // Find active overlapping range events
         const activeOverlaps = rangeEvents.filter(other => 
           event !== other && 
           Math.max(event.startYear, other.startYear) < Math.min(event.endYear, other.endYear)
         );
 
-        const overlapIndex = activeOverlaps.filter(other => 
+        // Assign lane index based on duration / title tiebreaker
+        const laneIndex = activeOverlaps.filter(other => 
           (other.endYear - other.startYear) > rawDuration || 
           ((other.endYear - other.startYear) === rawDuration && other.title < event.title)
         ).length;
 
-        const pillWidthPx = 10 + (overlapIndex * 4);
-        const pillRadiusPx = pillWidthPx / 2;
-        const zIndexVal = 30 - overlapIndex;
+        const maxLanes = activeOverlaps.length + 1;
+        const totalBundleWidth = (maxLanes * LANE_WIDTH_PX) + ((maxLanes - 1) * LANE_GAP_PX);
+        const laneOffsetPx = (laneIndex * (LANE_WIDTH_PX + LANE_GAP_PX)) - (totalBundleWidth / 2) + (LANE_WIDTH_PX / 2);
 
-        const pill = document.createElement('div');
-        pill.className = 'spine-pill';
-        pill.style.top = `${topPos}px`;
-        pill.style.height = `${pillHeight}px`;
-        pill.style.width = `${pillWidthPx}px`;
-        pill.style.borderRadius = `${pillRadiusPx}px`;
-        pill.style.zIndex = zIndexVal;
-        pill.style.backgroundColor = `${event.layerColor}33`;
-        pill.style.border = `2px solid ${event.layerColor}`;
+        const bar = document.createElement('div');
+        bar.className = 'spine-bar';
+        bar.style.top = `${topPos}px`;
+        bar.style.height = `${barHeight}px`;
+        bar.style.width = `${LANE_WIDTH_PX}px`;
+        bar.style.left = `calc(50% + ${laneOffsetPx}px)`;
+        bar.style.backgroundColor = event.layerColor;
+        bar.style.boxShadow = `0 0 4px ${event.layerColor}aa`;
 
         const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
         const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
-        pill.title = `${event.title} (${startStr} – ${endStr})`;
+        bar.title = `${event.title} (${startStr} – ${endStr})`;
 
-        pill.addEventListener('click', () => openEventModal(event));
+        bar.addEventListener('click', () => openEventModal(event));
         
-        eventToSpinePillMap.set(event, pill);
-        targetTrack.appendChild(pill);
+        eventToSpineBarMap.set(event, bar);
+        targetTrack.appendChild(bar);
       });
 
       // --- 2. POINT DOTS AND ALTERNATING CARDS ---
@@ -1008,7 +1011,7 @@
           targetTrack.appendChild(dotEl);
         }
 
-        const spineMarker = isPoint ? dotEl : eventToSpinePillMap.get(event);
+        const spineMarker = isPoint ? dotEl : eventToSpineBarMap.get(event);
 
         if (!isCollided) {
           if (side === 'left') lastLeftTopPx = topPos;
@@ -1060,7 +1063,7 @@
 
           cardContainer.appendChild(stickyWrapper);
 
-          // Attach spotlight to the parent cardContainer so line + card stay 100% opaque together
+          // Attach spotlight to cardContainer so line + card stay 100% opaque together
           attachHoverSpotlight(groupId, cardContainer, spineMarker);
 
           targetTrack.appendChild(cardContainer);
