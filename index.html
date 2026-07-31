@@ -718,9 +718,12 @@
       updateScrubberPosition();
     }
 
-    function setZoomLevel(targetZoom, keepYearCentered = true) {
+    function setZoomLevel(targetZoom, keepYearCentered = true, onComplete = null) {
       const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, targetZoom));
-      if (Math.abs(newZoom - currentZoomLevel) < 0.001) return;
+      if (Math.abs(newZoom - currentZoomLevel) < 0.001) {
+        if (onComplete) onComplete();
+        return;
+      }
 
       const currentScrollY = window.scrollY;
       const centerViewportY = currentScrollY + (window.innerHeight / 2);
@@ -742,6 +745,7 @@
             window.scrollTo({ top: newScrollY, behavior: 'instant' });
           }
           renderPending = false;
+          if (onComplete) onComplete();
         });
       }
     }
@@ -827,22 +831,30 @@
 
         const isRange = !event.isPointEvent && (event.endYear > event.startYear);
 
+        const performCenterScroll = () => {
+          const eventCenterYear = isRange ? (event.startYear + event.endYear) / 2 : event.startYear;
+          const centerCanvasTopPx = CANVAS_PADDING_TOP + ((eventCenterYear - START_YEAR) * pixelsPerYear);
+          const targetScrollY = centerCanvasTopPx - headerTotalHeight - (visibleViewportHeight / 2);
+
+          window.scrollTo({ top: Math.max(0, targetScrollY), behavior: 'smooth' });
+        };
+
         if (isRange) {
           const durationYears = event.endYear - event.startYear;
-          const targetPaddingPx = 40;
-          const availablePx = Math.max(100, visibleViewportHeight - targetPaddingPx);
+          // 120px total vertical margin (60px top + 60px bottom)
+          const targetPaddingPx = 120;
+          const availablePx = Math.max(80, visibleViewportHeight - targetPaddingPx);
           
           const idealPixelsPerYear = availablePx / durationYears;
           const idealZoom = idealPixelsPerYear / basePixelsPerYear;
 
-          setZoomLevel(idealZoom, false);
+          // Adjust zoom first, then scroll cleanly after the canvas re-render finishes
+          setZoomLevel(idealZoom, false, () => {
+            requestAnimationFrame(performCenterScroll);
+          });
+        } else {
+          performCenterScroll();
         }
-
-        const eventCenterYear = isRange ? (event.startYear + event.endYear) / 2 : event.startYear;
-        const centerCanvasTopPx = CANVAS_PADDING_TOP + ((eventCenterYear - START_YEAR) * pixelsPerYear);
-        const targetScrollY = centerCanvasTopPx - headerTotalHeight - (visibleViewportHeight / 2);
-
-        window.scrollTo({ top: Math.max(0, targetScrollY), behavior: 'smooth' });
       });
     }
 
