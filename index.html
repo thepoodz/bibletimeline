@@ -311,8 +311,7 @@
       font-weight: 700;
       font-size: 0.72rem;
       line-height: 1.15;
-      white-space: normal;
-      word-break: break-word;
+      white-space: nowrap;
       color: #ffffff;
       text-shadow: 0 1px 3px rgba(0,0,0,0.8);
     }
@@ -408,6 +407,7 @@
     /* Inner Visual Card Box - Colored Theme */
     .sticky-card-box {
       width: fit-content;
+      min-width: 60px;
       max-width: calc(100% - 16px);
       padding: 6px 10px;
       border-radius: 6px;
