@@ -224,7 +224,6 @@
       overflow-y: auto;
       overflow-x: hidden;
       position: relative;
-      scroll-behavior: smooth;
     }
 
     .timeline-container {
@@ -804,10 +803,6 @@
 
     /**
      * Set Zoom Level with Focal Point Support
-     * @param {number} targetZoom - Target zoom scale multiplier
-     * @param {boolean} keepYearCentered - Whether to re-align scroll offset
-     * @param {Function|null} onComplete - Callback after DOM update
-     * @param {number|null} focalPointY - Y offset relative to scrollView viewport to zoom into
      */
     function setZoomLevel(targetZoom, keepYearCentered = true, onComplete = null, focalPointY = null) {
       const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, targetZoom));
@@ -829,12 +824,20 @@
       if (!renderPending) {
         renderPending = true;
         requestAnimationFrame(() => {
+          // Temporarily disable smooth scroll so zoom updates land instantly under fingers
+          const originalScrollBehavior = scrollView.style.scrollBehavior;
+          scrollView.style.scrollBehavior = 'auto';
+
           rebuildCanvasLayout();
+          
           if (keepYearCentered) {
             const newTargetTopPx = CANVAS_PADDING_TOP + ((yearAtTarget - START_YEAR) * pixelsPerYear);
             const newScrollY = newTargetTopPx - targetViewportY;
             scrollView.scrollTop = newScrollY;
           }
+
+          scrollView.style.scrollBehavior = originalScrollBehavior;
+
           renderPending = false;
           if (onComplete) onComplete();
         });
@@ -937,6 +940,8 @@
           const centerCanvasTopPx = CANVAS_PADDING_TOP + ((eventCenterYear - START_YEAR) * pixelsPerYear);
           const targetScrollTop = centerCanvasTopPx - (visibleHeight / 2);
 
+          // Enable smooth scrolling for auto-focusing selected cards
+          scrollView.style.scrollBehavior = 'smooth';
           scrollView.scrollTo({ top: Math.max(0, targetScrollTop), behavior: 'smooth' });
         };
 
