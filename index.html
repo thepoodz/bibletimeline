@@ -307,16 +307,17 @@
       pointer-events: none;
     }
 
-   .event-block .title, .event-point .title {
-  font-weight: 700;
-  font-size: 0.72rem;
-  line-height: 1.2;
-  white-space: normal; /* Allows multi-word titles to wrap cleanly */
-  overflow-wrap: break-word; /* Prevents word overflow on narrow mobile screens */
-  word-break: keep-all; /* Ensures words wrap whole rather than splitting mid-word */
-  color: #ffffff;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-}
+    /* Title Styling - Allows Word Wrapping on Mobile */
+    .event-block .title, .event-point .title {
+      font-weight: 700;
+      font-size: 0.72rem;
+      line-height: 1.2;
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: keep-all;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
 
     /* --- Universal Selection Transitions --- */
     .spine-dot, .spine-bar, .connector-line, .event-point, .sticky-wrapper, .sticky-card-box {
@@ -349,7 +350,7 @@
     }
 
     .spine-bar.books-narrative {
-      opacity: 0.6;
+      opacity: 0.75;
     }
 
     .spine-dot.muted {
@@ -697,8 +698,10 @@
       'empires': 'Empires'
     };
 
-    // Dynamic Color Sequence for Layers
-    const PALETTE = ['#38bdf8', '#a855f7', '#10b981', '#f59e0b', '#f43f5e', '#06b6d4', '#ec4899', '#84cc16'];
+    // Layer Color Palettes (Shade Variation Engines)
+    const BLUE_SHADES = ['#38bdf8', '#60a5fa', '#2563eb', '#0284c7'];
+    const PURPLE_SHADES = ['#c084fc', '#a855f7', '#8b5cf6', '#7c3aed'];
+    const PALETTE = ['#10b981', '#f59e0b', '#f43f5e', '#06b6d4', '#ec4899', '#84cc16'];
 
     // Big Story & Books Narrative Active by Default
     let activeLayers = ['big-story', 'books-narrative'];
@@ -747,7 +750,9 @@
 
         let dotColor = '#64748b';
         if (isActive) {
-          if (key === 'kings-judah') dotColor = '#f59e0b';
+          if (key === 'big-story') dotColor = BLUE_SHADES[0];
+          else if (key === 'books-narrative') dotColor = PURPLE_SHADES[0];
+          else if (key === 'kings-judah') dotColor = '#f59e0b';
           else if (key === 'kings-israel') dotColor = '#ef4444';
           else dotColor = PALETTE[layerIdx % PALETTE.length];
         }
@@ -1045,15 +1050,27 @@
       activeLayers.forEach((catKey, layerIdx) => {
         if (!dataCache[catKey] || !dataCache[catKey].events) return;
 
-        let layerColor = PALETTE[layerIdx % PALETTE.length];
-        if (catKey === 'kings-judah') layerColor = '#f59e0b';
-        if (catKey === 'kings-israel') layerColor = '#ef4444';
+        dataCache[catKey].events.forEach((ev, evIdx) => {
+          let layerColor = ev.color;
+          
+          if (!layerColor) {
+            if (catKey === 'big-story') {
+              layerColor = BLUE_SHADES[evIdx % BLUE_SHADES.length];
+            } else if (catKey === 'books-narrative') {
+              layerColor = PURPLE_SHADES[evIdx % PURPLE_SHADES.length];
+            } else if (catKey === 'kings-judah') {
+              layerColor = '#f59e0b';
+            } else if (catKey === 'kings-israel') {
+              layerColor = '#ef4444';
+            } else {
+              layerColor = PALETTE[layerIdx % PALETTE.length];
+            }
+          }
 
-        dataCache[catKey].events.forEach(ev => {
           allCombinedEvents.push({
             ...ev,
             layerKey: catKey,
-            layerColor: ev.color || layerColor
+            layerColor: layerColor
           });
         });
       });
@@ -1073,7 +1090,7 @@
       // --- 1. PARALLEL SWIM LANE ENGINE FOR RANGE BARS ---
       const rangeEvents = allCombinedEvents.filter(e => !e.isPointEvent && (e.endYear - e.startYear) > 0);
 
-      const LANE_GAP_PX = 1;
+      const LANE_GAP_PX = 2;
 
       rangeEvents.forEach((event) => {
         const topPos = getYearOffset(event.startYear);
@@ -1082,7 +1099,7 @@
         const groupId = eventToGroupIdMap.get(event);
 
         const isBooksNarrative = event.layerKey === 'books-narrative';
-        const laneWidthPx = isBooksNarrative ? 9 : 3;
+        const laneWidthPx = isBooksNarrative ? 18 : 3;
 
         const activeOverlaps = rangeEvents.filter(other => 
           event !== other && 
@@ -1105,7 +1122,7 @@
         });
 
         sortedBundle.forEach((item, idx) => {
-          const itemWidth = item.layerKey === 'books-narrative' ? 9 : 3;
+          const itemWidth = item.layerKey === 'books-narrative' ? 18 : 3;
           if (idx < laneIndex) {
             previousLanesWidth += itemWidth + LANE_GAP_PX;
           }
