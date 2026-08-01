@@ -562,8 +562,6 @@
       font-size: 0.85rem;
       line-height: 1.45;
       color: #cbd5e1;
-      overflow-y: auto;
-      margin-bottom: 8px;
     }
 
     /* --- PORTRAIT / MOBILE ASPECT RATIO (height > width) --- */
@@ -581,15 +579,17 @@
       }
 
       .detail-panel.active {
-        height: fit-content;
-        max-height: 70vh;
-        padding-top: 10px;
-        padding-bottom: 12px;
+        height: auto;
+        padding-top: 12px;
+        padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
         border-top: 1px solid var(--border-color);
       }
 
       .panel-body {
         flex: none;
+        max-height: 28vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
       }
     }
 
@@ -620,6 +620,7 @@
 
       .panel-body {
         flex: 1;
+        overflow-y: auto;
       }
     }
   </style>
@@ -937,7 +938,6 @@
 
       clearTimeout(sheetTransitionTimeout);
       sheetTransitionTimeout = setTimeout(() => {
-        // Measure accurate viewport height AFTER the CSS slide-up transition completes
         const visibleHeight = scrollView.clientHeight;
         const isRange = !event.isPointEvent && (event.endYear > event.startYear);
 
