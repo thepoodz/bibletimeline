@@ -1290,7 +1290,7 @@
 
     function buildScrubberRail() {
       scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
-      const majorMilestones = new Map([[-4000, "4k"], [-3000, "3k"], [-2000, "2k"], [-1000, "1k"], [1, "1 AD"], [500, "500"]]);
+      const majorMilestones = new Map([[-4000, "4k"], [-3000, "3k"], [-2000, "2k"], [-1000, "1k"], [1, "1AD"]]);
 
       for (let y = START_YEAR; y <= END_YEAR; y += 100) {
         if (y === 0) continue;
