@@ -209,7 +209,7 @@
       width: 100%;
     }
 
-    /* Pinned Viewport Wrapper for Fixed Scrubber Bounds */
+    /* Pinned Viewport Wrapper */
     .timeline-viewport-wrapper {
       flex: 1;
       height: 100%;
@@ -802,7 +802,14 @@
       updateScrubberPosition();
     }
 
-    function setZoomLevel(targetZoom, keepYearCentered = true, onComplete = null) {
+    /**
+     * Set Zoom Level with Focal Point Support
+     * @param {number} targetZoom - Target zoom scale multiplier
+     * @param {boolean} keepYearCentered - Whether to re-align scroll offset
+     * @param {Function|null} onComplete - Callback after DOM update
+     * @param {number|null} focalPointY - Y offset relative to scrollView viewport to zoom into
+     */
+    function setZoomLevel(targetZoom, keepYearCentered = true, onComplete = null, focalPointY = null) {
       const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, targetZoom));
       if (Math.abs(newZoom - currentZoomLevel) < 0.001) {
         if (onComplete) onComplete();
@@ -810,8 +817,8 @@
       }
 
       const currentScrollY = scrollView.scrollTop;
-      const centerViewportY = currentScrollY + (scrollView.clientHeight / 2);
-      const yearAtCenter = START_YEAR + ((centerViewportY - CANVAS_PADDING_TOP) / pixelsPerYear);
+      const targetViewportY = (focalPointY !== null) ? focalPointY : (scrollView.clientHeight / 2);
+      const yearAtTarget = START_YEAR + (((currentScrollY + targetViewportY) - CANVAS_PADDING_TOP) / pixelsPerYear);
 
       currentZoomLevel = newZoom;
       pixelsPerYear = basePixelsPerYear * currentZoomLevel;
@@ -824,8 +831,8 @@
         requestAnimationFrame(() => {
           rebuildCanvasLayout();
           if (keepYearCentered) {
-            const newCenterViewportY = CANVAS_PADDING_TOP + ((yearAtCenter - START_YEAR) * pixelsPerYear);
-            const newScrollY = newCenterViewportY - (scrollView.clientHeight / 2);
+            const newTargetTopPx = CANVAS_PADDING_TOP + ((yearAtTarget - START_YEAR) * pixelsPerYear);
+            const newScrollY = newTargetTopPx - targetViewportY;
             scrollView.scrollTop = newScrollY;
           }
           renderPending = false;
@@ -843,8 +850,10 @@
       scrollView.addEventListener('wheel', (e) => {
         if (e.ctrlKey || e.metaKey) {
           e.preventDefault();
+          const rect = scrollView.getBoundingClientRect();
+          const focalY = e.clientY - rect.top;
           const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
-          setZoomLevel(currentZoomLevel * zoomFactor);
+          setZoomLevel(currentZoomLevel * zoomFactor, true, null, focalY);
         }
       }, { passive: false });
 
@@ -864,12 +873,18 @@
       document.addEventListener('touchmove', (e) => {
         if (e.touches.length === 2 && initialTouchDistance && initialTouchDistance > 0) {
           if (e.cancelable) e.preventDefault();
+          
           const currentDistance = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,
             e.touches[0].clientY - e.touches[1].clientY
           );
+          
+          // Midpoint between user's two fingers
+          const rect = scrollView.getBoundingClientRect();
+          const touchCenterY = ((e.touches[0].clientY + e.touches[1].clientY) / 2) - rect.top;
+          
           const scaleRatio = currentDistance / initialTouchDistance;
-          setZoomLevel(touchStartZoom * scaleRatio);
+          setZoomLevel(touchStartZoom * scaleRatio, true, null, touchCenterY);
         }
       }, { passive: false, capture: true });
 
@@ -1217,7 +1232,7 @@
 
     function buildScrubberRail() {
       scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
-      const majorMilestones = new Map([[-4000, "4k"], [-3000, "3k"], [-2000, "2k"], [-1000, "1k"], [1, "1 AD"]]);
+      const majorMilestones = new Map([[-4000, "4k"], [-3000, "3k"], [-2000, "2k"], [-1000, "1k"], [1, "1 AD"], [500, "500"]]);
 
       for (let y = START_YEAR; y <= END_YEAR; y += 100) {
         if (y === 0) continue;
