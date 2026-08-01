@@ -514,7 +514,7 @@
       height: 4px;
       background: var(--border-color);
       border-radius: 2px;
-      margin: 0 auto 12px auto;
+      margin: 0 auto 10px auto;
       flex-shrink: 0;
     }
 
@@ -553,14 +553,14 @@
       font-size: 0.75rem;
       color: var(--text-muted);
       font-weight: 600;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       border-bottom: 1px solid var(--border-color);
-      padding-bottom: 8px;
+      padding-bottom: 6px;
     }
 
     .panel-body {
       font-size: 0.85rem;
-      line-height: 1.5;
+      line-height: 1.45;
       color: #cbd5e1;
       overflow-y: auto;
       flex: 1;
@@ -581,9 +581,10 @@
       }
 
       .detail-panel.active {
-        height: 38vh;
-        padding-top: 12px;
-        padding-bottom: 24px;
+        height: auto;
+        max-height: 45vh;
+        padding-top: 10px;
+        padding-bottom: 16px;
         border-top: 1px solid var(--border-color);
       }
     }
@@ -928,10 +929,9 @@
 
       clearTimeout(sheetTransitionTimeout);
       sheetTransitionTimeout = setTimeout(() => {
-        calculateBaseScale();
-        
-        const isRange = !event.isPointEvent && (event.endYear > event.startYear);
+        // Measure accurate viewport height AFTER the CSS slide-up transition completes
         const visibleHeight = scrollView.clientHeight;
+        const isRange = !event.isPointEvent && (event.endYear > event.startYear);
 
         const eventCenterYear = isRange ? (event.startYear + event.endYear) / 2 : event.startYear;
         const centerCanvasTopPx = CANVAS_PADDING_TOP + ((eventCenterYear - START_YEAR) * pixelsPerYear);
