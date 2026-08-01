@@ -501,7 +501,7 @@
       border-color: var(--border-color);
       display: flex;
       flex-direction: column;
-      padding: 16px 20px 24px 20px;
+      padding: 16px 20px 20px 20px;
       z-index: 310;
       box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
       overflow: hidden;
@@ -563,7 +563,7 @@
       line-height: 1.45;
       color: #cbd5e1;
       overflow-y: auto;
-      flex: 1;
+      margin-bottom: 8px;
     }
 
     /* --- PORTRAIT / MOBILE ASPECT RATIO (height > width) --- */
@@ -581,11 +581,15 @@
       }
 
       .detail-panel.active {
-        height: auto;
-        max-height: 45vh;
+        height: fit-content;
+        max-height: 70vh;
         padding-top: 10px;
-        padding-bottom: 16px;
+        padding-bottom: 12px;
         border-top: 1px solid var(--border-color);
+      }
+
+      .panel-body {
+        flex: none;
       }
     }
 
@@ -612,6 +616,10 @@
         padding-left: 20px;
         padding-right: 20px;
         border-left: 1px solid var(--border-color);
+      }
+
+      .panel-body {
+        flex: 1;
       }
     }
   </style>
