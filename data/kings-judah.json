@@ -1,1368 +1,192 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Bible Timeline</title>
-  
-  <!-- Scroll Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
-
-  <style>
-    :root {
-      --bg-color: #0f172a;
-      --card-bg: #1e293b;
-      --border-color: #334155;
-      --accent-gold: #f59e0b;
-      --text-main: #f8fafc;
-      --text-muted: #64748b;
-      --col-year-width: 68px;
-      --scrubber-width: 38px;
-      --toolbar-height: 45px;
-      --header-height: 48px;
-      --header-total-height: calc(var(--toolbar-height) + var(--header-height));
-      --canvas-top-padding: 20px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-main);
-    }
-
-    /* --- App Shell Outer Wrapper --- */
-    .app-viewport {
-      display: flex;
-      flex-direction: column;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    /* --- Sticky Top Controls Toolbar --- */
-    .toolbar {
-      flex-shrink: 0;
-      height: var(--toolbar-height);
-      background-color: #090d16;
-      border-bottom: 1px solid var(--border-color);
-      padding: 0 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      z-index: 100;
-    }
-
-    .toolbar-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent-gold);
-    }
-
-    /* Zoom Controls */
-    .zoom-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 3px 12px;
-    }
-
-    .zoom-level-text {
-      font-size: 0.65rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      min-width: 38px;
-      text-align: left;
-      font-variant-numeric: tabular-nums;
-      user-select: none;
-    }
-
-    .zoom-btn {
-      background: transparent;
-      border: none;
-      color: var(--accent-gold);
-      font-size: 1.15rem;
-      font-weight: 800;
-      cursor: pointer;
-      width: 26px;
-      height: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      border-radius: 50%;
-      user-select: none;
-      transition: background 0.15s ease;
-    }
-
-    .zoom-btn:hover {
-      background: rgba(245, 158, 11, 0.15);
-    }
-
-    .zoom-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 85px;
-      height: 4px;
-      background: var(--border-color);
-      border-radius: 2px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .zoom-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--accent-gold);
-      cursor: pointer;
-      transition: transform 0.1s ease;
-    }
-
-    .zoom-slider::-webkit-slider-thumb:hover {
-      transform: scale(1.2);
-    }
-
-    .zoom-slider::-moz-range-thumb {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--accent-gold);
-      border: none;
-      cursor: pointer;
-    }
-
-    /* --- Layers Control Bar --- */
-    .layers-bar {
-      flex-shrink: 0;
-      height: var(--header-height);
-      background-color: #111827;
-      border-bottom: 2px solid var(--border-color);
-      padding: 0 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      z-index: 95;
-    }
-
-    .layers-bar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .layer-chip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 4px 10px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      user-select: none;
-      white-space: nowrap;
-      transition: all 0.15s ease;
-    }
-
-    .layer-chip.active {
-      color: var(--text-main);
-      border-color: rgba(255, 255, 255, 0.3);
-      background: rgba(30, 41, 59, 0.9);
-    }
-
-    .layer-color-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--text-muted);
-    }
-
-    .layer-chip.active .layer-color-dot {
-      box-shadow: 0 0 6px currentColor;
-    }
-
-    /* --- Workspace Layout Area --- */
-    .workspace-body {
-      flex: 1;
-      display: flex;
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-    }
-
-    /* Pinned Viewport Wrapper */
-    .timeline-viewport-wrapper {
-      flex: 1;
-      height: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Main Timeline Scroll Window */
-    .timeline-scroll-view {
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    .timeline-container {
-      display: grid;
-      grid-template-columns: var(--col-year-width) 1fr var(--scrubber-width);
-      width: 100%;
-      position: relative;
-    }
-
-    .timeline-canvas {
-      position: relative;
-      grid-column: 1 / -1;
-      display: grid;
-      grid-template-columns: inherit;
-      width: 100%;
-    }
-
-    /* Left Sticky Year Track */
-    .year-track {
-      position: relative;
-      background-color: #111827;
-      border-right: 2px solid var(--border-color);
-      z-index: 80;
-    }
-
-    .year-marker {
-      position: absolute;
-      left: 0;
-      right: 0;
-      text-align: center;
-      transform: translateY(-50%);
-      font-variant-numeric: tabular-nums;
-      pointer-events: none;
-    }
-
-    .year-marker.annual { font-size: 0.58rem; font-weight: 400; color: #475569; }
-    .year-marker.decade { font-size: 0.65rem; font-weight: 500; color: var(--text-muted); }
-    .year-marker.century { font-size: 0.78rem; font-weight: 700; color: #ffffff; }
-    .year-marker.millennium { font-size: 0.92rem; font-weight: 900; color: var(--accent-gold); }
-
-    /* Grid Lines */
-    .grid-line {
-      position: absolute;
-      left: 0;
-      right: 0;
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    .grid-line.annual { border-top: 1px dotted rgba(100, 116, 139, 0.18); z-index: 4; }
-    .grid-line.decade { border-top: 1px dashed rgba(100, 116, 139, 0.2); }
-    .grid-line.century { border-top: 1px solid rgba(255, 255, 255, 0.35); }
-    .grid-line.millennium { border-top: 1px solid var(--accent-gold); z-index: 6; }
-
-    .data-track {
-      position: relative;
-      border-right: 1px solid var(--border-color);
-      z-index: 10;
-    }
-
-    /* Central Spine Line */
-    .data-track::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      width: 2px;
-      background: rgba(51, 65, 85, 0.5);
-      transform: translateX(-50%);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .scrubber-spacer-track {
-      position: relative;
-      z-index: 5;
-    }
-
-    .event-block *, .event-point * {
-      pointer-events: none;
-    }
-
-    /* Title Styling */
-    .event-block .title, .event-point .title {
-      font-weight: 700;
-      font-size: 0.72rem;
-      line-height: 1.2;
-      white-space: normal;
-      overflow-wrap: break-word;
-      word-break: keep-all;
-      color: #ffffff;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    }
-
-    /* --- Universal Selection Transitions --- */
-    .spine-dot, .spine-bar, .connector-line, .event-point, .sticky-wrapper, .sticky-card-box {
-      transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-    }
-
-    /* Center Spine Dot for Point Events */
-    .spine-dot {
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      z-index: 50;
-      cursor: pointer;
-      pointer-events: auto;
-    }
-
-    /* Parallel Swim Lane Bar for Range Events */
-    .spine-bar {
-      position: absolute;
-      box-sizing: border-box;
-      border-radius: 2px;
-      cursor: pointer;
-      pointer-events: auto;
-      z-index: 30;
-      border-top: 1px solid rgba(15, 23, 42, 0.85);
-      border-bottom: 1px solid rgba(15, 23, 42, 0.85);
-    }
-
-    .spine-bar.books-narrative {
-      opacity: 0.75;
-    }
-
-    .spine-dot.muted {
-      background-color: #475569 !important;
-      box-shadow: none !important;
-    }
-
-    .spine-bar.muted {
-      background-color: #475569 !important;
-      opacity: 0.3 !important;
-    }
-
-    /* Outer Event Boundary Container */
-    .event-point {
-      position: absolute;
-      z-index: 40;
-      touch-action: none;
-      box-sizing: border-box;
-      background: transparent;
-      pointer-events: none;
-      max-width: 42%;
-    }
-
-    .event-point.branch-left {
-      right: 50%;
-    }
-
-    .event-point.branch-right {
-      left: 50%;
-    }
-
-    /* Sticky Flex Wrapper aligned to top */
-    .sticky-wrapper {
-      position: sticky;
-      top: 12px;
-      display: flex;
-      align-items: flex-start;
-      width: fit-content;
-      max-width: 100%;
-      z-index: 45;
-      pointer-events: none;
-    }
-
-    .event-point.branch-left .sticky-wrapper {
-      margin-left: auto;
-    }
-
-    /* Connector Line - Anchored to top of card */
-    .connector-line {
-      height: 2px;
-      width: 16px;
-      z-index: 40;
-      pointer-events: none;
-      flex-shrink: 0;
-      margin-top: 10px; /* Aligns line flush with upper area of card */
-      box-shadow: 0 0 0 1px #000000;
-    }
-
-    /* Inner Visual Card Box - Colored Theme */
-    .sticky-card-box {
-      width: fit-content;
-      min-width: 60px;
-      max-width: calc(100% - 16px);
-      padding: 6px 10px;
-      border-radius: 6px;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
-      cursor: pointer;
-      pointer-events: auto;
-    }
-
-    .event-point.branch-left .sticky-card-box { text-align: right; }
-    .event-point.branch-right .sticky-card-box { text-align: left; }
-
-    /* --- CLICK FOCUS SPOTLIGHT ENGINE --- */
-    .data-track.has-selection .spine-dot,
-    .data-track.has-selection .spine-bar,
-    .data-track.has-selection .event-point {
-      opacity: 0.15;
-    }
-
-    .data-track.has-selection .spine-dot.selected-active,
-    .data-track.has-selection .spine-bar.selected-active,
-    .data-track.has-selection .event-point.selected-active {
-      opacity: 1 !important;
-      z-index: 70 !important;
-    }
-
-    .data-track.has-selection .event-point.selected-active .sticky-card-box {
-      box-shadow: 0 4px 16px rgba(0,0,0,0.8), 0 0 10px currentColor;
-    }
-
-    /* --- Scrubber Rail --- */
-    .scrubber-rail {
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: var(--scrubber-width);
-      z-index: 200;
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(8px);
-      border-left: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
-      user-select: none;
-      touch-action: none;
-    }
-
-    .scrub-tick {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      cursor: pointer;
-    }
-
-    .scrub-tick.dot::before {
-      content: "";
-      width: 4px;
-      height: 4px;
-      background-color: #ffffff;
-      border-radius: 50%;
-      opacity: 0.8;
-    }
-
-    .scrub-label {
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: var(--accent-gold);
-      pointer-events: none;
-      line-height: 1;
-    }
-
-    .scrub-indicator {
-      position: absolute;
-      right: 3px;
-      width: 30px;
-      background: rgba(245, 158, 11, 0.3);
-      border: 1px solid var(--accent-gold);
-      border-radius: 4px;
-      pointer-events: none;
-      transition: top 0.05s linear;
-    }
-
-    /* --- DYNAMIC SPLIT LAYOUT PANEL --- */
-    .detail-panel {
-      background: var(--card-bg);
-      border-color: var(--border-color);
-      display: flex;
-      flex-direction: column;
-      padding: 16px 20px 24px 20px;
-      z-index: 310;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
-      overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-    }
-
-    .panel-handle {
-      width: 36px;
-      height: 4px;
-      background: var(--border-color);
-      border-radius: 2px;
-      margin: 0 auto 12px auto;
-      flex-shrink: 0;
-    }
-
-    .panel-close {
-      position: absolute;
-      top: 14px;
-      right: 16px;
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.4rem;
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .panel-close:hover { color: var(--text-main); }
-
-    .panel-type {
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--accent-gold);
-      letter-spacing: 0.05em;
-      margin-bottom: 2px;
-    }
-
-    .panel-title {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--text-main);
-      margin-bottom: 2px;
-      padding-right: 24px;
-    }
-
-    .panel-dates {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-bottom: 10px;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 8px;
-    }
-
-    .panel-body {
-      font-size: 0.85rem;
-      line-height: 1.5;
-      color: #cbd5e1;
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    /* --- PORTRAIT / MOBILE ASPECT RATIO (height > width) --- */
-    @media (max-aspect-ratio: 1/1) {
-      .workspace-body {
-        flex-direction: column;
-      }
-
-      .detail-panel {
-        width: 100%;
-        height: 0px;
-        padding-top: 0;
-        padding-bottom: 0;
-        border-top: 0px solid var(--border-color);
-      }
-
-      .detail-panel.active {
-        height: 38vh;
-        padding-top: 12px;
-        padding-bottom: 24px;
-        border-top: 1px solid var(--border-color);
-      }
-    }
-
-    /* --- LANDSCAPE / DESKTOP ASPECT RATIO (width >= height) --- */
-    @media (min-aspect-ratio: 1/1) {
-      .workspace-body {
-        flex-direction: row;
-      }
-
-      .panel-handle {
-        display: none;
-      }
-
-      .detail-panel {
-        width: 0px;
-        height: 100%;
-        padding-left: 0;
-        padding-right: 0;
-        border-left: 0px solid var(--border-color);
-      }
-
-      .detail-panel.active {
-        width: 360px;
-        padding-left: 20px;
-        padding-right: 20px;
-        border-left: 1px solid var(--border-color);
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <div class="app-viewport">
-    <header class="toolbar">
-      <span class="toolbar-title">Bible Timeline</span>
-
-      <div class="zoom-controls">
-        <span class="zoom-level-text" id="zoom-level-text">1.0×</span>
-        <button class="zoom-btn" id="btn-zoom-out" title="Zoom Out">−</button>
-        <input type="range" id="zoom-slider" class="zoom-slider" min="1" max="100" step="0.1" value="1">
-        <button class="zoom-btn" id="btn-zoom-in" title="Zoom In">+</button>
-      </div>
-    </header>
-
-    <!-- Google Maps Style Layer Toggles -->
-    <div class="layers-bar" id="layers-bar"></div>
-
-    <!-- Main Dynamic Workspace -->
-    <div class="workspace-body" id="workspace-body">
-      
-      <!-- Pinned Viewport Wrapper -->
-      <div class="timeline-viewport-wrapper">
-        <div class="scrubber-rail" id="scrubber-rail">
-          <div class="scrub-indicator" id="scrub-indicator"></div>
-        </div>
-
-        <div class="timeline-scroll-view" id="timeline-scroll-view">
-          <main class="timeline-container">
-            <div class="timeline-canvas" id="timeline-canvas">
-              <div class="year-track" id="year-track"></div>
-              <div class="data-track" id="single-data-track"></div>
-              <div class="scrubber-spacer-track"></div>
-            </div>
-          </main>
-        </div>
-      </div>
-
-      <!-- Docked Detail Panel (Bottom on Portrait, Sidebar on Landscape) -->
-      <aside class="detail-panel" id="detail-panel">
-        <div class="panel-handle"></div>
-        <button class="panel-close" id="panel-close">&times;</button>
-        <div class="panel-type" id="panel-type">Category</div>
-        <h2 class="panel-title" id="panel-title">Event Title</h2>
-        <div class="panel-dates" id="panel-dates">Years</div>
-        <div class="panel-body" id="panel-body">Description text goes here.</div>
-      </aside>
-
-    </div>
-  </div>
-
-  <script>
-    const START_YEAR = -4000;
-    const END_YEAR = 500;
-    const TOTAL_YEARS = END_YEAR - START_YEAR;
-    const CANVAS_PADDING_TOP = 20;
-
-    const MIN_ZOOM = 1.0;
-    const MAX_ZOOM = 100.0;
-    let currentZoomLevel = 1.0;
-
-    let basePixelsPerYear = 0.2;
-    let pixelsPerYear = basePixelsPerYear;
-    let renderPending = false;
-
-    // Track state of current selection across re-renders
-    let currentlySelectedGroupId = null;
-    let sheetTransitionTimeout = null;
-
-    // Available Datasets
-    const CATEGORIES = {
-      'big-story': 'The Big Story',
-      'books-narrative': 'Books Narrative',
-      'books-writings': 'Other Books',
-      'genealogy': 'Genealogy',
-      'kings-judah': 'Kings of Judah',
-      'kings-israel': 'Kings of Israel',
-      'prophets': 'Prophets',
-      'empires': 'Empires'
-    };
-
-    // Layer Color Palettes (Shade Variation Engines)
-    const BLUE_SHADES = ['#38bdf8', '#60a5fa', '#2563eb', '#0284c7'];
-    const PURPLE_SHADES = ['#c084fc', '#a855f7', '#8b5cf6', '#7c3aed'];
-    const PALETTE = ['#10b981', '#f59e0b', '#f43f5e', '#06b6d4', '#ec4899', '#84cc16'];
-
-    // Big Story & Books Narrative Active by Default
-    let activeLayers = ['big-story', 'books-narrative'];
-    const dataCache = {};
-
-    // DOM References
-    const layersBar = document.getElementById('layers-bar');
-    const targetTrack = document.getElementById('single-data-track');
-    const yearTrack = document.getElementById('year-track');
-    const canvas = document.getElementById('timeline-canvas');
-    const scrollView = document.getElementById('timeline-scroll-view');
-    const scrubberRail = document.getElementById('scrubber-rail');
-    const scrubIndicator = document.getElementById('scrub-indicator');
-
-    const zoomSlider = document.getElementById('zoom-slider');
-    const zoomLevelText = document.getElementById('zoom-level-text');
-    const btnZoomOut = document.getElementById('btn-zoom-out');
-    const btnZoomIn = document.getElementById('btn-zoom-in');
-
-    const detailPanel = document.getElementById('detail-panel');
-    const panelTitle = document.getElementById('panel-title');
-    const panelType = document.getElementById('panel-type');
-    const panelDates = document.getElementById('panel-dates');
-    const panelBody = document.getElementById('panel-body');
-    const panelClose = document.getElementById('panel-close');
-
-    function hexToRgba(hex, alpha = 0.2) {
-      if (!hex || !hex.startsWith('#')) return `rgba(30, 41, 59, ${alpha})`;
-      let c = hex.substring(1);
-      if (c.length === 3) c = c.split('').map(x => x + x).join('');
-      const num = parseInt(c, 16);
-      return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
-    }
-
-    function calculateBaseScale() {
-      const availableHeight = Math.max(300, scrollView.clientHeight - (CANVAS_PADDING_TOP * 2));
-      basePixelsPerYear = availableHeight / TOTAL_YEARS;
-      pixelsPerYear = basePixelsPerYear * currentZoomLevel;
-    }
-
-    function renderLayersBarUI() {
-      layersBar.innerHTML = '';
-      Object.entries(CATEGORIES).forEach(([key, title]) => {
-        const isActive = activeLayers.includes(key);
-        const layerIdx = activeLayers.indexOf(key);
-
-        let dotColor = '#64748b';
-        if (isActive) {
-          if (key === 'big-story') dotColor = BLUE_SHADES[0];
-          else if (key === 'books-narrative') dotColor = PURPLE_SHADES[0];
-          else if (key === 'kings-judah') dotColor = '#f59e0b';
-          else if (key === 'kings-israel') dotColor = '#ef4444';
-          else dotColor = PALETTE[layerIdx % PALETTE.length];
-        }
-
-        const chip = document.createElement('div');
-        chip.className = `layer-chip ${isActive ? 'active' : ''}`;
-        chip.innerHTML = `
-          <span class="layer-color-dot" style="background-color: ${dotColor}; color: ${dotColor};"></span>
-          <span>${title}</span>
-        `;
-
-        chip.addEventListener('click', async () => {
-          if (isActive) {
-            if (activeLayers.length > 1) {
-              activeLayers = activeLayers.filter(k => k !== key);
-            }
-          } else {
-            activeLayers.push(key);
-            await fetchCategoryData(key);
-          }
-          renderLayersBarUI();
-          renderTimeline();
-        });
-
-        layersBar.appendChild(chip);
-      });
-    }
-
-    async function loadTimeline() {
-      calculateBaseScale();
-      renderLayersBarUI();
-      rebuildCanvasLayout();
-      setupZoomListeners();
-      setupSheetListeners();
-
-      await Promise.all(Object.keys(CATEGORIES).map(k => fetchCategoryData(k)));
-      renderTimeline();
-
-      let resizeTimeout;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          calculateBaseScale();
-          rebuildCanvasLayout();
-        }, 150);
-      });
-    }
-
-    function rebuildCanvasLayout() {
-      setupCanvasHeight();
-      renderYearAxisAndGridLines();
-      renderTimeline();
-      buildScrubberRail();
-      setupTouchScrubber();
-      updateScrubberPosition();
-    }
-
-    /**
-     * Set Zoom Level with Focal Point Support
-     */
-    function setZoomLevel(targetZoom, keepYearCentered = true, onComplete = null, focalPointY = null) {
-      const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, targetZoom));
-      if (Math.abs(newZoom - currentZoomLevel) < 0.001) {
-        if (onComplete) onComplete();
-        return;
-      }
-
-      const currentScrollY = scrollView.scrollTop;
-      const targetViewportY = (focalPointY !== null) ? focalPointY : (scrollView.clientHeight / 2);
-      const yearAtTarget = START_YEAR + (((currentScrollY + targetViewportY) - CANVAS_PADDING_TOP) / pixelsPerYear);
-
-      currentZoomLevel = newZoom;
-      pixelsPerYear = basePixelsPerYear * currentZoomLevel;
-
-      zoomSlider.value = currentZoomLevel;
-      zoomLevelText.textContent = `${currentZoomLevel.toFixed(1)}×`;
-
-      if (!renderPending) {
-        renderPending = true;
-        requestAnimationFrame(() => {
-          const originalScrollBehavior = scrollView.style.scrollBehavior;
-          scrollView.style.scrollBehavior = 'auto';
-
-          rebuildCanvasLayout();
-          
-          if (keepYearCentered) {
-            const newTargetTopPx = CANVAS_PADDING_TOP + ((yearAtTarget - START_YEAR) * pixelsPerYear);
-            const newScrollY = newTargetTopPx - targetViewportY;
-            scrollView.scrollTop = newScrollY;
-          }
-
-          scrollView.style.scrollBehavior = originalScrollBehavior;
-
-          renderPending = false;
-          if (onComplete) onComplete();
-        });
-      }
-    }
-
-    function setupZoomListeners() {
-      zoomSlider.addEventListener('input', (e) => setZoomLevel(parseFloat(e.target.value)));
-      btnZoomOut.addEventListener('click', () => setZoomLevel(currentZoomLevel / 1.4));
-      btnZoomIn.addEventListener('click', () => setZoomLevel(currentZoomLevel * 1.4));
-      zoomLevelText.addEventListener('dblclick', () => setZoomLevel(1.0));
-
-      scrollView.addEventListener('wheel', (e) => {
-        if (e.ctrlKey || e.metaKey) {
-          e.preventDefault();
-          const rect = scrollView.getBoundingClientRect();
-          const focalY = e.clientY - rect.top;
-          const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
-          setZoomLevel(currentZoomLevel * zoomFactor, true, null, focalY);
-        }
-      }, { passive: false });
-
-      let initialTouchDistance = null;
-      let touchStartZoom = currentZoomLevel;
-
-      document.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 2) {
-          initialTouchDistance = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
-          touchStartZoom = currentZoomLevel;
-        }
-      }, { passive: true, capture: true });
-
-      document.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2 && initialTouchDistance && initialTouchDistance > 0) {
-          if (e.cancelable) e.preventDefault();
-          
-          const currentDistance = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
-          
-          const rect = scrollView.getBoundingClientRect();
-          const touchCenterY = ((e.touches[0].clientY + e.touches[1].clientY) / 2) - rect.top;
-          
-          const scaleRatio = currentDistance / initialTouchDistance;
-          setZoomLevel(touchStartZoom * scaleRatio, true, null, touchCenterY);
-        }
-      }, { passive: false, capture: true });
-
-      document.addEventListener('touchend', () => {
-        initialTouchDistance = null;
-      }, { capture: true });
-    }
-
-    function applySelectionHighlight(groupId) {
-      currentlySelectedGroupId = groupId;
-      if (!groupId) {
-        targetTrack.classList.remove('has-selection');
-        document.querySelectorAll('.selected-active').forEach(el => el.classList.remove('selected-active'));
-        return;
-      }
-
-      targetTrack.classList.add('has-selection');
-      document.querySelectorAll('.selected-active').forEach(el => el.classList.remove('selected-active'));
-      document.querySelectorAll(`[data-group-id="${groupId}"]`).forEach(el => el.classList.add('selected-active'));
-    }
-
-    /* --- Click-to-Select Spotlight & Scroll-into-View Handler --- */
-    function openEventSheet(event, groupId) {
-      applySelectionHighlight(groupId);
-
-      panelTitle.textContent = event.title;
-      panelType.textContent = event.subtitle || CATEGORIES[event.layerKey] || 'Event Details';
-      
-      const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
-      const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
-      panelDates.textContent = event.startYear === event.endYear ? startStr : `${startStr} – ${endStr}`;
-      panelBody.textContent = event.description || "Detailed notes, key verses, or historical context for this period can be populated in your JSON files.";
-
-      const isAlreadyActive = detailPanel.classList.contains('active');
-      detailPanel.classList.add('active');
-
-      const delayMs = isAlreadyActive ? 10 : 320;
-
-      clearTimeout(sheetTransitionTimeout);
-      sheetTransitionTimeout = setTimeout(() => {
-        const visibleHeight = scrollView.clientHeight;
-        const isRange = !event.isPointEvent && (event.endYear > event.startYear);
-
-        const eventCenterYear = isRange ? (event.startYear + event.endYear) / 2 : event.startYear;
-        const centerCanvasTopPx = CANVAS_PADDING_TOP + ((eventCenterYear - START_YEAR) * pixelsPerYear);
-        const targetScrollTop = centerCanvasTopPx - (visibleHeight / 2);
-
-        scrollView.style.scrollBehavior = 'smooth';
-        scrollView.scrollTo({ top: Math.max(0, targetScrollTop), behavior: 'smooth' });
-      }, delayMs);
-    }
-
-    function closeSheet() {
-      detailPanel.classList.remove('active');
-      applySelectionHighlight(null);
-      setTimeout(() => {
-        calculateBaseScale();
-        rebuildCanvasLayout();
-      }, 320);
-    }
-
-    function setupSheetListeners() {
-      panelClose.addEventListener('click', closeSheet);
-
-      canvas.addEventListener('click', (e) => {
-        const isInteractiveClick = e.target.closest('.sticky-card-box, .spine-dot, .spine-bar, .detail-panel, .toolbar, .layers-bar');
-        if (!isInteractiveClick) {
-          closeSheet();
-        }
-      });
-
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeSheet();
-      });
-    }
-
-    async function fetchCategoryData(categoryKey) {
-      if (!categoryKey || dataCache[categoryKey]) return dataCache[categoryKey];
-      try {
-        const response = await fetch(`data/${categoryKey}.json?v=${Date.now()}`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const rawData = await response.json();
-        
-        if (Array.isArray(rawData)) {
-          dataCache[categoryKey] = { metadata: {}, events: rawData };
-        } else {
-          dataCache[categoryKey] = {
-            metadata: rawData.metadata || {},
-            events: rawData.events || []
-          };
-        }
-        
-        return dataCache[categoryKey];
-      } catch (error) {
-        console.error(`Error loading dataset 'data/${categoryKey}.json':`, error);
-        return { metadata: {}, events: [] };
-      }
-    }
-
-    function getYearOffset(year) {
-      return CANVAS_PADDING_TOP + ((year - START_YEAR) * pixelsPerYear);
-    }
-
-    function setupCanvasHeight() {
-      const totalHeight = (TOTAL_YEARS * pixelsPerYear) + (CANVAS_PADDING_TOP * 2);
-      canvas.style.height = `${totalHeight}px`;
-    }
-
-    function renderYearAxisAndGridLines() {
-      yearTrack.innerHTML = '';
-      canvas.querySelectorAll('.grid-line').forEach(l => l.remove());
-
-      const showDecades = pixelsPerYear >= 1.0;
-      const showAnnuals = pixelsPerYear >= 12.0;
-
-      for (let y = START_YEAR; y <= END_YEAR; y++) {
-        if (y === 0) continue;
-        const absYear = Math.abs(y);
-        const topPos = getYearOffset(y);
-
-        if (absYear % 1000 === 0 || y === 1) {
-          const labelText = y === 1 ? '1 AD' : `${absYear}`;
-          addMarkerAndLine(topPos, labelText, 'millennium');
-        } else if (absYear % 100 === 0) {
-          const centuryStyle = showDecades ? 'century' : 'decade';
-          addMarkerAndLine(topPos, absYear, centuryStyle);
-        } else if (absYear % 10 === 0 && showDecades) {
-          addMarkerAndLine(topPos, absYear, 'decade');
-        } else if (showAnnuals) {
-          addMarkerAndLine(topPos, absYear, 'annual');
-        }
-      }
-    }
-
-    function addMarkerAndLine(topPos, labelText, typeClass) {
-      const marker = document.createElement('div');
-      marker.className = `year-marker ${typeClass}`;
-      marker.style.top = `${topPos}px`;
-      marker.textContent = labelText;
-
-      const gridLine = document.createElement('div');
-      gridLine.className = `grid-line ${typeClass}`;
-      gridLine.style.top = `${topPos}px`;
-
-      yearTrack.appendChild(marker);
-      canvas.appendChild(gridLine);
-    }
-
-    function renderTimeline() {
-      targetTrack.innerHTML = '';
-      const allCombinedEvents = [];
-
-      activeLayers.forEach((catKey, layerIdx) => {
-        if (!dataCache[catKey] || !dataCache[catKey].events) return;
-
-        dataCache[catKey].events.forEach((ev, evIdx) => {
-          let layerColor = ev.color;
-          
-          if (!layerColor) {
-            if (catKey === 'big-story') {
-              layerColor = BLUE_SHADES[evIdx % BLUE_SHADES.length];
-            } else if (catKey === 'books-narrative') {
-              layerColor = PURPLE_SHADES[evIdx % PURPLE_SHADES.length];
-            } else if (catKey === 'kings-judah') {
-              layerColor = '#f59e0b';
-            } else if (catKey === 'kings-israel') {
-              layerColor = '#ef4444';
-            } else {
-              layerColor = PALETTE[layerIdx % PALETTE.length];
-            }
-          }
-
-          allCombinedEvents.push({
-            ...ev,
-            layerKey: catKey,
-            layerColor: layerColor
-          });
-        });
-      });
-
-      if (allCombinedEvents.length === 0) return;
-
-      allCombinedEvents.sort((a, b) => a.startYear - b.startYear);
-
-      const eventToSpineBarMap = new Map();
-      const eventToGroupIdMap = new Map();
-
-      allCombinedEvents.forEach((ev, idx) => {
-        const cleanTitle = ev.title.replace(/[^\w-]/g, '-');
-        eventToGroupIdMap.set(ev, `group-${idx}-${cleanTitle}`);
-      });
-
-      // --- 1. PARALLEL SWIM LANE ENGINE FOR RANGE BARS ---
-      const rangeEvents = allCombinedEvents.filter(e => !e.isPointEvent && (e.endYear - e.startYear) > 0);
-
-      const LANE_GAP_PX = 2;
-
-      rangeEvents.forEach((event) => {
-        const topPos = getYearOffset(event.startYear);
-        const rawDuration = event.endYear - event.startYear;
-        const barHeight = Math.max(14, rawDuration * pixelsPerYear);
-        const groupId = eventToGroupIdMap.get(event);
-
-        const isBooksNarrative = event.layerKey === 'books-narrative';
-        const laneWidthPx = isBooksNarrative ? 18 : 3;
-
-        const activeOverlaps = rangeEvents.filter(other => 
-          event !== other && 
-          Math.max(event.startYear, other.startYear) < Math.min(event.endYear, other.endYear)
-        );
-
-        // Standardized lane sorting to keep narrative books tightly aligned
-        const laneIndex = activeOverlaps.filter(other => {
-          if (other.layerKey !== event.layerKey) {
-            return other.layerKey < event.layerKey;
-          }
-          const durA = event.endYear - event.startYear;
-          const durB = other.endYear - other.startYear;
-          if (durA !== durB) return durB > durA;
-          return other.title < event.title;
-        }).length;
-
-        let previousLanesWidth = 0;
-        let totalBundleWidth = 0;
-
-        const sortedBundle = [event, ...activeOverlaps].sort((a, b) => {
-          if (a.layerKey !== b.layerKey) return a.layerKey < b.layerKey ? -1 : 1;
-          const durA = a.endYear - a.startYear;
-          const durB = b.endYear - b.startYear;
-          if (durA !== durB) return durB - durA;
-          return a.title < b.title ? -1 : 1;
-        });
-
-        sortedBundle.forEach((item, idx) => {
-          const itemWidth = item.layerKey === 'books-narrative' ? 18 : 3;
-          if (idx < laneIndex) {
-            previousLanesWidth += itemWidth + LANE_GAP_PX;
-          }
-          totalBundleWidth += itemWidth + (idx > 0 ? LANE_GAP_PX : 0);
-        });
-
-        // Precise centered offset calculation relative to spine line
-        const laneOffsetPx = previousLanesWidth - (totalBundleWidth / 2);
-
-        const bar = document.createElement('div');
-        bar.className = `spine-bar ${event.layerKey}`;
-        bar.dataset.groupId = groupId;
-        bar.style.top = `${topPos}px`;
-        bar.style.height = `${barHeight}px`;
-        bar.style.width = `${laneWidthPx}px`;
-        bar.style.left = `calc(50% + ${laneOffsetPx}px)`;
-        bar.style.backgroundColor = event.layerColor;
-        bar.style.boxShadow = `0 0 4px ${event.layerColor}88`;
-
-        const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
-        const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
-        bar.title = `${event.title} (${startStr} – ${endStr})`;
-
-        bar.addEventListener('click', (e) => {
-          e.stopPropagation();
-          openEventSheet(event, groupId);
-        });
-
-        eventToSpineBarMap.set(event, bar);
-        targetTrack.appendChild(bar);
-      });
-
-      // --- 2. POINT DOTS AND ALTERNATING CARDS ---
-      const MIN_VERTICAL_GAP_PX = 30;
-      let lastLeftTopPx = -9999;
-      let lastRightTopPx = -9999;
-
-      allCombinedEvents.forEach((event, eventIdx) => {
-        const topPos = getYearOffset(event.startYear);
-        const rawDuration = event.endYear - event.startYear;
-        const isPoint = event.isPointEvent || rawDuration === 0;
-
-        const side = (eventIdx % 2 === 0) ? 'left' : 'right';
-        const itemColor = event.layerColor;
-
-        const lastTopPx = (side === 'left') ? lastLeftTopPx : lastRightTopPx;
-        const rawGapPx = topPos - lastTopPx;
-
-        const groupId = eventToGroupIdMap.get(event);
-
-        let dotEl = null;
-        if (isPoint) {
-          const isCollided = rawGapPx < MIN_VERTICAL_GAP_PX;
-          dotEl = document.createElement('div');
-          dotEl.className = `spine-dot ${isCollided ? 'muted' : ''}`;
-          dotEl.style.top = `${topPos}px`;
-          dotEl.dataset.groupId = groupId;
-
-          if (!isCollided) {
-            dotEl.style.backgroundColor = itemColor;
-            dotEl.style.boxShadow = `0 0 6px ${itemColor}`;
-          }
-          const yearStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
-          dotEl.title = `${event.title} (${yearStr})`;
-          
-          dotEl.addEventListener('click', (e) => {
-            e.stopPropagation();
-            openEventSheet(event, groupId);
-          });
-          targetTrack.appendChild(dotEl);
-
-          if (!isCollided) {
-            if (side === 'left') lastLeftTopPx = topPos;
-            else lastRightTopPx = topPos;
-          }
-        }
-
-        // Card rendering logic: default to top of event block, nudge down only when needed
-        let cardTopPx = topPos;
-        let isCardVisible = true;
-        let shiftDownPx = 0;
-
-        if (rawGapPx < MIN_VERTICAL_GAP_PX) {
-          if (!isPoint) {
-            const rangeBlockHeight = Math.max(32, rawDuration * pixelsPerYear);
-            shiftDownPx = MIN_VERTICAL_GAP_PX - rawGapPx;
-            
-            // Allow nudge down only if card fits inside the range block
-            if (shiftDownPx <= (rangeBlockHeight - 20)) {
-              cardTopPx = topPos + shiftDownPx;
-            } else {
-              isCardVisible = false;
-            }
-          } else {
-            isCardVisible = false;
-          }
-        }
-
-        if (isCardVisible) {
-          if (side === 'left') lastLeftTopPx = cardTopPx;
-          else lastRightTopPx = cardTopPx;
-
-          const cardContainer = document.createElement('div');
-          cardContainer.className = `event-point branch-${side}`;
-          cardContainer.style.top = `${topPos}px`;
-          cardContainer.dataset.groupId = groupId;
-
-          if (!isPoint) {
-            const boundaryHeight = Math.max(32, rawDuration * pixelsPerYear);
-            cardContainer.style.height = `${boundaryHeight}px`;
-          }
-
-          const stickyWrapper = document.createElement('div');
-          stickyWrapper.className = 'sticky-wrapper';
-          
-          // Apply top margin shift if nudged down due to collision
-          if (shiftDownPx > 0) {
-            stickyWrapper.style.marginTop = `${shiftDownPx}px`;
-          }
-
-          const line = document.createElement('div');
-          line.className = 'connector-line';
-          line.style.backgroundColor = itemColor;
-
-          const cardBox = document.createElement('div');
-          cardBox.className = 'sticky-card-box';
-          
-          cardBox.style.backgroundColor = hexToRgba(itemColor, 0.25);
-          cardBox.style.border = `1px solid ${itemColor}`;
-          cardBox.style.color = itemColor;
-
-          cardBox.innerHTML = `<div class="title">${event.title}</div>`;
-
-          cardBox.addEventListener('click', (e) => {
-            e.stopPropagation();
-            openEventSheet(event, groupId);
-          });
-
-          if (side === 'left') {
-            stickyWrapper.appendChild(cardBox);
-            stickyWrapper.appendChild(line);
-          } else {
-            stickyWrapper.appendChild(line);
-            stickyWrapper.appendChild(cardBox);
-          }
-
-          cardContainer.appendChild(stickyWrapper);
-          targetTrack.appendChild(cardContainer);
-        }
-      });
-
-      if (currentlySelectedGroupId) {
-        applySelectionHighlight(currentlySelectedGroupId);
-      }
-    }
-
-    function buildScrubberRail() {
-      scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
-      const majorMilestones = new Map([[-4000, "4k"], [-3000, "3k"], [-2000, "2k"], [-1000, "1k"], [1, "1 AD"], [500, "500"]]);
-
-      for (let y = START_YEAR; y <= END_YEAR; y += 100) {
-        if (y === 0) continue;
-        const tickKey = y;
-        const tick = document.createElement('div');
-        tick.className = 'scrub-tick';
-
-        if (majorMilestones.has(tickKey)) {
-          const label = document.createElement('span');
-          label.className = 'scrub-label';
-          label.textContent = majorMilestones.get(tickKey);
-          tick.appendChild(label);
-        } else {
-          tick.classList.add('dot');
-        }
-
-        scrubberRail.appendChild(tick);
-      }
-    }
-
-    function updateScrubberPosition() {
-      const rect = scrubberRail.getBoundingClientRect();
-      const maxScroll = scrollView.scrollHeight - scrollView.clientHeight;
-      
-      if (maxScroll <= 0) {
-        scrubIndicator.style.height = `${rect.height}px`;
-        scrubIndicator.style.top = `0px`;
-        return;
-      }
-
-      const viewportRatio = scrollView.clientHeight / scrollView.scrollHeight;
-      const indicatorHeight = Math.max(16, rect.height * viewportRatio);
-      
-      const scrollPercentage = Math.max(0, Math.min(1, scrollView.scrollTop / maxScroll));
-      const availableTravel = rect.height - indicatorHeight;
-      const indicatorTop = scrollPercentage * availableTravel;
-
-      scrubIndicator.style.height = `${indicatorHeight}px`;
-      scrubIndicator.style.top = `${indicatorTop}px`;
-    }
-
-    function setupTouchScrubber() {
-      function scrubToY(clientY) {
-        const rect = scrubberRail.getBoundingClientRect();
-        const viewportRatio = scrollView.clientHeight / scrollView.scrollHeight;
-        const indicatorHeight = Math.max(16, rect.height * viewportRatio);
-        const availableTravel = rect.height - indicatorHeight;
-
-        if (availableTravel <= 0) return;
-
-        const targetTop = clientY - rect.top - (indicatorHeight / 2);
-        const percentage = Math.max(0, Math.min(1, targetTop / availableTravel));
-        
-        const maxScroll = scrollView.scrollHeight - scrollView.clientHeight;
-        scrollView.scrollTop = percentage * maxScroll;
-        updateScrubberPosition();
-      }
-
-      let isScrubbing = false;
-
-      scrubberRail.addEventListener('mousedown', (e) => { isScrubbing = true; scrubToY(e.clientY); });
-      window.addEventListener('mousemove', (e) => { if (isScrubbing) scrubToY(e.clientY); });
-      window.addEventListener('mouseup', () => isScrubbing = false);
-
-      scrubberRail.addEventListener('touchstart', (e) => { isScrubbing = true; scrubToY(e.touches[0].clientY); }, { passive: true });
-      scrubberRail.addEventListener('touchmove', (e) => { if (isScrubbing) scrubToY(e.touches[0].clientY); }, { passive: true });
-      scrubberRail.addEventListener('touchend', () => isScrubbing = false);
-
-      scrollView.addEventListener('scroll', updateScrubberPosition, { passive: true });
-    }
-
-    loadTimeline();
-  </script>
-</body>
-</html>
+{
+  "metadata": {
+    "color": "#64748b",
+    "colorMap": {
+      "good": "#22c55e",
+      "bad": "#eab308",
+      "evil": "#ef4444"
+    }
+  },
+  "events": [
+  {
+    "id": "rehoboam",
+    "title": "Rehoboam",
+    "subtitle": "1 Kings 12–14 | 17 yrs",
+    "startYear": -931,
+    "endYear": -913,
+    "classification": "bad",
+    "description": "Son of Solomon; rejected elders' advice causing the 10 northern tribes to rebel under Jeroboam."
+  },
+  {
+    "id": "abijam",
+    "title": "Abijah (Abijam)",
+    "subtitle": "1 Kings 15 | 3 yrs",
+    "startYear": -913,
+    "endYear": -911,
+    "classification": "bad",
+    "description": "Fought against Jeroboam of Israel; won a major battle through divine intervention despite personal shortcomings."
+  },
+  {
+    "id": "asa",
+    "title": "Asa",
+    "subtitle": "1 Kings 15 | 41 yrs",
+    "startYear": -911,
+    "endYear": -870,
+    "classification": "good",
+    "description": "A godly reformer who removed idols and defeated the Ethiopian army; relied on Syria later in life."
+  },
+  {
+    "id": "jehoshaphat",
+    "title": "Jehoshaphat",
+    "subtitle": "1 Kings 22 | 25 yrs",
+    "startYear": -873,
+    "endYear": -848,
+    "classification": "good",
+    "description": "Sent teachers with God's Law throughout Judah; made an unwise military alliance with Ahab."
+  },
+  {
+    "id": "jehoram-judah",
+    "title": "Jehoram",
+    "subtitle": "2 Kings 8 | 8 yrs",
+    "startYear": -853,
+    "endYear": -841,
+    "classification": "evil",
+    "description": "Married Athaliah, Ahab's daughter; introduced Baal worship to Judah and murdered his brothers."
+  },
+  {
+    "id": "ahaziah-judah",
+    "title": "Ahaziah",
+    "subtitle": "2 Kings 8 | 1 yr",
+    "startYear": -841,
+    "endYear": -841,
+    "classification": "evil",
+    "description": "Followed the house of Ahab; killed by Jehu while visiting King Joram of Israel."
+  },
+  {
+    "id": "athaliah",
+    "title": "Athaliah (Queen)",
+    "subtitle": "2 Kings 11 | 6 yrs",
+    "startYear": -841,
+    "endYear": -835,
+    "classification": "evil",
+    "description": "Usurped the throne after her son's death and attempted to exterminate the royal line of David."
+  },
+  {
+    "id": "joash-judah",
+    "title": "Joash (Jehoash)",
+    "subtitle": "2 Kings 12 | 40 yrs",
+    "startYear": -835,
+    "endYear": -796,
+    "classification": "good",
+    "description": "Hidden as a child by Jehoiada the priest; repaired the Temple, but lapsed after Jehoiada died."
+  },
+  {
+    "id": "amaziah",
+    "title": "Amaziah",
+    "subtitle": "2 Kings 14 | 29 yrs",
+    "startYear": -796,
+    "endYear": -767,
+    "classification": "good",
+    "description": "Defeated Edom; grew proud and challenged Northern Israel to war, resulting in Jerusalem's wall being breached."
+  },
+  {
+    "id": "uzziah",
+    "title": "Uzziah (Azariah)",
+    "subtitle": "2 Chronicles 26 | 52 yrs",
+    "startYear": -790,
+    "endYear": -739,
+    "classification": "good",
+    "description": "Strengthened Judah militarily and economically; struck with leprosy for arrogantly burning incense in the Temple."
+  },
+  {
+    "id": "jotham",
+    "title": "Jotham",
+    "subtitle": "2 Kings 15 | 16 yrs",
+    "startYear": -750,
+    "endYear": -731,
+    "classification": "good",
+    "description": "Rebuilt the Upper Gate of the Temple and fortified Judah; served as co-regent during Uzziah's leprosy."
+  },
+  {
+    "id": "ahaz",
+    "title": "Ahaz",
+    "subtitle": "2 Kings 16 | 16 yrs",
+    "startYear": -735,
+    "endYear": -715,
+    "classification": "evil",
+    "description": "Practiced child sacrifice, closed the Temple doors, and paid Assyria for protection against Israel and Syria."
+  },
+  {
+    "id": "hezekiah",
+    "title": "Hezekiah",
+    "subtitle": "2 Kings 18–20 | 29 yrs",
+    "startYear": -729,
+    "endYear": -695,
+    "classification": "good",
+    "description": "Judah's greatest reformer; destroyed the high places, built Hezekiah's Tunnel, and prayed as God destroyed Assyria's siege."
+  },
+  {
+    "id": "manasseh",
+    "title": "Manasseh",
+    "subtitle": "2 Kings 21 | 55 yrs",
+    "startYear": -695,
+    "endYear": -642,
+    "classification": "evil",
+    "description": "Judah's longest-reigning and most wicked king; shed innocent blood, but repented late in life while captive in Babylon."
+  },
+  {
+    "id": "amon",
+    "title": "Amon",
+    "subtitle": "2 Kings 21 | 2 yrs",
+    "startYear": -642,
+    "endYear": -640,
+    "classification": "evil",
+    "description": "Continued Manasseh's idolatrous practices without repenting; assassinated by his own servants."
+  },
+  {
+    "id": "josiah",
+    "title": "Josiah",
+    "subtitle": "2 Kings 22–23 | 31 yrs",
+    "startYear": -640,
+    "endYear": -609,
+    "classification": "good",
+    "description": "Boy king who discovered the Book of the Law, purged idol worship, and celebrated Passover; killed fighting Egypt at Megiddo."
+  },
+  {
+    "id": "jehoahaz-judah",
+    "title": "Jehoahaz",
+    "subtitle": "2 Kings 23 | 3 months",
+    "startYear": -609,
+    "endYear": -609,
+    "classification": "evil",
+    "description": "Ruled 3 months before Pharaoh Necho deposed him and took him in chains to Egypt where he died."
+  },
+  {
+    "id": "jehoiakim",
+    "title": "Jehoiakim",
+    "subtitle": "2 Kings 23–24 | 11 yrs",
+    "startYear": -609,
+    "endYear": -597,
+    "classification": "evil",
+    "description": "Placed on throne by Egypt; burned Jeremiah's prophetic scroll; experienced Nebuchadnezzar's first siege (605 BC)."
+  },
+  {
+    "id": "jehoiachin",
+    "title": "Jehoiachin",
+    "subtitle": "2 Kings 24 | 3 months",
+    "startYear": -597,
+    "endYear": -597,
+    "classification": "evil",
+    "description": "Surrendered to Nebuchadnezzar and was carried captive to Babylon along with Ezekiel and Judah's nobility."
+  },
+  {
+    "id": "zedekiah",
+    "title": "Zedekiah",
+    "subtitle": "2 Kings 24–25 | 11 yrs",
+    "startYear": -597,
+    "endYear": -586,
+    "classification": "evil",
+    "description": "Judah's final king; rebelled against Babylon resulting in the destruction of Jerusalem and Solomonic Temple in 586 BC."
+  }
+]
+}
