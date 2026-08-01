@@ -349,6 +349,7 @@
       border-top: 1px solid rgba(15, 23, 42, 0.85);
       border-bottom: 1px solid rgba(15, 23, 42, 0.85);
       box-shadow: 0 0 0 1px #000000, 0 0 4px currentColor;
+      transform: translateX(-50%);
     }
 
     .spine-bar.big-story {
@@ -1139,8 +1140,13 @@
           totalBundleWidth += itemWidth + (idx > 0 ? LANE_GAP_PX : 0);
         });
 
-        // Precise centered offset calculation relative to spine line
-        const laneOffsetPx = previousLanesWidth - (totalBundleWidth / 2);
+        // Anchor Big Story directly on center spine, calculate swim lanes for others
+        let laneOffsetPx = 0;
+        if (event.layerKey === 'big-story') {
+          laneOffsetPx = 0;
+        } else {
+          laneOffsetPx = previousLanesWidth - (totalBundleWidth / 2);
+        }
 
         const bar = document.createElement('div');
         bar.className = `spine-bar ${event.layerKey}`;
