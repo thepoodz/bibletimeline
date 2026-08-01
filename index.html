@@ -1289,27 +1289,35 @@
     }
 
     function buildScrubberRail() {
-      scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
-      const majorMilestones = new Map([[-4000, "4k"], [-3000, "3k"], [-2000, "2k"], [-1000, "1k"], [1, "1"]]);
+  scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
+  
+  // Use "1A" or "1" so it matches the 2-character width of "1k"
+  const majorMilestones = new Map([
+    [-4000, "4k"], 
+    [-3000, "3k"], 
+    [-2000, "2k"], 
+    [-1000, "1k"], 
+    [1, "1"]
+  ]);
 
-      for (let y = START_YEAR; y <= END_YEAR; y += 100) {
-        if (y === 0) continue;
-        const tickKey = y;
-        const tick = document.createElement('div');
-        tick.className = 'scrub-tick';
+  for (let y = START_YEAR; y <= END_YEAR; y += 100) {
+    if (y === 0) continue;
+    const tickKey = y;
+    const tick = document.createElement('div');
+    tick.className = 'scrub-tick';
 
-        if (majorMilestones.has(tickKey)) {
-          const label = document.createElement('span');
-          label.className = 'scrub-label';
-          label.textContent = majorMilestones.get(tickKey);
-          tick.appendChild(label);
-        } else {
-          tick.classList.add('dot');
-        }
-
-        scrubberRail.appendChild(tick);
-      }
+    if (majorMilestones.has(tickKey)) {
+      const label = document.createElement('span');
+      label.className = 'scrub-label';
+      label.textContent = majorMilestones.get(tickKey);
+      tick.appendChild(label);
+    } else {
+      tick.classList.add('dot');
     }
+
+    scrubberRail.appendChild(tick);
+  }
+}
 
     function updateScrubberPosition() {
       const rect = scrubberRail.getBoundingClientRect();
