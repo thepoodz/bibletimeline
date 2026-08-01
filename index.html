@@ -1272,11 +1272,11 @@
             stickyWrapper.style.marginTop = `${shiftDownPx}px`;
           }
 
-          // Calculate precise connector line length to reach outside lane edge
+          // Calculate line length to stop right at the OUTER edge of the swim lane
           let dynamicLineWidth = 32;
           if (!isPoint && Math.abs(laneOffsetPx) > 0) {
-            const outerEdgeDistance = Math.abs(laneOffsetPx) + (laneWidthPx / 2);
-            dynamicLineWidth = Math.max(16, Math.round(outerEdgeDistance));
+            const innerEdgeDistance = Math.abs(laneOffsetPx) - (laneWidthPx / 2);
+            dynamicLineWidth = Math.max(12, Math.round(innerEdgeDistance));
           }
 
           const line = document.createElement('div');
