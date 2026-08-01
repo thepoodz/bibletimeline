@@ -384,7 +384,8 @@
 
     /* Sticky Flex Wrapper */
     .sticky-wrapper {
-      position: absolute;
+      position: sticky;
+      top: 12px;
       display: flex;
       align-items: center;
       width: fit-content;
@@ -395,7 +396,6 @@
 
     .event-point.branch-left .sticky-wrapper {
       margin-left: auto;
-      right: 0;
     }
 
     /* Connector Line with Black Outline Effect */
@@ -1201,24 +1201,23 @@
           }
         }
 
-        // Card rendering logic with down-shifting for multi-year range blocks
+        // Card rendering logic: default to top of event block, nudge down only when needed
         let cardTopPx = topPos;
         let isCardVisible = true;
+        let shiftDownPx = 0;
 
-        if (!isPoint) {
-          const rangeBlockHeight = Math.max(32, rawDuration * pixelsPerYear);
-          
-          // Down-shift range card if top region is crowded
-          if (rawGapPx < MIN_VERTICAL_GAP_PX) {
-            const shiftDownPx = MIN_VERTICAL_GAP_PX - rawGapPx;
+        if (rawGapPx < MIN_VERTICAL_GAP_PX) {
+          if (!isPoint) {
+            const rangeBlockHeight = Math.max(32, rawDuration * pixelsPerYear);
+            shiftDownPx = MIN_VERTICAL_GAP_PX - rawGapPx;
+            
+            // Allow nudge down only if card fits inside the range block
             if (shiftDownPx <= (rangeBlockHeight - 20)) {
               cardTopPx = topPos + shiftDownPx;
             } else {
-              isCardVisible = false; // Exceeds range block height, hide clutter
+              isCardVisible = false;
             }
-          }
-        } else {
-          if (rawGapPx < MIN_VERTICAL_GAP_PX) {
+          } else {
             isCardVisible = false;
           }
         }
@@ -1240,9 +1239,10 @@
           const stickyWrapper = document.createElement('div');
           stickyWrapper.className = 'sticky-wrapper';
           
-          // Down-shift position within the range boundary
-          const verticalOffsetPx = cardTopPx - topPos;
-          stickyWrapper.style.top = `${verticalOffsetPx}px`;
+          // Apply top margin shift if nudged down due to collision
+          if (shiftDownPx > 0) {
+            stickyWrapper.style.marginTop = `${shiftDownPx}px`;
+          }
 
           const line = document.createElement('div');
           line.className = 'connector-line';
