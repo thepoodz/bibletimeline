@@ -377,14 +377,6 @@
       max-width: 42%;
     }
 
-    .event-point.branch-left {
-      right: 50%;
-    }
-
-    .event-point.branch-right {
-      left: 50%;
-    }
-
     /* Sticky Flex Wrapper aligned to top */
     .sticky-wrapper {
       position: sticky;
@@ -404,7 +396,6 @@
     /* Connector Line - Flush with top edge of card and dot */
     .connector-line {
       height: 2px;
-      width: 32px;
       z-index: 40;
       pointer-events: none;
       flex-shrink: 0;
@@ -416,7 +407,6 @@
     .sticky-card-box {
       width: fit-content;
       min-width: 60px;
-      max-width: calc(100% - 32px);
       padding: 6px 10px;
       border-radius: 6px;
       backdrop-filter: blur(6px);
@@ -1255,10 +1245,24 @@
           if (side === 'left') lastLeftTopPx = cardTopPx;
           else lastRightTopPx = cardTopPx;
 
+          const outerEdgeDistance = Math.abs(laneOffsetPx) + (laneWidthPx / 2);
+
           const cardContainer = document.createElement('div');
           cardContainer.className = `event-point branch-${side}`;
           cardContainer.style.top = `${topPos}px`;
           cardContainer.dataset.groupId = groupId;
+
+          // Align container origin directly to swim lane outer boundary
+          if (!isPoint && Math.abs(laneOffsetPx) > 0) {
+            if (side === 'left') {
+              cardContainer.style.right = `calc(50% + ${outerEdgeDistance}px)`;
+            } else {
+              cardContainer.style.left = `calc(50% + ${outerEdgeDistance}px)`;
+            }
+          } else {
+            if (side === 'left') cardContainer.style.right = '50%';
+            else cardContainer.style.left = '50%';
+          }
 
           if (!isPoint) {
             const boundaryHeight = Math.max(32, rawDuration * pixelsPerYear);
@@ -1272,12 +1276,8 @@
             stickyWrapper.style.marginTop = `${shiftDownPx}px`;
           }
 
-          // Calculate line length to stop right at the OUTER edge of the swim lane
-          let dynamicLineWidth = 32;
-          if (!isPoint && Math.abs(laneOffsetPx) > 0) {
-            const innerEdgeDistance = Math.abs(laneOffsetPx) - (laneWidthPx / 2);
-            dynamicLineWidth = Math.max(12, Math.round(innerEdgeDistance));
-          }
+          // Clean fixed connector line length running from card to lane edge
+          const dynamicLineWidth = 24;
 
           const line = document.createElement('div');
           line.className = 'connector-line';
