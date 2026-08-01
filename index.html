@@ -1084,8 +1084,9 @@
 
       allCombinedEvents.sort((a, b) => a.startYear - b.startYear);
 
-      const eventToSpineBarMap = new Map();
       const eventToGroupIdMap = new Map();
+      const eventToOffsetMap = new Map();
+      const eventToWidthMap = new Map();
 
       allCombinedEvents.forEach((ev, idx) => {
         const cleanTitle = ev.title.replace(/[^\w-]/g, '-');
@@ -1094,7 +1095,6 @@
 
       // --- 1. PARALLEL SWIM LANE ENGINE FOR RANGE BARS ---
       const rangeEvents = allCombinedEvents.filter(e => !e.isPointEvent && (e.endYear - e.startYear) > 0);
-
       const LANE_GAP_PX = 2;
 
       rangeEvents.forEach((event) => {
@@ -1105,14 +1105,13 @@
 
         const isBooksNarrative = event.layerKey === 'books-narrative';
         const laneWidthPx = isBooksNarrative ? 18 : 3;
+        eventToWidthMap.set(event, laneWidthPx);
 
         let laneOffsetPx = 0;
 
         if (event.layerKey === 'big-story') {
-          // Big Story stays anchored directly on the spine line
           laneOffsetPx = 0;
         } else {
-          // Filter overlaps strictly within non-big-story range items
           const activeOverlaps = rangeEvents.filter(other => 
             other.layerKey !== 'big-story' &&
             event !== other && 
@@ -1148,9 +1147,11 @@
             totalBundleWidth += itemWidth + (idx > 0 ? LANE_GAP_PX : 0);
           });
 
-          // Offset calculated relative to spine center, taking full bundle width into account
+          // Precise lane center offset relative to spine
           laneOffsetPx = previousLanesWidth - (totalBundleWidth / 2) + (laneWidthPx / 2);
         }
+
+        eventToOffsetMap.set(event, laneOffsetPx);
 
         const bar = document.createElement('div');
         bar.className = `spine-bar ${event.layerKey}`;
@@ -1175,7 +1176,6 @@
           openEventSheet(event, groupId);
         });
 
-        eventToSpineBarMap.set(event, bar);
         targetTrack.appendChild(bar);
       });
 
@@ -1189,13 +1189,21 @@
         const rawDuration = event.endYear - event.startYear;
         const isPoint = event.isPointEvent || rawDuration === 0;
 
-        const side = (eventIdx % 2 === 0) ? 'left' : 'right';
         const itemColor = event.layerColor;
+        const groupId = eventToGroupIdMap.get(event);
+        const laneOffsetPx = eventToOffsetMap.get(event) || 0;
+        const laneWidthPx = eventToWidthMap.get(event) || 0;
+
+        // Sync card side to lane position if offset left or right
+        let side = 'left';
+        if (!isPoint && Math.abs(laneOffsetPx) > 1) {
+          side = laneOffsetPx < 0 ? 'left' : 'right';
+        } else {
+          side = (eventIdx % 2 === 0) ? 'left' : 'right';
+        }
 
         const lastTopPx = (side === 'left') ? lastLeftTopPx : lastRightTopPx;
         const rawGapPx = topPos - lastTopPx;
-
-        const groupId = eventToGroupIdMap.get(event);
 
         let dotEl = null;
         if (isPoint) {
@@ -1233,7 +1241,6 @@
             const rangeBlockHeight = Math.max(32, rawDuration * pixelsPerYear);
             shiftDownPx = MIN_VERTICAL_GAP_PX - rawGapPx;
             
-            // Allow nudge down only if card fits inside the range block
             if (shiftDownPx <= (rangeBlockHeight - 20)) {
               cardTopPx = topPos + shiftDownPx;
             } else {
@@ -1261,17 +1268,25 @@
           const stickyWrapper = document.createElement('div');
           stickyWrapper.className = 'sticky-wrapper';
           
-          // Apply top margin shift if nudged down due to collision
           if (shiftDownPx > 0) {
             stickyWrapper.style.marginTop = `${shiftDownPx}px`;
+          }
+
+          // Calculate precise connector line length to reach outside lane edge
+          let dynamicLineWidth = 32;
+          if (!isPoint && Math.abs(laneOffsetPx) > 0) {
+            const outerEdgeDistance = Math.abs(laneOffsetPx) + (laneWidthPx / 2);
+            dynamicLineWidth = Math.max(16, Math.round(outerEdgeDistance));
           }
 
           const line = document.createElement('div');
           line.className = 'connector-line';
           line.style.backgroundColor = itemColor;
+          line.style.width = `${dynamicLineWidth}px`;
 
           const cardBox = document.createElement('div');
           cardBox.className = 'sticky-card-box';
+          cardBox.style.maxWidth = `calc(100% - ${dynamicLineWidth}px)`;
           
           cardBox.style.backgroundColor = hexToRgba(itemColor, 0.25);
           cardBox.style.border = `1px solid ${itemColor}`;
