@@ -1245,23 +1245,29 @@
           if (side === 'left') lastLeftTopPx = cardTopPx;
           else lastRightTopPx = cardTopPx;
 
-          const outerEdgeDistance = Math.abs(laneOffsetPx) + (laneWidthPx / 2);
-
           const cardContainer = document.createElement('div');
           cardContainer.className = `event-point branch-${side}`;
           cardContainer.style.top = `${topPos}px`;
           cardContainer.dataset.groupId = groupId;
 
-          // Align container origin directly to swim lane outer boundary
+          // Align container origin directly to swim lane outer boundary or center spine
           if (!isPoint && Math.abs(laneOffsetPx) > 0) {
+            const outerEdgeDistance = Math.abs(laneOffsetPx) + (laneWidthPx / 2);
             if (side === 'left') {
               cardContainer.style.right = `calc(50% + ${outerEdgeDistance}px)`;
+              cardContainer.style.left = 'auto';
             } else {
               cardContainer.style.left = `calc(50% + ${outerEdgeDistance}px)`;
+              cardContainer.style.right = 'auto';
             }
           } else {
-            if (side === 'left') cardContainer.style.right = '50%';
-            else cardContainer.style.left = '50%';
+            if (side === 'left') {
+              cardContainer.style.right = '50%';
+              cardContainer.style.left = 'auto';
+            } else {
+              cardContainer.style.left = '50%';
+              cardContainer.style.right = 'auto';
+            }
           }
 
           if (!isPoint) {
@@ -1276,7 +1282,7 @@
             stickyWrapper.style.marginTop = `${shiftDownPx}px`;
           }
 
-          // Clean fixed connector line length running from card to lane edge
+          // Clean fixed connector line length running strictly from card to lane edge
           const dynamicLineWidth = 24;
 
           const line = document.createElement('div');
