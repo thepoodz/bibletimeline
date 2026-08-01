@@ -324,17 +324,18 @@
       transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
     }
 
-    /* Center Spine Dot for Point Events */
+    /* Center Spine Dot for Point Events - with Black Outline Effect */
     .spine-dot {
       position: absolute;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       z-index: 50;
       cursor: pointer;
       pointer-events: auto;
+      box-shadow: 0 0 0 1px #000000, 0 0 6px currentColor;
     }
 
     /* Parallel Swim Lane Bar for Range Events */
@@ -347,15 +348,15 @@
       z-index: 30;
       border-top: 1px solid rgba(15, 23, 42, 0.85);
       border-bottom: 1px solid rgba(15, 23, 42, 0.85);
+      box-shadow: 0 0 0 1px #000000, 0 0 4px currentColor;
+    }
+
+    .spine-bar.big-story {
+      z-index: 35;
     }
 
     .spine-bar.books-narrative {
       opacity: 0.75;
-    }
-
-    .spine-dot.muted {
-      background-color: #475569 !important;
-      box-shadow: none !important;
     }
 
     .spine-bar.muted {
@@ -1149,7 +1150,7 @@
         bar.style.width = `${laneWidthPx}px`;
         bar.style.left = `calc(50% + ${laneOffsetPx}px)`;
         bar.style.backgroundColor = event.layerColor;
-        bar.style.boxShadow = `0 0 4px ${event.layerColor}88`;
+        bar.style.color = event.layerColor;
 
         const startStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
         const endStr = event.endYear < 0 ? `${Math.abs(event.endYear)} BC` : `${event.endYear} AD`;
@@ -1186,14 +1187,13 @@
         if (isPoint) {
           const isCollided = rawGapPx < MIN_VERTICAL_GAP_PX;
           dotEl = document.createElement('div');
-          dotEl.className = `spine-dot ${isCollided ? 'muted' : ''}`;
+          dotEl.className = 'spine-dot';
           dotEl.style.top = `${topPos}px`;
           dotEl.dataset.groupId = groupId;
 
-          if (!isCollided) {
-            dotEl.style.backgroundColor = itemColor;
-            dotEl.style.boxShadow = `0 0 6px ${itemColor}`;
-          }
+          dotEl.style.backgroundColor = itemColor;
+          dotEl.style.color = itemColor;
+
           const yearStr = event.startYear < 0 ? `${Math.abs(event.startYear)} BC` : `${event.startYear} AD`;
           dotEl.title = `${event.title} (${yearStr})`;
           
@@ -1288,36 +1288,34 @@
       }
     }
 
-function buildScrubberRail() {
-  scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
+    function buildScrubberRail() {
+      scrubberRail.querySelectorAll('.scrub-tick').forEach(t => t.remove());
 
-  const majorMilestones = new Map([
-    [-4000, "4k"], 
-    [-3000, "3k"], 
-    [-2000, "2k"], 
-    [-1000, "1k"], 
-    [1, "1"] // Or "1A" / "1"
-  ]);
+      const majorMilestones = new Map([
+        [-4000, "4k"], 
+        [-3000, "3k"], 
+        [-2000, "2k"], 
+        [-1000, "1k"], 
+        [1, "1"]
+      ]);
 
-  for (let y = START_YEAR; y <= END_YEAR; y += 100) {
-    // If we land on 0, map it to 1 AD so the milestone gets caught!
-    const tickKey = (y === 0) ? 1 : y; 
-    
-    const tick = document.createElement('div');
-    tick.className = 'scrub-tick';
+      for (let y = START_YEAR; y <= END_YEAR; y += 100) {
+        const tickKey = (y === 0) ? 1 : y;
+        const tick = document.createElement('div');
+        tick.className = 'scrub-tick';
 
-    if (majorMilestones.has(tickKey)) {
-      const label = document.createElement('span');
-      label.className = 'scrub-label';
-      label.textContent = majorMilestones.get(tickKey);
-      tick.appendChild(label);
-    } else {
-      tick.classList.add('dot');
+        if (majorMilestones.has(tickKey)) {
+          const label = document.createElement('span');
+          label.className = 'scrub-label';
+          label.textContent = majorMilestones.get(tickKey);
+          tick.appendChild(label);
+        } else {
+          tick.classList.add('dot');
+        }
+
+        scrubberRail.appendChild(tick);
+      }
     }
-
-    scrubberRail.appendChild(tick);
-  }
-}
 
     function updateScrubberPosition() {
       const rect = scrubberRail.getBoundingClientRect();
