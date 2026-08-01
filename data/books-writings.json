@@ -188,6 +188,24 @@
     "type": "book",
     "description": "Eight night visions encouraging Zerubbabel and Joshua; predicts Messiah on a donkey."
   },
+    {
+    "id": "1-chronicles",
+    "title": "1 Chronicles",
+    "subtitle": "Genealogies & Davidic Temple Setup",
+    "startYear": -450,
+    "endYear": -430,
+    "type": "book",
+    "description": "Post-exilic re-retelling of Israel's history focusing on David and temple ministry."
+  },
+  {
+    "id": "2-chronicles",
+    "title": "2 Chronicles",
+    "subtitle": "Solomon to Cyrus Decree",
+    "startYear": -450,
+    "endYear": -430,
+    "type": "book",
+    "description": "Focuses on the kings of Judah who honored God's temple up to Cyrus' proclamation."
+  },
   {
     "id": "malachi",
     "title": "Malachi",
