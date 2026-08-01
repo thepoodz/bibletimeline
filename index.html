@@ -307,14 +307,16 @@
       pointer-events: none;
     }
 
-    .event-block .title, .event-point .title {
-      font-weight: 700;
-      font-size: 0.72rem;
-      line-height: 1.15;
-      white-space: nowrap;
-      color: #ffffff;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    }
+   .event-block .title, .event-point .title {
+  font-weight: 700;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  white-space: normal; /* Allows multi-word titles to wrap cleanly */
+  overflow-wrap: break-word; /* Prevents word overflow on narrow mobile screens */
+  word-break: keep-all; /* Ensures words wrap whole rather than splitting mid-word */
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
 
     /* --- Universal Selection Transitions --- */
     .spine-dot, .spine-bar, .connector-line, .event-point, .sticky-wrapper, .sticky-card-box {
