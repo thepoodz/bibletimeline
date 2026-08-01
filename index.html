@@ -382,12 +382,12 @@
       left: 50%;
     }
 
-    /* Sticky Flex Wrapper */
+    /* Sticky Flex Wrapper aligned to top */
     .sticky-wrapper {
       position: sticky;
       top: 12px;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       width: fit-content;
       max-width: 100%;
       z-index: 45;
@@ -398,13 +398,14 @@
       margin-left: auto;
     }
 
-    /* Connector Line with Black Outline Effect */
+    /* Connector Line - Anchored to top of card */
     .connector-line {
       height: 2px;
       width: 16px;
       z-index: 40;
       pointer-events: none;
       flex-shrink: 0;
+      margin-top: 10px; /* Aligns line flush with upper area of card */
       box-shadow: 0 0 0 1px #000000;
     }
 
@@ -1107,15 +1108,22 @@
           Math.max(event.startYear, other.startYear) < Math.min(event.endYear, other.endYear)
         );
 
-        const laneIndex = activeOverlaps.filter(other => 
-          (other.endYear - other.startYear) > rawDuration || 
-          ((other.endYear - other.startYear) === rawDuration && other.title < event.title)
-        ).length;
+        // Standardized lane sorting to keep narrative books tightly aligned
+        const laneIndex = activeOverlaps.filter(other => {
+          if (other.layerKey !== event.layerKey) {
+            return other.layerKey < event.layerKey;
+          }
+          const durA = event.endYear - event.startYear;
+          const durB = other.endYear - other.startYear;
+          if (durA !== durB) return durB > durA;
+          return other.title < event.title;
+        }).length;
 
         let previousLanesWidth = 0;
         let totalBundleWidth = 0;
 
         const sortedBundle = [event, ...activeOverlaps].sort((a, b) => {
+          if (a.layerKey !== b.layerKey) return a.layerKey < b.layerKey ? -1 : 1;
           const durA = a.endYear - a.startYear;
           const durB = b.endYear - b.startYear;
           if (durA !== durB) return durB - durA;
