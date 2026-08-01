@@ -307,7 +307,7 @@
       pointer-events: none;
     }
 
-    /* Title Styling - Allows Word Wrapping on Mobile */
+    /* Title Styling */
     .event-block .title, .event-point .title {
       font-weight: 700;
       font-size: 0.72rem;
@@ -384,10 +384,9 @@
 
     /* Sticky Flex Wrapper */
     .sticky-wrapper {
-      position: sticky;
-      top: 12px;
+      position: absolute;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       width: fit-content;
       max-width: 100%;
       z-index: 45;
@@ -396,15 +395,17 @@
 
     .event-point.branch-left .sticky-wrapper {
       margin-left: auto;
+      right: 0;
     }
 
-    /* Connector Line */
+    /* Connector Line with Black Outline Effect */
     .connector-line {
-      height: 0px;
+      height: 2px;
       width: 16px;
       z-index: 40;
       pointer-events: none;
       flex-shrink: 0;
+      box-shadow: 0 0 0 1px #000000;
     }
 
     /* Inner Visual Card Box - Colored Theme */
@@ -415,7 +416,7 @@
       padding: 6px 10px;
       border-radius: 6px;
       backdrop-filter: blur(6px);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
       cursor: pointer;
       pointer-events: auto;
     }
@@ -1129,7 +1130,8 @@
           totalBundleWidth += itemWidth + (idx > 0 ? LANE_GAP_PX : 0);
         });
 
-        const laneOffsetPx = previousLanesWidth - (totalBundleWidth / 2) + (laneWidthPx / 2);
+        // Precise centered offset calculation relative to spine line
+        const laneOffsetPx = previousLanesWidth - (totalBundleWidth / 2);
 
         const bar = document.createElement('div');
         bar.className = `spine-bar ${event.layerKey}`;
@@ -1168,13 +1170,13 @@
         const itemColor = event.layerColor;
 
         const lastTopPx = (side === 'left') ? lastLeftTopPx : lastRightTopPx;
-        const gapPx = topPos - lastTopPx;
-        const isCollided = gapPx < MIN_VERTICAL_GAP_PX;
+        const rawGapPx = topPos - lastTopPx;
 
         const groupId = eventToGroupIdMap.get(event);
 
         let dotEl = null;
         if (isPoint) {
+          const isCollided = rawGapPx < MIN_VERTICAL_GAP_PX;
           dotEl = document.createElement('div');
           dotEl.className = `spine-dot ${isCollided ? 'muted' : ''}`;
           dotEl.style.top = `${topPos}px`;
@@ -1192,11 +1194,38 @@
             openEventSheet(event, groupId);
           });
           targetTrack.appendChild(dotEl);
+
+          if (!isCollided) {
+            if (side === 'left') lastLeftTopPx = topPos;
+            else lastRightTopPx = topPos;
+          }
         }
 
-        if (!isCollided) {
-          if (side === 'left') lastLeftTopPx = topPos;
-          else lastRightTopPx = topPos;
+        // Card rendering logic with down-shifting for multi-year range blocks
+        let cardTopPx = topPos;
+        let isCardVisible = true;
+
+        if (!isPoint) {
+          const rangeBlockHeight = Math.max(32, rawDuration * pixelsPerYear);
+          
+          // Down-shift range card if top region is crowded
+          if (rawGapPx < MIN_VERTICAL_GAP_PX) {
+            const shiftDownPx = MIN_VERTICAL_GAP_PX - rawGapPx;
+            if (shiftDownPx <= (rangeBlockHeight - 20)) {
+              cardTopPx = topPos + shiftDownPx;
+            } else {
+              isCardVisible = false; // Exceeds range block height, hide clutter
+            }
+          }
+        } else {
+          if (rawGapPx < MIN_VERTICAL_GAP_PX) {
+            isCardVisible = false;
+          }
+        }
+
+        if (isCardVisible) {
+          if (side === 'left') lastLeftTopPx = cardTopPx;
+          else lastRightTopPx = cardTopPx;
 
           const cardContainer = document.createElement('div');
           cardContainer.className = `event-point branch-${side}`;
@@ -1210,10 +1239,14 @@
 
           const stickyWrapper = document.createElement('div');
           stickyWrapper.className = 'sticky-wrapper';
+          
+          // Down-shift position within the range boundary
+          const verticalOffsetPx = cardTopPx - topPos;
+          stickyWrapper.style.top = `${verticalOffsetPx}px`;
 
           const line = document.createElement('div');
           line.className = 'connector-line';
-          line.style.borderTop = `1px solid ${itemColor}`;
+          line.style.backgroundColor = itemColor;
 
           const cardBox = document.createElement('div');
           cardBox.className = 'sticky-card-box';
