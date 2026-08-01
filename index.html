@@ -914,7 +914,7 @@
       document.querySelectorAll(`[data-group-id="${groupId}"]`).forEach(el => el.classList.add('selected-active'));
     }
 
-    /* --- Click-to-Select Spotlight & Auto-Fit Panel Handler --- */
+    /* --- Click-to-Select Spotlight & Scroll-into-View Handler --- */
     function openEventSheet(event, groupId) {
       applySelectionHighlight(groupId);
 
@@ -938,29 +938,12 @@
         const isRange = !event.isPointEvent && (event.endYear > event.startYear);
         const visibleHeight = scrollView.clientHeight;
 
-        const performCenterScroll = () => {
-          const eventCenterYear = isRange ? (event.startYear + event.endYear) / 2 : event.startYear;
-          const centerCanvasTopPx = CANVAS_PADDING_TOP + ((eventCenterYear - START_YEAR) * pixelsPerYear);
-          const targetScrollTop = centerCanvasTopPx - (visibleHeight / 2);
+        const eventCenterYear = isRange ? (event.startYear + event.endYear) / 2 : event.startYear;
+        const centerCanvasTopPx = CANVAS_PADDING_TOP + ((eventCenterYear - START_YEAR) * pixelsPerYear);
+        const targetScrollTop = centerCanvasTopPx - (visibleHeight / 2);
 
-          scrollView.style.scrollBehavior = 'smooth';
-          scrollView.scrollTo({ top: Math.max(0, targetScrollTop), behavior: 'smooth' });
-        };
-
-        if (isRange) {
-          const durationYears = event.endYear - event.startYear;
-          const targetPaddingPx = 100;
-          const availablePx = Math.max(60, visibleHeight - targetPaddingPx);
-          
-          const idealPixelsPerYear = availablePx / durationYears;
-          const idealZoom = idealPixelsPerYear / basePixelsPerYear;
-
-          setZoomLevel(idealZoom, false, () => {
-            requestAnimationFrame(performCenterScroll);
-          });
-        } else {
-          performCenterScroll();
-        }
+        scrollView.style.scrollBehavior = 'smooth';
+        scrollView.scrollTo({ top: Math.max(0, targetScrollTop), behavior: 'smooth' });
       }, delayMs);
     }
 
@@ -1103,7 +1086,6 @@
         const barHeight = Math.max(14, rawDuration * pixelsPerYear);
         const groupId = eventToGroupIdMap.get(event);
 
-        // Books Narrative bars get 9px width, others stay 3px
         const isBooksNarrative = event.layerKey === 'books-narrative';
         const laneWidthPx = isBooksNarrative ? 9 : 3;
 
@@ -1117,7 +1099,6 @@
           ((other.endYear - other.startYear) === rawDuration && other.title < event.title)
         ).length;
 
-        // Dynamic bundle centering math based on individual widths
         let previousLanesWidth = 0;
         let totalBundleWidth = 0;
 
