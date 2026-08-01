@@ -314,11 +314,13 @@
       line-height: 1.15;
       white-space: normal;
       word-break: break-word;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
     }
 
     /* --- Universal Selection Transitions --- */
     .spine-dot, .spine-bar, .connector-line, .event-point, .sticky-wrapper, .sticky-card-box {
-      transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+      transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
     }
 
     /* Center Spine Dot for Point Events */
@@ -397,15 +399,14 @@
       flex-shrink: 0;
     }
 
-    /* Inner Visual Card Box */
+    /* Inner Visual Card Box - Colored Theme */
     .sticky-card-box {
       width: fit-content;
       max-width: calc(100% - 16px);
       padding: 6px 10px;
-      background: rgba(15, 23, 42, 0.92);
-      border-radius: 4px;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      border-radius: 6px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
       cursor: pointer;
       pointer-events: auto;
     }
@@ -428,11 +429,15 @@
     }
 
     .data-track.has-selection .event-point.selected-active .sticky-card-box {
-      background: rgba(30, 41, 59, 0.98);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.7);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.8), 0 0 10px currentColor;
     }
 
-    /* --- Scrubber Rail (Always 100% Height of Viewport Wrapper) --- */
+    .data-track.has-selection .event-point.selected-active .title {
+      color: #0f172a !important;
+      text-shadow: none !important;
+    }
+
+    /* --- Scrubber Rail --- */
     .scrubber-rail {
       position: absolute;
       right: 0;
@@ -489,7 +494,7 @@
       transition: top 0.05s linear;
     }
 
-    /* --- DYNAMIC SPLIT LAYOUT PANEL (Bottom or Side) --- */
+    /* --- DYNAMIC SPLIT LAYOUT PANEL --- */
     .detail-panel {
       background: var(--card-bg);
       border-color: var(--border-color);
@@ -589,7 +594,7 @@
       }
 
       .panel-handle {
-        display: none; /* Hide drag handle on desktop sidebar */
+        display: none;
       }
 
       .detail-panel {
@@ -716,6 +721,14 @@
     const panelDates = document.getElementById('panel-dates');
     const panelBody = document.getElementById('panel-body');
     const panelClose = document.getElementById('panel-close');
+
+    function hexToRgba(hex, alpha = 0.2) {
+      if (!hex || !hex.startsWith('#')) return `rgba(30, 41, 59, ${alpha})`;
+      let c = hex.substring(1);
+      if (c.length === 3) c = c.split('').map(x => x + x).join('');
+      const num = parseInt(c, 16);
+      return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
+    }
 
     function calculateBaseScale() {
       const availableHeight = Math.max(300, scrollView.clientHeight - (CANVAS_PADDING_TOP * 2));
@@ -895,7 +908,6 @@
       const isAlreadyActive = detailPanel.classList.contains('active');
       detailPanel.classList.add('active');
 
-      // Wait 320ms for CSS panel expansion transition (300ms) to finish so scrollView.clientHeight is exact
       const delayMs = isAlreadyActive ? 10 : 320;
 
       clearTimeout(sheetTransitionTimeout);
@@ -1172,11 +1184,11 @@
 
           const cardBox = document.createElement('div');
           cardBox.className = 'sticky-card-box';
-          if (side === 'left') {
-            cardBox.style.borderRight = `3px solid ${itemColor}`;
-          } else {
-            cardBox.style.borderLeft = `3px solid ${itemColor}`;
-          }
+          
+          // Full-Color Theme Styling
+          cardBox.style.backgroundColor = hexToRgba(itemColor, 0.25);
+          cardBox.style.border = `1px solid ${itemColor}`;
+          cardBox.style.color = itemColor;
 
           cardBox.innerHTML = `<div class="title">${event.title}</div>`;
 
